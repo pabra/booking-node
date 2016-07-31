@@ -1,0 +1,20 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "description": "the backend API for the \"booking node\" engine",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://pepp@peppnet.de/~/git/booking_node"
+  },
+  "author": "pabra",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "mysql": "^2.11.1"
+  }
+}
