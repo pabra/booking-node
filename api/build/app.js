@@ -9,6 +9,7 @@ var express = require('express'),
     debug = _debug('app:debug'),
     routes = require('./lib/routes');
 
+
 app.get('/', routes.getIndex);
 app.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
 app.get('/group/:uid/:yearMonth', routes.getUnavailGroupPeriod);

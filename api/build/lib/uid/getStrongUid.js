@@ -8,6 +8,7 @@ var crypto = require('crypto'),
     maxTries = 25,
     getStrongUid;
 
+
 getStrongUid = function (len, callback, i) {
     if (len < 2) throw new Error(`len '${len}' < 2`);
     if (len > maxUidLen) throw new Error(`len '${len}' > ${maxUidLen}`);

@@ -7,6 +7,7 @@ var db = require('./db'),
     dateAndTime = require('./dateAndTime'),
     uidLib = require('./uid');
 
+
 exports.getIndex = function (req, res) {
     pool.query('SELECT NOW() AS now', function (err, rows, fields) {
         if (err) throw err;
