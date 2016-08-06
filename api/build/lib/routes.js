@@ -5,8 +5,17 @@ var db = require('./db'),
     errors = require('./errors'),
     ValueError = errors.ValueError,
     dateAndTime = require('./dateAndTime'),
-    uidLib = require('./uid');
+    uidLib = require('./uid'),
+    httpErrorHandler;
 
+
+httpErrorHandler = function (e, res) {
+    if (e instanceof ValueError) {
+        res.status(400).send(e);
+    } else {
+        throw e;
+    }
+};
 
 exports.getIndex = function (req, res) {
     pool.query('SELECT NOW() AS now', function (err, rows, fields) {
@@ -24,11 +33,7 @@ exports.getUnavailItemPeriod = function (req, res) {
 
         res.send({item_uid: uid, year: yearMonth.year, month: yearMonth.month});
     } catch (e) {
-        if (e instanceof ValueError) {
-            res.status(400).send(e);
-        } else {
-            throw e;
-        }
+        httpErrorHandler(e, res);
     }
 };
 
@@ -41,11 +46,7 @@ exports.getUnavailGroupPeriod = function (req, res) {
 
         res.send({group_uid: uid, year: yearMonth.year, month: yearMonth.month});
     } catch (e) {
-        if (e instanceof ValueError) {
-            res.status(400).send(e);
-        } else {
-            throw e;
-        }
+        httpErrorHandler(e, res);
     }
 };
 
@@ -62,11 +63,7 @@ exports.postItemBooking = function (req, res) {
 
         res.send({uid: uid, from: fromDate, to: toDate});
     } catch(e) {
-        if (e instanceof ValueError) {
-            res.status(400).send(e);
-        } else {
-            throw e;
-        }
+        httpErrorHandler(e, res);
     }
 };
 
