@@ -47,8 +47,12 @@ http localhost:3000
 # request item availbility
 http localhost:3000/item/abc123/2016-06
 
+# post a booking
+http POST localhost:3000/item/abc123/2016-06-01..2016-06-30
+
 # invalid requests
 http localhost:3000/abc/def
 http localhost:3000/item/abc_def/2016
 http localhost:3000/item/abc123/2010
+http POST localhost:3000/item/abc123/2016-07-01..2016-06-30
 ```

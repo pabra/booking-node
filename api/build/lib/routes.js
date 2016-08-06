@@ -49,6 +49,27 @@ exports.getUnavailGroupPeriod = function (req, res) {
     }
 };
 
+exports.postItemBooking = function (req, res) {
+    var uid, fromDate, toDate;
+
+    try {
+        uid = uidLib.ensureValidUid(req.params.uid);
+        fromDate = dateAndTime.ensureValidIsoDate(req.params.from);
+        toDate = dateAndTime.ensureValidIsoDate(req.params.to);
+        if (toDate < fromDate) {
+            throw new ValueError(`${toDate} < ${fromDate}`);
+        }
+
+        res.send({uid: uid, from: fromDate, to: toDate});
+    } catch(e) {
+        if (e instanceof ValueError) {
+            res.status(400).send(e);
+        } else {
+            throw e;
+        }
+    }
+};
+
 exports.auth = function (req, res) {
     var email = req.params.email;
 

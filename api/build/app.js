@@ -14,6 +14,7 @@ app.get('/', routes.getIndex);
 app.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
 app.get('/group/:uid/:yearMonth', routes.getUnavailGroupPeriod);
 
+app.post('/item/:uid/:from..:to', routes.postItemBooking);
 app.post('/auth/:email', routes.auth);
 
 app.listen(3000, function () {

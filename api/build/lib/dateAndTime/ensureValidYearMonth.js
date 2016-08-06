@@ -2,38 +2,8 @@
 
 var errors = require('../errors'),
     ValueError = errors.ValueError,
-    ensureValidYear, ensureValidMonth;
+    helpers = require('./_helpers.js');
 
-/**
- * Validate passed year
- *
- * Valid year is currentYear -1 or currentYear +2
- */
-ensureValidYear = function (year) {
-    var currentYear = new Date().getFullYear(),
-        minYear = currentYear - 1,
-        maxYear = currentYear + 2;
-
-    if (year < minYear) throw new ValueError(`year ${year} < ${minYear}`);
-    if (year > maxYear) throw new ValueError(`year ${year} > ${minYear}`);
-
-    return year;
-};
-
-/**
- * Validate passed month
- *
- * Valid month is 1 <= month <= 12
- */
-ensureValidMonth = function (month) {
-    var minMonth = 1,
-        maxMonth = 12;
-
-    if (month < minMonth) throw new ValueError(`month ${month} < ${minMonth}`);
-    if (month > maxMonth) throw new ValueError(`month ${month} < ${maxMonth}`);
-
-    return month;
-};
 
 /**
  * Parse and return year and month
@@ -56,13 +26,10 @@ module.exports = function ensureValidYearMonthFn (testYearMonth) {
     }
 
     if (matchYearMonth) {
-        year = parseInt(matchYearMonth[1], 10);
-        year = ensureValidYear(year);
-        month = parseInt(matchYearMonth[2], 10);
-        month = ensureValidMonth(month);
+        year = helpers.ensureValidYear(matchYearMonth[1]);
+        month = helpers.ensureValidMonth(matchYearMonth[2]);
     } else if (matchYear) {
-        year = parseInt(matchYear[0], 10);
-        year = ensureValidYear(year);
+        year = helpers.ensureValidYear(matchYearMonth[0]);
         month = null;
     }
 
