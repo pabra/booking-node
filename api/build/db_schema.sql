@@ -1,8 +1,6 @@
--- CREATE DATABASE fewo_py CHARACTER SET utf8;
--- USE fewo_py;
-
-SET time_zone = '+00:00';
-
+/* companies have `items` and/or `item_groups` they want to offer. They also have
+ * `users` to manage these `items`.
+ */
 CREATE TABLE companies (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
@@ -16,6 +14,8 @@ INSERT INTO companies
     VALUES
     ('XR00TX', 'root company');
 
+/* user_roles set the right of `users`
+ */
 CREATE TABLE user_roles (
     id int(1) unsigned NOT NULL AUTO_INCREMENT,
     name varchar(16) NOT NULL,
@@ -31,6 +31,9 @@ INSERT INTO user_roles
     ('manager'),    -- rights for specific items or groups (allowed to add and remove items in groups)
     ('booker');     -- can only handle requests for specific items or groups
 
+/* users can login to the admin page and manage `items`, `requests`, etc.
+ * depending on their `user_roles`. They belong to a company.
+ */
 CREATE TABLE users (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
@@ -52,6 +55,14 @@ INSERT INTO users
     VALUES
     ('xr00tx', 'root user', 'root@localhost', 'admin', (SELECT id FROM companies WHERE uid = 'XR00TX'), (SELECT id FROM user_roles WHERE name = 'root'));
 
+/* item_groups grouping multiple `items` of the same type. If someone offers seats
+ * for a seminar, each seat would be an individual item but you won't offer each
+ * item but the `item_group` od these items. Or you have multiple scooters of certain
+ * types. You don't offer each individual scooter but all the different types of groups
+ * of scooters.
+ *  `item_groups` always belong to `companies`.
+ * I think, this free grouping is a main feature.
+ */
 CREATE TABLE item_groups (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
@@ -63,6 +74,10 @@ CREATE TABLE item_groups (
     FOREIGN KEY (company) REFERENCES companies (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+/* the individual items that are available. `items` always belong to `item_groups`
+ * if you don't use `item_groups`, there has to be a transparent dummy groups. So
+ * that there are fewer exceptions to look fo in the code and queries.
+ */
 CREATE TABLE items (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
@@ -74,6 +89,9 @@ CREATE TABLE items (
     FOREIGN KEY (item_group) REFERENCES item_groups (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+/* Which `users` of role 'booker' (in `user_roles`) have the right to manage
+ * requests/bookings for which `item_groups`.
+ */
 CREATE TABLE user_item_group (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     user int(4) unsigned NOT NULL,
@@ -85,6 +103,9 @@ CREATE TABLE user_item_group (
     FOREIGN KEY (item_group) REFERENCES item_groups (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+/* Which `users` of role 'booker' (in `user_roles`) have the right to manage
+ * requests/bookings for which `items`.
+ */
 CREATE TABLE user_item (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     user int(4) unsigned NOT NULL,
@@ -96,6 +117,8 @@ CREATE TABLE user_item (
     FOREIGN KEY (item) REFERENCES items (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+/* People that actually book/rent `items`
+ */
 CREATE TABLE customers (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
@@ -104,6 +127,10 @@ CREATE TABLE customers (
     UNIQUE KEY (uid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+/* `requests` of `customers` for `items` (the actual bookings). If a `customers`
+ * request `items_groups`, some code has to assign one available item of that group.
+ * TODO: How to request/book multiple items in the same request?
+ */
 CREATE TABLE requests (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
