@@ -18,7 +18,6 @@ exports.ensureValidYear = function (testYear) {
 
     yearInt = utils.ensureInt(testYear);
 
-    if (!yearInt > 0) throw new ValueError(`year ${yearInt} not > 0`);
     if (yearInt < minYear) throw new ValueError(`year ${yearInt} < ${minYear}`);
     if (yearInt > maxYear) throw new ValueError(`year ${yearInt} > ${minYear}`);
 
