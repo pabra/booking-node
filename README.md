@@ -45,7 +45,7 @@ Ever tried [httpie](https://github.com/jkbrzt/httpie)? Replace `http` with
 http localhost:3000
 
 # request item availbility
-http localhost:3000/item/abc123/2016-06
+http localhost:3000/item/item01/2016
 
 # post a booking
 http POST localhost:3000/item/abc123/2016-06-01..2016-06-30

@@ -2,6 +2,7 @@
 
 var db = require('./db'),
     pool = db.pool,
+    co = require('co'),
     errors = require('./errors'),
     ValueError = errors.ValueError,
     dateAndTime = require('./dateAndTime'),
@@ -24,18 +25,19 @@ exports.getIndex = function (req, res) {
     });
 };
 
-exports.getUnavailItemPeriod = function (req, res) {
-    var uid, yearMonth;
+exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
+    var uid, yearMonth, data, debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
         yearMonth = dateAndTime.ensureValidYearMonth(req.params.yearMonth);
-
-        res.send({item_uid: uid, year: yearMonth.year, month: yearMonth.month});
+        debug = {item_uid: uid, year: yearMonth.year, month: yearMonth.month};
+        data = yield db.getUnavailItemPeriod(uid, yearMonth.year, yearMonth.month);
+        res.send({data: data, debug: debug});
     } catch (e) {
         httpErrorHandler(e, res);
     }
-};
+});
 
 exports.getUnavailGroupPeriod = function (req, res) {
     var uid, yearMonth;
