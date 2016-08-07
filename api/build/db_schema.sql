@@ -127,15 +127,13 @@ CREATE TABLE customers (
     UNIQUE KEY (uid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-/* `requests` of `customers` for `items` (the actual bookings). If a `customers`
- * request `items_groups`, some code has to assign one available item of that group.
- * TODO: How to request/book multiple items in the same request?
+/* `requests` of `customers` (the actual bookings). If a `customers` requests
+ * `items_groups`, some code has to assign one/some available item(s) of that group.
  */
 CREATE TABLE requests (
     id int(4) unsigned NOT NULL AUTO_INCREMENT,
     uid varchar(6) NOT NULL,
     customer int(4) unsigned NOT NULL,
-    item int(4) unsigned DEFAULT NULL,
     date_from date NOT NULL,
     date_to date NOT NULL,
     request_time datetime NOT NULL,
@@ -143,8 +141,19 @@ CREATE TABLE requests (
     PRIMARY KEY (id),
     UNIQUE KEY (uid),
     KEY (customer),
+    FOREIGN KEY (customer) REFERENCES customers (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/* Which `items` are involved by `requests`
+ */
+CREATE TABLE request_items (
+    id int(4) unsigned NOT NULL AUTO_INCREMENT,
+    request int(4) unsigned NOT NULL,
+    item int(4) unsigned NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY (request, item),
     KEY (item),
-    FOREIGN KEY (customer) REFERENCES customers (id),
+    FOREIGN KEY (request) REFERENCES requests (id),
     FOREIGN KEY (item) REFERENCES items (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
