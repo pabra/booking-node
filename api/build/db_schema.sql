@@ -157,14 +157,38 @@ CREATE TABLE request_items (
     FOREIGN KEY (item) REFERENCES items (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-
 -- DEMO DATA
 INSERT INTO companies
     (uid, name)
     VALUES
-    ('AbCDeF', 'some company');
+    ('comp01', 'some company');
+
+INSERT INTO item_groups
+    (uid, name, company)
+    VALUES
+    ('grou01', 'transparant', (SELECT id FROM companies WHERE uid = 'comp01'));
+
+INSERT INTO items
+    (uid, name, item_group)
+    VALUES
+    ('item01', 'unique thing to rent', (SELECT id FROM item_groups WHERE uid = 'grou01'));
 
 INSERT INTO users
     (uid, name, email, pass, company, role)
     VALUES
-    ('abc123', 'ein user', 'user@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'AbCDeF'), (SELECT id FROM user_roles WHERE name = 'owner'));
+    ('user01', 'ein user', 'user@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'comp01'), (SELECT id FROM user_roles WHERE name = 'owner'));
+
+INSERT INTO customers
+    (uid, name)
+    VALUES
+    ('cust01', 'a regular customer');
+
+INSERT INTO requests
+    (uid, customer, date_from, date_to, request_time)
+    VALUES
+    ('requ01', (SELECT id FROM customers WHERE uid = 'cust01'), '2016-06-01', '2016-06-30', '2016-05-05');
+
+INSERT INTO request_items
+    (request, item)
+    VALUES
+    ((SELECT id FROM requests WHERE uid = 'requ01'), (SELECT id FROM items WHERE uid = 'item01'));
