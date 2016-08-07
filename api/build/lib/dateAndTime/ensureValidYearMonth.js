@@ -6,10 +6,10 @@ var errors = require('../errors'),
 
 
 /**
- * Parse and return year and month
+ * ensureValidYearMonthFn - Parse and return year and month
  *
- * testYearMonth is expected to be 4 digit year (eg '2016') or
- * year-month (eg '2016-06')
+ * @param {string} testYearMonth - 4 digit year (eg '2016') or year-month (eg '2016-06')
+ * @return {object} Object - object of `year` and `month` as integers (month can be null)
  */
 module.exports = function ensureValidYearMonthFn (testYearMonth) {
     var year, month, matchYearMonth, matchYear;
@@ -29,7 +29,7 @@ module.exports = function ensureValidYearMonthFn (testYearMonth) {
         year = helpers.ensureValidYear(matchYearMonth[1]);
         month = helpers.ensureValidMonth(matchYearMonth[2]);
     } else if (matchYear) {
-        year = helpers.ensureValidYear(matchYearMonth[0]);
+        year = helpers.ensureValidYear(matchYear[0]);
         month = null;
     }
 
