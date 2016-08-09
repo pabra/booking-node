@@ -1,7 +1,6 @@
 "use strict";
 
-var db = require('../db'),
-    co = require('co');
+var db = require('../db');
 
 /**
  * getUnavailItemPeriodFn - queries the databse for unavailbility of an item
@@ -11,8 +10,8 @@ var db = require('../db'),
  * @param  {number} month   - description
  * @return {type}           - description
  */
-module.exports = co.wrap(function * getUnavailItemPeriodFn (itemUid, year, month) {
-    var q, monthStart, monthEnd, dayStart, dayEnd, res;
+module.exports = function getUnavailItemPeriodFn (itemUid, year, month) {
+    var q, monthStart, monthEnd, dayStart, dayEnd;
 
     monthStart = month ? month : 1;
     monthEnd = month ? month : 12;
@@ -31,5 +30,5 @@ module.exports = co.wrap(function * getUnavailItemPeriodFn (itemUid, year, month
     ].join('\n');
 
     // TODO: use date from passed `year` and `month`
-    return yield db.queryPromise(q, [itemUid, new Date('2016-01-01'), new Date('2016-12-31')]);
-});
+    return db.queryPromise(q, [itemUid, new Date('2016-01-01'), new Date('2016-12-31')]);
+};
