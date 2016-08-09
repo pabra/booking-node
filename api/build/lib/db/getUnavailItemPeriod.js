@@ -1,6 +1,7 @@
 "use strict";
 
-var db = require('../db');
+var db = require('../db'),
+    dat = require('../dateAndTime');
 
 /**
  * getUnavailItemPeriodFn - queries the databse for unavailbility of an item
@@ -11,12 +12,12 @@ var db = require('../db');
  * @return {type}           - description
  */
 module.exports = function getUnavailItemPeriodFn (itemUid, year, month) {
-    var q, monthStart, monthEnd, dayStart, dayEnd;
+    var q, monthStart, monthEnd, dateStart, dateEnd;
 
     monthStart = month ? month : 1;
     monthEnd = month ? month : 12;
-    dayStart = 1;
-    dayEnd = 28; // TODO: fix
+    dateStart = dat.setFirstDayOfMonth(dat.mkDate(year, monthStart, 1));
+    dateEnd = dat.setLastDayOfMonth(dat.mkDate(year, monthEnd, 1));
     q = `
         SELECT     r.uid AS request_uid,
                    r.date_from,
@@ -25,10 +26,9 @@ module.exports = function getUnavailItemPeriodFn (itemUid, year, month) {
         LEFT JOIN  request_items ri ON ri.request = r.id
         LEFT JOIN  items i ON i.id = ri.item
         WHERE      i.uid = ?
-                   AND (date_to >= ?
-                        OR date_from <= ?)      -- TODO: get rid of the OR?
+                   AND date_to >= ?
+                   AND date_from <= ?
     `;
 
-    // TODO: use date from passed `year` and `month`
-    return db.queryPromise(q, [itemUid, new Date('2016-01-01'), new Date('2016-12-31')]);
+    return db.queryPromise(q, [itemUid, dateStart, dateEnd]);
 };
