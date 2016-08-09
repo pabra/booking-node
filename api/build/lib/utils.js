@@ -15,3 +15,8 @@ exports.ensureInt = function (testInt) {
 
     return sureInt;
 };
+
+exports.isInt = function isIntFn (testInt) {
+    return isNaN(testInt) ? false :
+           parseInt(testInt, 10) !== testInt ? false : true;
+};
