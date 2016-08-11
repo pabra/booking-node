@@ -171,7 +171,8 @@ INSERT INTO item_groups
 INSERT INTO items
     (uid, name, item_group)
     VALUES
-    ('item01', 'unique thing to rent', (SELECT id FROM item_groups WHERE uid = 'grou01'));
+    ('item01', 'unique thing to rent', (SELECT id FROM item_groups WHERE uid = 'grou01')),
+    ('item02', 'another thing', (SELECT id FROM item_groups WHERE uid = 'grou01'));
 
 INSERT INTO users
     (uid, name, email, pass, company, role)
@@ -181,14 +182,19 @@ INSERT INTO users
 INSERT INTO customers
     (uid, name)
     VALUES
-    ('cust01', 'a regular customer');
+    ('cust01', 'a regular customer'),
+    ('cust02', 'an unregular customer');
 
 INSERT INTO requests
     (uid, customer, date_from, date_to, request_time)
     VALUES
-    ('requ01', (SELECT id FROM customers WHERE uid = 'cust01'), '2016-06-01', '2016-06-30', '2016-05-05');
+    ('requ01', (SELECT id FROM customers WHERE uid = 'cust01'), '2016-06-15', '2016-07-03', '2016-05-05'),
+    ('requ02', (SELECT id FROM customers WHERE uid = 'cust02'), '2016-06-02', '2016-06-20', '2016-05-09'),
+    ('requ03', (SELECT id FROM customers WHERE uid = 'cust02'), '2016-05-21', '2016-06-01', '2016-05-04');
 
 INSERT INTO request_items
     (request, item)
     VALUES
-    ((SELECT id FROM requests WHERE uid = 'requ01'), (SELECT id FROM items WHERE uid = 'item01'));
+    ((SELECT id FROM requests WHERE uid = 'requ01'), (SELECT id FROM items WHERE uid = 'item01')),
+    ((SELECT id FROM requests WHERE uid = 'requ02'), (SELECT id FROM items WHERE uid = 'item02')),
+    ((SELECT id FROM requests WHERE uid = 'requ03'), (SELECT id FROM items WHERE uid = 'item01'));
