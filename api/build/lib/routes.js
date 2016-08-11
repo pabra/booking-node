@@ -39,18 +39,19 @@ exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
     }
 });
 
-exports.getUnavailGroupPeriod = function (req, res) {
-    var uid, yearMonth;
+exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
+    var uid, yearMonth, data, debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
         yearMonth = dateAndTime.ensureValidYearMonth(req.params.yearMonth);
-
-        res.send({group_uid: uid, year: yearMonth.year, month: yearMonth.month});
+        debug = {group_uid: uid, year: yearMonth.year, month: yearMonth.month};
+        data = yield db.getUnavailGroupPeriod(uid, yearMonth.year, yearMonth.month);
+        res.send({data: data, debug: debug});
     } catch (e) {
         httpErrorHandler(e, res);
     }
-};
+});
 
 exports.postItemBooking = function (req, res) {
     var uid, fromDate, toDate;
