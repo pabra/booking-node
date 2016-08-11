@@ -10,7 +10,8 @@ var mysql = require('mysql'),
         port            : process.env.MYSQL_PORT_3306_TCP_PORT || 3306,
         user            : process.env.MYSQL_ENV_MYSQL_USER || 'booking_node',
         password        : process.env.MYSQL_ENV_MYSQL_PASSWORD || 'root',
-        database        : database
+        database        : database,
+        timezone        : 'Europe/Berlin'
     },
     pool = mysql.createPool(connOpt),
     getMultiConn,
