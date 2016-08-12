@@ -1,6 +1,6 @@
 "use strict";
 
-var db = require('../db'),
+var queryPromise = require('./_queryPromise'),
     dat = require('../dateAndTime');
 
 /**
@@ -32,5 +32,5 @@ module.exports = function getUnavailItemPeriodFn (itemUid, year, month) {
                     r.date_to ASC
     `;
 
-    return db.queryPromise(q, [itemUid, dateStart, dateEnd]);
+    return queryPromise(q, [itemUid, dateStart, dateEnd]);
 };

@@ -6,6 +6,5 @@ var connect = require('./connect'),
 exports.pool = connect.pool;
 exports.getUnavailItemPeriod = require('./getUnavailItemPeriod');
 exports.getUnavailGroupPeriod = require('./getUnavailGroupPeriod');
-exports.queryPromise = require('./queryPromise');
 
 loadSchema.loadSchema();
