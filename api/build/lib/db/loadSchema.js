@@ -1,8 +1,7 @@
 "use strict";
 
 var fs = require('fs'),
-    _debug = require('debug'),
-    info = _debug('app:info'),
+    logger = require('../logger'),
     connect = require('./connect'),
     database = connect.database,
     loadSchema;
@@ -21,10 +20,6 @@ loadSchema = function () {
     };
 
     getSchema = function () {
-        // fs.readdir('./', function (err, files) {
-        //     if (err) throw err;
-        //     console.log(files);
-        // }) ;
         fs.readFile('./db_schema.sql', 'utf-8', function (err, data) {
             if (err) throw err;
 
@@ -40,18 +35,17 @@ loadSchema = function () {
                  CREATE DATABASE ${database};
                  USE ${database}`;
 
-        info('multiquery:', q);
+        logger.info('multiquery:', q);
         conn.query(q, function(err) { responseHandler(err, applySchema); });
     };
 
     applySchema = function () {
-        info('apply Schema ', conn.threadId);
+        logger.info('apply Schema ', conn.threadId);
         conn.query(schemaStr, function (err) { responseHandler(err, close); });
     };
 
     close = function () {
-        info('close connection', conn.threadId);
-        // conn.release();
+        logger.info('close connection', conn.threadId);
         conn.end();
     };
 

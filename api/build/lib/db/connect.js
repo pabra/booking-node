@@ -15,19 +15,15 @@ var mysql = require('mysql'),
     },
     pool = mysql.createPool(connOpt),
     getMultiConn,
-    _debug = require('debug'),
-    info = _debug('app:info'),
-    warn = _debug('app:warn');
+    logger = require('../logger');
 
 pool.on('connection', function (connection) {
-    // connection.query('SET SESSION auto_increment_increment=1')
-    // debug('made new connection: ' + connection.threadId);
-    info('made new connection: ' + connection.threadId);
+    logger.info('made new connection: ' + connection.threadId);
+    logger.debug('connections in pool:', connection.config.pool._allConnections.length);
 });
 
 pool.on('enqueue', function () {
-    // debug('Waiting for available connection slot');
-    warn('Waiting for available connection slot');
+    logger.warn('Waiting for available connection slot');
 });
 
 getMultiConn = function () {
@@ -35,7 +31,7 @@ getMultiConn = function () {
         conn = mysql.createConnection(opts);
 
     conn.connect();
-    info('made new multi statement connection: ' + conn.threadId);
+    logger.info('made new multi statement connection: ' + conn.threadId);
 
     return conn;
 };

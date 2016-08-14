@@ -70,7 +70,6 @@ exports.postItemBooking = co.wrap(function * (req, res) {
 
         res.send({data: data, debug: debug});
     } catch(e) {
-        debug('routes err', e);
         httpErrorHandler(e, res);
     }
 });

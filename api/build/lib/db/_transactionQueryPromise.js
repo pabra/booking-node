@@ -1,14 +1,13 @@
 "use strict";
 
-var _debug = require('debug'),
-    debug = _debug('app:debug');
+var logger = require('../logger');
 
 module.exports = function (conn, query, args) {
     return new Promise(function(resolve, reject) {
         conn.query(query, args, function (err, rows, fields) {
-            debug('result of transaction query promise, rows', rows);
+            logger.debug('result of transaction query promise, rows', rows);
             if (err) {
-                debug('err in transaction query promise:', err.message);
+                logger.debug('err in transaction query promise:', err.message);
                 reject(err);
             }
             resolve(rows);

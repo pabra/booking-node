@@ -3,19 +3,18 @@
 var db = require('../db'),
     pool = db.pool,
     co = require('co'),
-    _debug = require('debug'),
-    debug = _debug('app:debug'),
+    logger = require('../logger'),
     transErrFn;
 
 
 transErrFn = function (conn, err) {
-    debug('will rollback transaction');
+    logger.debug('will rollback transaction');
     conn.rollback(function() {
-        debug('transaction rolled back');
+        logger.debug('transaction rolled back');
         conn.destroy();
+        // conn.release();
         // throw err;
     });
-    debugger;
     return {errno: err.errno,
             code: err.code,
             message: err.message,
@@ -32,24 +31,24 @@ module.exports = function (txFn) {
 
             conn.beginTransaction(co(function * (err) {
                 if (err) throw err;
-                debug('begin transaction');
+                logger.debug('begin transaction');
 
                 try {
-                    debug('call txFn');
+                    logger.debug('call txFn');
                     res = yield txFn(conn);
-                    debug('out txFn res:', res);
+                    logger.debug('out txFn res:', res);
                 } catch (err) {
-                    debug('caught error outside txFn');
+                    logger.debug('caught error outside txFn');
                     transactionFailed = true;
                     resolve(transErrFn(conn, err));
                 }
 
                 if (!transactionFailed) {
-                    debug('before commit, res:', res);
+                    logger.debug('before commit, res:', res);
                     conn.commit(function(err) {
                         if (err) transErrFn(conn, err);
                         else {
-                            debug('transaction committed, res:', res);
+                            logger.debug('transaction committed, res:', res);
                             conn.release();
                             resolve(res);
                         }

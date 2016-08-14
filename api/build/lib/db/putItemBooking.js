@@ -1,8 +1,7 @@
 "use strict";
 
 var co = require('co'),
-    _debug = require('debug'),
-    debug = _debug('app:debug'),
+    logger = require('../logger'),
     transactionPromise = require('./_transactionPromise'),
     transactionQueryPromise = require('./_transactionQueryPromise');
 
@@ -10,14 +9,14 @@ var co = require('co'),
 module.exports = co.wrap(function * putItemBookingFn(itemUid, fromDate, toDate) {
     var txFn, txRes;
 
-    debug('define txFn');
+    logger.debug('define txFn');
     txFn = co.wrap(function * (conn) {
         var q, result;
 
         q = 'SELECT NOW()';
-        debug('in txFn q1:', q);
+        logger.debug('in txFn q1:', q);
         result = yield transactionQueryPromise(conn, q);
-        debug('in txFn res1:', result);
+        logger.debug('in txFn res1:', result);
 
         q = `
             INSERT INTO requests
@@ -25,9 +24,9 @@ module.exports = co.wrap(function * putItemBookingFn(itemUid, fromDate, toDate) 
             VALUES
             (?, 2, ?, ?, NOW())
         `;
-        debug('in txFn q2:', q);
+        logger.debug('in txFn q2:', q);
         result = yield transactionQueryPromise(conn, q, ['requ09', fromDate, toDate]);
-        debug('in txFn res2:', result);
+        logger.debug('in txFn res2:', result);
         // throw new Error('test');
 
         return result;

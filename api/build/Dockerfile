@@ -14,7 +14,6 @@ RUN echo 'Europe/Berlin' > /etc/timezone \
 
 
 WORKDIR /usr/src/app
-USER app
 
 ADD package.json .
 
@@ -23,5 +22,7 @@ RUN npm install
 EXPOSE 3000
 
 ADD . .
+RUN chown -R app:app log
+USER app
 
 CMD ["npm", "start"]
