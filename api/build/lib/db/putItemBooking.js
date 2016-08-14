@@ -6,8 +6,8 @@ var co = require('co'),
     transactionQueryPromise = require('./_transactionQueryPromise');
 
 
-module.exports = co.wrap(function * putItemBookingFn(itemUid, fromDate, toDate) {
-    var txFn, txRes;
+module.exports = function putItemBookingFn (itemUid, fromDate, toDate) {
+    var txFn;
 
     logger.debug('define txFn');
     txFn = co.wrap(function * (conn) {
@@ -32,7 +32,5 @@ module.exports = co.wrap(function * putItemBookingFn(itemUid, fromDate, toDate) 
         return result;
     });
 
-    // resolve transaction promise before return
-    txRes =  yield transactionPromise(txFn);
-    return txRes;
-});
+    return transactionPromise(txFn);
+};
