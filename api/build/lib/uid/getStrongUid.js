@@ -3,35 +3,35 @@
 var crypto = require('crypto'),
     // removed from alphabet: aeiouAEIOU 01l
     alphabet = 'bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ23456789',
-    maxUidLen = 200,
-    bytesLen = 255,
-    maxTries = 25,
-    getStrongUid;
+    expAlpha = new RegExp('[^' + alphabet + ']', 'g'),
+    maxUidLen = 256,
+    maxTries = 25;
 
 
-getStrongUid = function (len, callback, i) {
-    if (len < 2) throw new Error(`len '${len}' < 2`);
-    if (len > maxUidLen) throw new Error(`len '${len}' > ${maxUidLen}`);
+module.exports = function (len) {
+    return new Promise(function(resolve, reject) {
+        if (len < 2) reject(new Error(`len '${len}' < 2`));
+        if (len > maxUidLen) reject(new Error(`len '${len}' > ${maxUidLen}`));
 
-    i = i ? i + 1 : 1;
+        var expMatch = new RegExp('[^0-9].{' + (len - 1) + '}'),
+            i = 0,
+            mkRnd, rnd;
 
-    if (i >= maxTries) throw new Error(`could not get uid of length ${len} within ${i} tries`);
+        mkRnd = function () {
+            if (++i >= maxTries) reject(new Error(`could not get uid of length ${len} within ${i} tries`));
 
-    crypto.randomBytes(bytesLen, function(err, buf) {
-        if (err) throw err;
+            crypto.randomBytes(len * 2, function(err, buf) {
+                if (err) reject(err);
 
-        var expAlpha = new RegExp('[^' + alphabet + ']', 'g'),
-            expMatch = new RegExp('[^0-9].{' + (len - 1) + '}'),
-            rnd = buf.toString('base64')
-                     .replace(expAlpha, '')
-                     .match(expMatch);
+                rnd = buf.toString('base64')
+                         .replace(expAlpha, '')
+                         .match(expMatch);
 
-        if (rnd) {
-            callback(rnd[0]);
-        } else {
-            getStrongUid(len, callback, i);
-        }
+                if (rnd) resolve(rnd[0]);
+                else mkRnd;
+            });
+        };
+
+        mkRnd();
     });
 };
-
-module.exports = getStrongUid;

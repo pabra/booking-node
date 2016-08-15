@@ -3,6 +3,7 @@
 var db = require('./db'),
     pool = db.pool,
     co = require('co'),
+    logger = require('./logger'),
     errors = require('./errors'),
     ValueError = errors.ValueError,
     dateAndTime = require('./dateAndTime'),
@@ -10,11 +11,15 @@ var db = require('./db'),
     httpErrorHandler;
 
 
-httpErrorHandler = function (e, res) {
-    if (e instanceof ValueError) {
-        res.status(400).send(e);
+httpErrorHandler = function (err, res) {
+    if (err instanceof ValueError) {
+        res.status(400).send(err);
     } else {
-        throw e;
+        res.status(400).send({errno: err.errno,
+                              code: err.code,
+                              message: err.message,
+                              name: err.name});
+        logger.error(err);
     }
 };
 
@@ -74,10 +79,15 @@ exports.postItemBooking = co.wrap(function * (req, res) {
     }
 });
 
-exports.auth = function (req, res) {
-    var email = req.params.email;
+exports.auth = co.wrap(function * (req, res) {
+    var email = req.params.email,
+        token;
 
-    uidLib.getStrongUid(128, function (token) {
+    try {
+        token = yield uidLib.getStrongUid(128);
+
         res.send({email:email, pass:'xxx', token: token});
-    });
-};
+    } catch (e){
+        httpErrorHandler(e, res);
+    }
+});
