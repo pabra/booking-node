@@ -28,7 +28,7 @@ module.exports = function (len) {
                          .match(expMatch);
 
                 if (rnd) resolve(rnd[0]);
-                else mkRnd;
+                else mkRnd();
             });
         };
 
