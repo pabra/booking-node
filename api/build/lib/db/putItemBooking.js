@@ -1,40 +1,31 @@
 "use strict";
 
 var co = require('co'),
-    uid = require('../uid'),
     transactionPromise = require('./_transactionPromise'),
     transactionQueryPromise = require('./_transactionQueryPromise'),
-    maxTries = 25;
+    uidInsertHelper = require('./_uidInsertHelper');
 
 
 module.exports = function putItemBookingFn (itemUid, fromDate, toDate) {
     var txFn;
 
     txFn = co.wrap(function * (conn) {
-        var q, result, newReqUid, insErr, i;
+        var q, args, result;
 
         q = 'SELECT NOW()';
         result = yield transactionQueryPromise(conn, q);
 
         q = `
             INSERT INTO requests
-            (uid, customer, date_from, date_to, request_time)
-            VALUES
-            (?, 2, ?, ?, NOW())
+            SET request_time = NOW(),
+                ?
         `;
-        i = 0;
-        while (i++ === 0 || (insErr && 'ER_DUP_ENTRY' === insErr.code)) {
-            if (i >= maxTries) throw new Error(`too many retries (${i}) for inserting new request`);
+        args = {uid: null,
+                customer: 2,
+                date_from: fromDate,
+                date_to: toDate};
 
-            newReqUid = yield uid.getStrongUid(6);
-
-            try {
-                result = yield transactionQueryPromise(conn, q, [newReqUid, fromDate, toDate]);
-            } catch (err) {
-                if ('ER_DUP_ENTRY' === err.code) insErr = err;
-                else throw err;
-            }
-        }
+        result = uidInsertHelper(q, args, conn);
 
         return result;
     });
