@@ -6,16 +6,15 @@ var db = require('../db'),
     transErrFn;
 
 
-transErrFn = function (conn, err) {
+transErrFn = function (conn, err, reject) {
     conn.rollback(function() {
         conn.destroy();
         // conn.release();
-        // throw err;
+        reject({errno: err.errno,
+                code: err.code,
+                message: err.message,
+                name: err.name});
     });
-    return {errno: err.errno,
-            code: err.code,
-            message: err.message,
-            name: err.name};
 };
 
 module.exports = function (txFn) {
@@ -23,27 +22,31 @@ module.exports = function (txFn) {
         pool.getConnection(function(err, conn) {
             var res;
 
-            if (err) throw err;
+            if (err) {
+                reject(err);
+                return;
+            }
 
             conn.beginTransaction(co(function * (err) {
-                if (err) throw err;
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
                 try {
                     res = yield txFn(conn);
                 } catch (err) {
-                    transactionFailed = true;
-                    resolve(transErrFn(conn, err));
+                    transErrFn(conn, err, reject);
+                    return;
                 }
 
-                if (!transactionFailed) {
-                    conn.commit(function(err) {
-                        if (err) transErrFn(conn, err);
-                        else {
-                            conn.release();
-                            resolve(res);
-                        }
-                    });
-                }
+                conn.commit(function(err) {
+                    if (err) transErrFn(conn, err, reject);
+                    else {
+                        conn.release();
+                        resolve(res);
+                    }
+                });
             }));
         });
     });
