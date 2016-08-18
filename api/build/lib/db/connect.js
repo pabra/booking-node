@@ -24,6 +24,7 @@ pool.on('connection', function (connection) {
 
 pool.on('enqueue', function () {
     logger.warn('Waiting for available connection slot');
+    logger.debug('connections in pool:', this._allConnections.length);
 });
 
 getMultiConn = function () {
