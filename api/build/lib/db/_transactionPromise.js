@@ -3,11 +3,13 @@
 var db = require('../db'),
     pool = db.pool,
     co = require('co'),
+    logger = require('../logger'),
     transErrFn;
 
 
 transErrFn = function (conn, err, reject) {
     conn.rollback(function() {
+        logger.debug('rolled back transaction');
         conn.destroy();
         // conn.release();
         reject({errno: err.errno,
