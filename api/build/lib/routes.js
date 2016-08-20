@@ -61,17 +61,26 @@ exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
 });
 
 exports.postItemBooking = co.wrap(function * (req, res) {
-    var uid, fromDate, toDate, data, debug;
+    var uid, fromDate, toDate, customerName, passObject, data, debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
         fromDate = dateAndTime.ensureValidIsoDate(req.params.from);
         toDate = dateAndTime.ensureValidIsoDate(req.params.to);
+        customerName = req.body.name;
+        passObject = {item: uid,
+                      fromDate: fromDate,
+                      toDate: toDate,
+                      customerName: customerName};
+
         if (toDate < fromDate) {
             throw new ValueError(`${toDate} < ${fromDate}`);
         }
-        debug = {uid: uid, fromDate: fromDate, toDate: toDate};
-        data = yield db.putItemBooking(uid, fromDate, toDate);
+        if (!customerName) {
+            throw new ValueError(`missing name`);
+        }
+        debug = {uid: uid, fromDate: fromDate, toDate: toDate, customerName: customerName};
+        data = yield db.putItemBooking(passObject);
 
         res.send({data: data, debug: debug});
     } catch(e) {

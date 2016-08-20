@@ -3,17 +3,37 @@
 var co = require('co'),
     transactionPromise = require('./_transactionPromise'),
     transactionQueryPromise = require('./_transactionQueryPromise'),
-    uidInsertHelper = require('./_uidInsertHelper');
+    uidInsertHelper = require('./_uidInsertHelper'),
+    errors = require('../errors');
 
 
-module.exports = function putItemBookingFn (itemUid, fromDate, toDate) {
+module.exports = function putItemBookingFn (obj) {
+    // var itemUid, fromDate, toDate, customerName, item
     var txFn;
 
     txFn = co.wrap(function * (conn) {
         var q, args, result;
 
-        q = 'SELECT NOW()';
-        result = yield transactionQueryPromise(conn, q);
+        q = `
+            SELECT  id
+            FROM    items
+            WHERE   ?
+        `;
+        args = {uid: obj.item};
+        result = yield transactionQueryPromise(conn, q, args);
+
+        if (result.length === 0) throw new errors.ValueError(`unknown item uid '${obj.item}'`);
+
+        obj.itemId = result[0].id;
+
+        q = `
+            INSERT INTO customers
+            SET ?
+        `;
+        args = {uid: null,
+                name: obj.customerName};
+
+        result = yield uidInsertHelper(q, args, conn);
 
         q = `
             INSERT INTO requests
@@ -21,11 +41,21 @@ module.exports = function putItemBookingFn (itemUid, fromDate, toDate) {
                 ?
         `;
         args = {uid: null,
-                customer: 2,
-                date_from: fromDate,
-                date_to: toDate};
+                customer: result.insertId,
+                date_from: obj.fromDate,
+                date_to: obj.toDate};
 
-        result = uidInsertHelper(q, args, conn);
+        result = yield uidInsertHelper(q, args, conn);
+
+        q = `
+            INSERT INTO request_items
+            SET         request = ?,
+                        item = ?
+        `;
+        args = {request: result.insertId,
+                item: obj.itemId};
+        args = [result.insertId, obj.itemId];
+        result = yield transactionQueryPromise(conn, q, args);
 
         return result;
     });

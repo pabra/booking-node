@@ -48,7 +48,7 @@ http localhost:3000
 http localhost:3000/item/item01/2016
 
 # post a booking
-http POST localhost:3000/item/abc123/2016-06-01..2016-06-30
+http -v POST localhost:3000/item/item01/2016-06-01..2016-06-30 name='customer name'
 
 # invalid requests
 http localhost:3000/abc/def
