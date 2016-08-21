@@ -50,6 +50,9 @@ http localhost:3000/item/item01/2016
 # post a booking
 http -v POST localhost:3000/item/item01/2016-06-01..2016-06-30 name='customer name'
 
+# create new account (company with user of role "owner")
+http -v POST localhost:3000/new_account company_name='my new company' user_name='the new user' user_email=user@example.com user_pass=secret
+
 # invalid requests
 http localhost:3000/abc/def
 http localhost:3000/item/abc_def/2016

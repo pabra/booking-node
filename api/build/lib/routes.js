@@ -88,6 +88,30 @@ exports.postItemBooking = co.wrap(function * (req, res) {
     }
 });
 
+exports.newAccount = co.wrap(function * (req, res) {
+    var companyName, userName, userEmail, userPass, passObject, data;
+
+    try {
+        companyName = req.body.company_name;
+        userName = req.body.user_name;
+        userEmail = req.body.user_email;
+        userPass = req.body.user_pass;
+        passObject = {companyName: companyName,
+                      userName: userName,
+                      userEmail: userEmail,
+                      userPass: userPass};
+        if (!companyName) throw new ValueError(`missing company name`);
+        if (!userName) throw new ValueError(`missing user name`);
+        if (!userEmail) throw new ValueError(`missing user email`);
+        if (!userPass) throw new ValueError(`missing user password`);
+        data = yield db.newAccount(passObject);
+
+        res.send({data: data, debug: passObject});
+    } catch(e) {
+        httpErrorHandler(e, res);
+    }
+});
+
 exports.auth = co.wrap(function * (req, res) {
     var email = req.params.email,
         token;

@@ -7,5 +7,6 @@ exports.pool = connect.pool;
 exports.getUnavailItemPeriod = require('./getUnavailItemPeriod');
 exports.getUnavailGroupPeriod = require('./getUnavailGroupPeriod');
 exports.putItemBooking = require('./putItemBooking');
+exports.newAccount = require('./newAccount');
 
 loadSchema.loadSchema();
