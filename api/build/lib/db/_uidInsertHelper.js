@@ -4,6 +4,7 @@ var co = require('co'),
     uid = require('../uid'),
     queryPromise = require('./_queryPromise'),
     transactionQueryPromise = require('./_transactionQueryPromise'),
+    dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/,
     maxTries = 25;
 
 
@@ -20,7 +21,7 @@ module.exports = co.wrap(function * (query, args, connection) {
             if (!connection) result = yield queryPromise(query, args);
             else result = yield transactionQueryPromise(connection, query, args);
         } catch (err) {
-            if ('ER_DUP_ENTRY' === err.code) insErr = err;
+            if ('ER_DUP_ENTRY' === err.code && err.message.match(dupUidRe)) insErr = err;
             else throw err;
         }
     }
