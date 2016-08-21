@@ -44,6 +44,7 @@ CREATE TABLE users (
     role int(1) unsigned NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY (uid),
+    UNIQUE KEY (email),
     KEY (company),
     KEY (role),
     FOREIGN KEY (company) REFERENCES companies (id),
