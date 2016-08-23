@@ -113,13 +113,20 @@ exports.newAccount = co.wrap(function * (req, res) {
 });
 
 exports.auth = co.wrap(function * (req, res) {
-    var email = req.params.email,
-        token;
+    var email = req.body.email,
+        pass = req.body.pass,
+        debug = {email: email, pass: pass},
+        data = {};
 
     try {
-        token = yield uidLib.getStrongUid(128);
+        if (!email) throw new ValueError('missing email');
+        if (!pass) throw new ValueError('missing pass');
+        data.auth = yield db.userAuth(email, pass);
 
-        res.send({email:email, pass:'xxx', token: token});
+        if (data.auth) data.token = yield uidLib.getStrongUid(128);
+        else data.token = null;
+
+        res.send({data: data, debug: debug});
     } catch (e){
         httpErrorHandler(e, res);
     }

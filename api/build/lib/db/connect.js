@@ -11,7 +11,7 @@ var mysql = require('mysql'),
         user            : process.env.MYSQL_ENV_MYSQL_USER || 'booking_node',
         password        : process.env.MYSQL_ENV_MYSQL_PASSWORD || 'root',
         database        : database,
-        // debug           : true,
+        // debug           : ['ComQueryPacket', 'RowDataPacket'],
         timezone        : 'Europe/Berlin'
     },
     pool = mysql.createPool(connOpt),

@@ -8,5 +8,6 @@ exports.getUnavailItemPeriod = require('./getUnavailItemPeriod');
 exports.getUnavailGroupPeriod = require('./getUnavailGroupPeriod');
 exports.putItemBooking = require('./putItemBooking');
 exports.newAccount = require('./newAccount');
+exports.userAuth = require('./userAuth');
 
 loadSchema.loadSchema();
