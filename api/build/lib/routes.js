@@ -121,10 +121,12 @@ exports.auth = co.wrap(function * (req, res) {
     try {
         if (!email) throw new ValueError('missing email');
         if (!pass) throw new ValueError('missing pass');
-        data.auth = yield db.userAuth(email, pass);
+        data.uid = yield db.userAuth(email, pass);
 
-        if (data.auth) data.token = yield uidLib.getStrongUid(128);
-        else data.token = null;
+        if (data.uid) {
+            req.token.payload.uid = data.uid;
+            data.token = req.token.encode();
+        }
 
         res.send({data: data, debug: debug});
     } catch (e){

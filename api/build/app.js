@@ -3,11 +3,12 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
+    token = require('./lib/token'),
     logger = require('./lib/logger'),
     routes = require('./lib/routes');
 
-
 app.use(bodyParser.json());
+app.use(token);
 
 app.get('/', routes.getIndex);
 app.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);

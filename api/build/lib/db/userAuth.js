@@ -8,7 +8,7 @@ module.exports = co.wrap(function * (email, pass) {
     var q, args, res;
 
     q = `
-        SELECT  1 AS auth
+        SELECT  uid
         FROM    users
         WHERE   email = ?
                 AND pass = ?
@@ -17,7 +17,7 @@ module.exports = co.wrap(function * (email, pass) {
 
     try {
         res = yield queryPromise(q, args);
-        return res.length === 1 && res[0].auth;
+        return res.length === 1 ? res[0].uid : null;
     } catch (err) {
         throw err;
     }
