@@ -4,6 +4,14 @@ booking-node
 turn any website into a book-anything managing page
 
 
+You can overwrite values in those `vars.cfg` files by writing a `vars.local.cfg`
+file with your own values. You may like to set `DEVEL=1` while developing.  In
+case of the `api` and `db` containers, you'll just stay connected to the stdout
+of these containers.  
+But the `manage` container will than watch for changes of your html/js/css files
+and will rebuild the bundles.
+
+
 DB
 --
 
@@ -62,3 +70,15 @@ http localhost:3000/item/abc_def/2016
 http localhost:3000/item/abc123/2010
 http POST localhost:3000/item/abc123/2016-07-01..2016-06-30
 ```
+
+
+single page manage server
+-------------------------
+
+run:
+```bash
+./manage/build_container.sh && ./manage/detach_container.sh
+```
+
+Now go to [http://localhost]().  
+You can login using `user@localhost` and `pass`.

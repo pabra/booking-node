@@ -45,7 +45,7 @@ if [ "$LOCAL_PORT" ] && [ "$LOCAL_PORT" -gt 0 ]; then
     )
 fi
 
-if [ -n "$DEVEL" ]; then
+if [[ $DEVEL ]] && [[ $DEVEL != 0 ]]; then
     $DOCKER run \
         -it \
         --rm \
