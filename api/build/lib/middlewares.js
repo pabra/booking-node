@@ -3,7 +3,7 @@
 var jwt = require('jwt-simple'),
     logger = require('./logger');
 
-module.exports = function (req, res, next) {
+exports.token = function (req, res, next) {
     var secret = 'MySuperSecretSuperLongSuperString';
 
     logger.debug('req.body.token', req.body.token);
@@ -24,5 +24,17 @@ module.exports = function (req, res, next) {
         }
     }
     logger.debug('req.token', req.token);
+
+    next();
+};
+
+exports.crossDomain = function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Origin', req.headers['origin']);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, application/json, text/plain');
+    // res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Max-Age', 24 * 60 * 60);
+
     next();
 };

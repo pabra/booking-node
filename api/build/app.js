@@ -3,12 +3,20 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    token = require('./lib/token'),
+    midWare = require('./lib/middlewares'),
+    cors = require('cors'),
     logger = require('./lib/logger'),
-    routes = require('./lib/routes');
+    routes = require('./lib/routes'),
+    corsOptions = {
+        // origin: true,
+        methods: ['POST'],
+        allowedHeaders: ['Content-Type', 'X-Requested-With', 'application/json', 'text/plain']
+    };
 
-app.use(bodyParser.json());
-app.use(token);
+app.use(bodyParser.json({type: ['json', 'text']}));
+app.use(midWare.token);
+// app.use(midWare.crossDomain);
+app.use(cors(corsOptions));
 
 app.get('/', routes.getIndex);
 app.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
