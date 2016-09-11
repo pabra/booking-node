@@ -115,7 +115,7 @@ exports.newAccount = co.wrap(function * (req, res) {
 exports.auth = co.wrap(function * (req, res) {
     var email = req.body.email,
         pass = req.body.pass,
-        debug = {email: email, pass: pass},
+        // debug = {email: email, pass: pass},
         data = {};
 
     try {
@@ -128,7 +128,8 @@ exports.auth = co.wrap(function * (req, res) {
             data.token = req.token.encode();
         }
 
-        res.send({data: data, debug: debug});
+        // res.send({data: data, debug: debug});
+        res.send(data);
     } catch (e){
         httpErrorHandler(e, res);
     }
