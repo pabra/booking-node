@@ -1,0 +1,21 @@
+{
+  "name": "build",
+  "version": "0.0.1",
+  "description": "Web based mamangement interface to API",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack ./src_www/js/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pabra",
+  "license": "ISC",
+  "dependencies": {
+    "css-loader": "^0.15.6",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.3",
+    "knockout": "=3.4.0",
+    "style-loader": "^0.12.4",
+    "webpack": "^1.13.2",
+    "xhr": "^2.2.2"
+  }
+}
