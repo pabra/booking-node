@@ -39,7 +39,7 @@ exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
         debug = {item_uid: uid, year: yearMonth.year, month: yearMonth.month};
         data = yield db.getUnavailItemPeriod(uid, yearMonth.year, yearMonth.month);
 
-        res.send({data: data, debug: debug});
+        res.send({data, debug});
     } catch (e) {
         httpErrorHandler(e, res);
     }
@@ -54,7 +54,7 @@ exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
         debug = {group_uid: uid, year: yearMonth.year, month: yearMonth.month};
         data = yield db.getUnavailGroupPeriod(uid, yearMonth.year, yearMonth.month);
 
-        res.send({data: data, debug: debug});
+        res.send({data, debug});
     } catch (e) {
         httpErrorHandler(e, res);
     }
@@ -68,10 +68,7 @@ exports.postItemBooking = co.wrap(function * (req, res) {
         fromDate = dateAndTime.ensureValidIsoDate(req.params.from);
         toDate = dateAndTime.ensureValidIsoDate(req.params.to);
         customerName = req.body.name;
-        passObject = {item: uid,
-                      fromDate: fromDate,
-                      toDate: toDate,
-                      customerName: customerName};
+        passObject = {item: uid, fromDate, toDate, customerName};
 
         if (toDate < fromDate) {
             throw new ValueError(`${toDate} < ${fromDate}`);
@@ -79,10 +76,10 @@ exports.postItemBooking = co.wrap(function * (req, res) {
         if (!customerName) {
             throw new ValueError(`missing name`);
         }
-        debug = {uid: uid, fromDate: fromDate, toDate: toDate, customerName: customerName};
+        debug = {uid, fromDate, toDate, customerName};
         data = yield db.putItemBooking(passObject);
 
-        res.send({data: data, debug: debug});
+        res.send({data, debug});
     } catch(e) {
         httpErrorHandler(e, res);
     }
@@ -96,17 +93,14 @@ exports.newAccount = co.wrap(function * (req, res) {
         userName = req.body.user_name;
         userEmail = req.body.user_email;
         userPass = req.body.user_pass;
-        passObject = {companyName: companyName,
-                      userName: userName,
-                      userEmail: userEmail,
-                      userPass: userPass};
+        passObject = {companyName, userName, userEmail, userPass};
         if (!companyName) throw new ValueError(`missing company name`);
         if (!userName) throw new ValueError(`missing user name`);
         if (!userEmail) throw new ValueError(`missing user email`);
         if (!userPass) throw new ValueError(`missing user password`);
         data = yield db.newAccount(passObject);
 
-        res.send({data: data, debug: passObject});
+        res.send({data, debug: passObject});
     } catch(e) {
         httpErrorHandler(e, res);
     }
@@ -115,7 +109,6 @@ exports.newAccount = co.wrap(function * (req, res) {
 exports.auth = co.wrap(function * (req, res) {
     var email = req.body.email,
         pass = req.body.pass,
-        // debug = {email: email, pass: pass},
         data = {};
 
     try {
@@ -128,7 +121,6 @@ exports.auth = co.wrap(function * (req, res) {
             data.token = req.token.encode();
         }
 
-        // res.send({data: data, debug: debug});
         res.send(data);
     } catch (e){
         httpErrorHandler(e, res);

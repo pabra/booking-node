@@ -33,5 +33,5 @@ module.exports = function ensureValidYearMonthFn (testYearMonth) {
         month = null;
     }
 
-    return {year: year, month: month};
+    return {year, month};
 };
