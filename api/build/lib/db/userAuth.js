@@ -15,10 +15,6 @@ module.exports = co.wrap(function * (email, pass) {
     `;
     args = [email, pass];
 
-    try {
-        res = yield queryPromise(q, args);
-        return res.length === 1 ? res[0].uid : null;
-    } catch (err) {
-        throw err;
-    }
+    res = yield queryPromise(q, args);
+    return res.length === 1 ? res[0].uid : null;
 });
