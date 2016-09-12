@@ -1,27 +1,25 @@
 "use strict";
 
-var db = require('./db'),
-    pool = db.pool,
-    co = require('co'),
-    logger = require('./logger'),
-    errors = require('./errors'),
-    ValueError = errors.ValueError,
-    dateAndTime = require('./dateAndTime'),
-    uidLib = require('./uid'),
-    httpErrorHandler;
+const   db = require('./db'),
+        pool = db.pool,
+        co = require('co'),
+        logger = require('./logger'),
+        errors = require('./errors'),
+        ValueError = errors.ValueError,
+        dateAndTime = require('./dateAndTime'),
+        uidLib = require('./uid'),
+        httpErrorHandler = function (err, res) {
+            if (err instanceof ValueError) {
+                res.status(400).send(err);
+            } else {
+                res.status(400).send({errno: err.errno,
+                                      code: err.code,
+                                      message: err.message,
+                                      name: err.name});
+                logger.error(err);
+            }
+        };
 
-
-httpErrorHandler = function (err, res) {
-    if (err instanceof ValueError) {
-        res.status(400).send(err);
-    } else {
-        res.status(400).send({errno: err.errno,
-                              code: err.code,
-                              message: err.message,
-                              name: err.name});
-        logger.error(err);
-    }
-};
 
 exports.getIndex = function (req, res) {
     pool.query('SELECT NOW() AS now', function (err, rows, fields) {
@@ -31,7 +29,7 @@ exports.getIndex = function (req, res) {
 };
 
 exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
-    var uid, yearMonth, data, debug;
+    let uid, yearMonth, data, debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
@@ -46,7 +44,7 @@ exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
 });
 
 exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
-    var uid, yearMonth, data, debug;
+    let uid, yearMonth, data, debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
@@ -61,7 +59,7 @@ exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
 });
 
 exports.postItemBooking = co.wrap(function * (req, res) {
-    var uid, fromDate, toDate, customerName, passObject, data, debug;
+    let uid, fromDate, toDate, customerName, passObject, data, debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
@@ -86,7 +84,7 @@ exports.postItemBooking = co.wrap(function * (req, res) {
 });
 
 exports.newAccount = co.wrap(function * (req, res) {
-    var companyName, userName, userEmail, userPass, passObject, data;
+    let companyName, userName, userEmail, userPass, passObject, data;
 
     try {
         companyName = req.body.company_name;
@@ -107,9 +105,9 @@ exports.newAccount = co.wrap(function * (req, res) {
 });
 
 exports.auth = co.wrap(function * (req, res) {
-    var email = req.body.email,
-        pass = req.body.pass,
-        data = {};
+    const   email = req.body.email,
+            pass = req.body.pass,
+            data = {};
 
     try {
         if (!email) throw new ValueError('missing email');

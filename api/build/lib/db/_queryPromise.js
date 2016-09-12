@@ -1,7 +1,7 @@
 "use strict";
 
-var db = require('../db'),
-    pool = db.pool;
+const   db = require('../db'),
+        pool = db.pool;
 
 module.exports = function (query, args) {
     return new Promise(function(resolve, reject) {

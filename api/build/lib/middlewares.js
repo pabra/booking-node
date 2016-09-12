@@ -1,10 +1,10 @@
 "use strict";
 
-var jwt = require('jwt-simple'),
-    logger = require('./logger');
+const   jwt = require('jwt-simple'),
+        logger = require('./logger');
 
 exports.token = function (req, res, next) {
-    var secret = 'MySuperSecretSuperLongSuperString';
+    const secret = 'MySuperSecretSuperLongSuperString';
 
     logger.debug('req.body.token', req.body.token);
     req.token = {

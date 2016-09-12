@@ -5,7 +5,7 @@
  * https://gist.github.com/justmoon/15511f92e5216fa2624b
  */
 
-var util = require('util');
+const util = require('util');
 
 function ValueError (message, extra) {
   Error.captureStackTrace(this, this.constructor);

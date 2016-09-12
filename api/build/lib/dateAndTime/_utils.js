@@ -1,9 +1,10 @@
 "use strict";
 
-var errors = require('../errors'),
-    ValueError = errors.ValueError,
-    utils = require('../utils'),
-    mkDate, setFirstDayOfMonth, setLastDayOfMonth;
+const   errors = require('../errors'),
+        ValueError = errors.ValueError,
+        utils = require('../utils');
+
+let mkDate, setFirstDayOfMonth, setLastDayOfMonth;
 
 
 /**
@@ -15,7 +16,7 @@ var errors = require('../errors'),
  * @return {object}         - new Date() object
  */
 mkDate = function mkDateFn (year, month, day) {
-    var newDate;
+    let newDate;
 
     if (!utils.isInt(year) || !utils.isInt(month) || !utils.isInt(day)) {
         throw new ValueError(`year, month, day must be integer: ${year}, ${month}, ${day}`);
@@ -51,7 +52,7 @@ setFirstDayOfMonth = function setFirstDayOfMonthFn (dObj) {
 };
 
 setLastDayOfMonth = function setLastDayOfMonthFn (dObj) {
-    var fullDay = 24 * 60 * 60 * 1000;
+    const fullDay = 24 * 60 * 60 * 1000;
 
     if (!dObj instanceof Date) {
         throw new ValueError(`not an instance of Date: ${dObj}`);

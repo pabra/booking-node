@@ -1,15 +1,15 @@
 "use strict";
 
-var co = require('co'),
-    uid = require('../uid'),
-    queryPromise = require('./_queryPromise'),
-    transactionQueryPromise = require('./_transactionQueryPromise'),
-    dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/,
-    maxTries = 25;
+const   co = require('co'),
+        uid = require('../uid'),
+        queryPromise = require('./_queryPromise'),
+        transactionQueryPromise = require('./_transactionQueryPromise'),
+        dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/,
+        maxTries = 25;
 
 
 module.exports = co.wrap(function * (query, args, connection) {
-    var i = 0,
+    let i = 0,
         result, insErr;
 
     while (i++ === 0 || (insErr && 'ER_DUP_ENTRY' === insErr.code)) {

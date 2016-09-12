@@ -1,28 +1,24 @@
 "use strict";
 
-var db = require('../db'),
-    pool = db.pool,
-    co = require('co'),
-    logger = require('../logger'),
-    transErrFn;
-
-
-transErrFn = function (conn, err, reject) {
-    conn.rollback(function() {
-        logger.debug('rolled back transaction');
-        conn.destroy();
-        // conn.release();
-        reject({errno: err.errno,
-                code: err.code,
-                message: err.message,
-                name: err.name});
-    });
-};
+const   db = require('../db'),
+        pool = db.pool,
+        co = require('co'),
+        logger = require('../logger'),
+        transErrFn = function (conn, err, reject) {
+            conn.rollback(function() {
+                logger.debug('rolled back transaction');
+                conn.destroy();
+                reject({errno: err.errno,
+                        code: err.code,
+                        message: err.message,
+                        name: err.name});
+            });
+        };
 
 module.exports = function (txFn) {
     return new Promise(function(resolve, reject) {
         pool.getConnection(function(err, conn) {
-            var res;
+            let res;
 
             if (err) {
                 reject(err);

@@ -1,7 +1,7 @@
 "use strict";
 
-var winston = require('winston'),
-    logDir = __dirname + '/../log';
+const   winston = require('winston'),
+        logDir = __dirname + '/../log';
 
 module.exports = new (winston.Logger)({
     transports: [

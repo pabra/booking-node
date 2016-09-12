@@ -1,11 +1,11 @@
 "use strict";
 
-var errors = require('./errors'),
-    ValueError = errors.ValueError;
+const   errors = require('./errors'),
+        ValueError = errors.ValueError;
 
 
 exports.ensureInt = function (testInt) {
-    var sureInt;
+    let sureInt;
 
     if (['string', 'number'].indexOf(typeof testInt) > -1) {
         // a float is typeof 'number' too, so always parse as int

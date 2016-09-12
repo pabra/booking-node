@@ -1,11 +1,11 @@
 "use strict";
 
-var uidLib = require('./'),
-    errors = require('../errors'),
-    ValueError = errors.ValueError;
+const   uidLib = require('./'),
+        errors = require('../errors'),
+        ValueError = errors.ValueError;
 
 module.exports = function validUidFn (testUid) {
-    var expression = uidLib.expression;
+    const expression = uidLib.expression;
 
 
     if ('string' !== typeof testUid) {

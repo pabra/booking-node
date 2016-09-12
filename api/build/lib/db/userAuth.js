@@ -1,11 +1,11 @@
 "use strict";
 
-var co = require('co'),
-    queryPromise = require('./_queryPromise');
+const   co = require('co'),
+        queryPromise = require('./_queryPromise');
 
 
 module.exports = co.wrap(function * (email, pass) {
-    var q, args, res;
+    let q, args, res;
 
     q = `
         SELECT  uid

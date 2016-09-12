@@ -1,11 +1,11 @@
 "use strict";
 
-var crypto = require('crypto'),
-    // removed from alphabet: aeiouAEIOU 01l
-    alphabet = 'bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ23456789',
-    expAlpha = new RegExp('[^' + alphabet + ']', 'g'),
-    maxUidLen = 256,
-    maxTries = 25;
+const   crypto = require('crypto'),
+        // removed from alphabet: aeiouAEIOU 01l
+        alphabet = 'bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ23456789',
+        expAlpha = new RegExp('[^' + alphabet + ']', 'g'),
+        maxUidLen = 256,
+        maxTries = 25;
 
 
 module.exports = function (len) {
@@ -13,8 +13,8 @@ module.exports = function (len) {
         if (len < 2) reject(new Error(`len '${len}' < 2`));
         if (len > maxUidLen) reject(new Error(`len '${len}' > ${maxUidLen}`));
 
-        var expMatch = new RegExp('[^0-9].{' + (len - 1) + '}'),
-            i = 0,
+        const expMatch = new RegExp('[^0-9].{' + (len - 1) + '}');
+        let i = 0,
             mkRnd, rnd;
 
         mkRnd = function () {

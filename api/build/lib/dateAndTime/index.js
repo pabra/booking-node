@@ -1,6 +1,6 @@
 "use strict";
 
-var _utils = require('./_utils');
+const _utils = require('./_utils');
 
 exports.ensureValidYearMonth = require('./ensureValidYearMonth');
 exports.ensureValidIsoDate = require('./ensureValidIsoDate');

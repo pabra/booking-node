@@ -1,13 +1,13 @@
 "use strict";
 
-var fs = require('fs'),
-    logger = require('../logger'),
-    connect = require('./connect'),
-    database = connect.database,
-    loadSchema;
+const   fs = require('fs'),
+        logger = require('../logger'),
+        connect = require('./connect'),
+        database = connect.database;
 
-loadSchema = function () {
-    var conn = connect.getMultiConn(),
+
+exports.loadSchema = function () {
+    let conn = connect.getMultiConn(),
         schemaStr, responseHandler, getSchema,
         emptyDb, applySchema, close;
 
@@ -31,9 +31,9 @@ loadSchema = function () {
     };
 
     emptyDb = function () {
-        var q = `DROP DATABASE IF EXISTS ${database};
-                 CREATE DATABASE ${database};
-                 USE ${database}`;
+        const q = `DROP DATABASE IF EXISTS ${database};
+                   CREATE DATABASE ${database};
+                   USE ${database}`;
 
         logger.info('multiquery:', q);
         conn.query(q, function(err) { responseHandler(err, applySchema); });
@@ -51,5 +51,3 @@ loadSchema = function () {
 
     getSchema();
 };
-
-exports.loadSchema = loadSchema;

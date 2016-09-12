@@ -1,13 +1,13 @@
 "use strict";
 
-var errors = require('../errors'),
-    ValueError = errors.ValueError,
-    helpers = require('./_helpers.js'),
-    utils = require('../utils');
+const   errors = require('../errors'),
+        ValueError = errors.ValueError,
+        helpers = require('./_helpers.js'),
+        utils = require('../utils');
 
 
 module.exports = function ensureValidIsoDate (testIsoDate) {
-    var year, month, day, matchIsoDate, newDate;
+    let year, month, day, matchIsoDate, newDate;
 
     if ('string' !== typeof testIsoDate) {
         throw new ValueError(`'${testIsoDate}' is not a string`);
