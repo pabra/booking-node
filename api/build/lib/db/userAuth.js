@@ -1,7 +1,7 @@
 "use strict";
 
 const   co = require('co'),
-        queryPromise = require('./_queryPromise');
+        queryPromise = require('./internal/queryPromise');
 
 
 module.exports = co.wrap(function * (email, pass) {

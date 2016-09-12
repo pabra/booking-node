@@ -1,8 +1,8 @@
 "use strict";
 
-const   errors = require('../errors'),
+const   errors = require('../../errors'),
         ValueError = errors.ValueError,
-        utils = require('../utils');
+        utils = require('../../utils');
 
 let mkDate, setFirstDayOfMonth, setLastDayOfMonth;
 

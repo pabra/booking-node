@@ -2,7 +2,7 @@
 
 const   errors = require('../errors'),
         ValueError = errors.ValueError,
-        helpers = require('./_helpers.js'),
+        helpers = require('./internal/helpers.js'),
         utils = require('../utils');
 
 

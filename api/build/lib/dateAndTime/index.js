@@ -1,9 +1,9 @@
 "use strict";
 
-const _utils = require('./_utils');
+const internUtils = require('./internal/utils');
 
 exports.ensureValidYearMonth = require('./ensureValidYearMonth');
 exports.ensureValidIsoDate = require('./ensureValidIsoDate');
-exports.mkDate = _utils.mkDate;
-exports.setFirstDayOfMonth = _utils.setFirstDayOfMonth;
-exports.setLastDayOfMonth = _utils.setLastDayOfMonth;
+exports.mkDate = internUtils.mkDate;
+exports.setFirstDayOfMonth = internUtils.setFirstDayOfMonth;
+exports.setLastDayOfMonth = internUtils.setLastDayOfMonth;

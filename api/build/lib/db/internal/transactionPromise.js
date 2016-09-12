@@ -1,9 +1,9 @@
 "use strict";
 
-const   db = require('../db'),
+const   db = require('../../db'),
         pool = db.pool,
         co = require('co'),
-        logger = require('../logger'),
+        logger = require('../../logger'),
         transErrFn = function (conn, err, reject) {
             conn.rollback(function() {
                 logger.debug('rolled back transaction');

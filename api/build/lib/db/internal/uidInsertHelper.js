@@ -1,9 +1,9 @@
 "use strict";
 
 const   co = require('co'),
-        uid = require('../uid'),
-        queryPromise = require('./_queryPromise'),
-        transactionQueryPromise = require('./_transactionQueryPromise'),
+        uid = require('../../uid'),
+        queryPromise = require('./queryPromise'),
+        transactionQueryPromise = require('./transactionQueryPromise'),
         dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/,
         maxTries = 25;
 

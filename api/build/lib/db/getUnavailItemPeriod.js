@@ -1,6 +1,6 @@
 "use strict";
 
-const   queryPromise = require('./_queryPromise'),
+const   queryPromise = require('./internal/queryPromise'),
         dat = require('../dateAndTime');
 
 /**

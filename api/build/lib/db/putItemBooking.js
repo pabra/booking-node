@@ -1,9 +1,9 @@
 "use strict";
 
 const   co = require('co'),
-        transactionPromise = require('./_transactionPromise'),
-        transactionQueryPromise = require('./_transactionQueryPromise'),
-        uidInsertHelper = require('./_uidInsertHelper'),
+        transactionPromise = require('./internal/transactionPromise'),
+        transactionQueryPromise = require('./internal/transactionQueryPromise'),
+        uidInsertHelper = require('./internal/uidInsertHelper'),
         errors = require('../errors');
 
 
