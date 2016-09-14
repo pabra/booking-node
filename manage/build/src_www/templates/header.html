@@ -1,13 +1,11 @@
-<header>
-    Hello <span data-bind="text: uid"></span>
-    <nav>
-        <ul data-bind="foreach: pages">
-            <li>
-                <a href="#"
-                   data-bind="click: $parent.select_page,
-                              text: name,
-                              css: {active: $parent.page().id == id}"></a>
-            </li>
-        </ul>
-    </nav>
-</header>
+Hello <span data-bind="text: uid"></span>
+<nav>
+    <ul data-bind="foreach: pages">
+        <li>
+            <a href="#"
+               data-bind="click: $parent.select_page,
+                          text: name,
+                          css: {active: $parent.page().id == id}"></a>
+        </li>
+    </ul>
+</nav>
