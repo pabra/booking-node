@@ -1,9 +1,8 @@
-<section data-bind="if: page().id == 0">
+<section data-bind="if: page().name == 'logout'" data-name="logout">
     <h1 data-bind="text: page().name"></h1>
     <a href="#" data-bind="click: logout">logout</a>
 </section>
-<section data-bind="if: page().id == 1">
-    <h1 data-bind="text: page().name"></h1>
+<section data-bind="if: page().name == 'items'" data-name="items">
 </section>
 <section data-bind="if: page().id == 2">
     <h1 data-bind="text: page().name"></h1>

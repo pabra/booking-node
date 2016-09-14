@@ -1,0 +1,11 @@
+<a href="#" data-bind="click: {{ modelName }}.getItems">get items</a>
+<ul data-bind="foreach: { data: {{ modelName }}.items, as: 'group' }">
+    <li>
+        group: <span data-bind="text: group.data.group_name"></span>
+        <ul data-bind="foreach: { data: group.items, as: 'item' }">
+            <li>
+                item: <span data-bind="text: item.item_name"></span>
+            </li>
+        </ul>
+    </li>
+</ul>
