@@ -28,6 +28,19 @@ exports.token = function (req, res, next) {
     next();
 };
 
+exports.validToken = function (req, res, next) {
+    if (req.token.payload.uid) {
+        logger.debug('valid uid found', req.token.payload.uid);
+        next();
+    } else {
+        logger.debug('need valid token');
+        res.status(403).send({errno: 403,
+                              code: 403,
+                              message: 'valid token required',
+                              name: 'Forbidden'});
+    }
+};
+
 exports.crossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     // res.header('Access-Control-Allow-Origin', req.headers['origin']);
