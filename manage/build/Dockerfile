@@ -22,7 +22,8 @@ RUN npm install \
 ADD . ./
 
 RUN cp nginx.conf /etc/nginx/nginx.conf \
-    && echo "alias ll='ls -lahF'" >> ~/.bashrc
+    && echo "alias ll='ls -lahF'" >> ~/.bashrc \
+    && /data/bin/deploy_page.sh
 
 ENTRYPOINT ["/data/bin/docker-entrypoint.sh"]
 

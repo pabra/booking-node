@@ -13,7 +13,7 @@ fi
 echo 'copy *.html files'
 cp ./src_www/*.html ./srv_www/
 
-echo 'running webpack $WEBPACK_ARGS'
+echo "running webpack $WEBPACK_ARGS"
 ./node_modules/.bin/webpack $WEBPACK_ARGS ./src_www/js/index.js
 
 
@@ -23,6 +23,7 @@ find ./srv_www \
     -name '*.js' \
     -o -name '*.html' \
     -o -name '*.css' | while read -r f; do
-        echo "$f > $f.gz";
-        gzip -9 -c $f > $f.gz;
+        printf '%s (%sk)  ->  ' "$f" "$(du -k $f | cut -f1)"
+        gzip -9 -c $f > $f.gz
+        printf '%s (%sk)\n' "${f}.gz" "$(du -k ${f}.gz | cut -f1)"
 done
