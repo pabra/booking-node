@@ -124,3 +124,16 @@ exports.auth = co.wrap(function * (req, res) {
         httpErrorHandler(e, res);
     }
 });
+
+exports.getItems = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+    let items;
+
+    try {
+        items = yield db.getItemsForUser(token.uid);
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+
+    res.send(items);
+});

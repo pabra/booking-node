@@ -30,3 +30,6 @@ app.post('/new_account', routes.newAccount);
 app.listen(3000, function () {
     logger.info('Example app listening on port 3000!');
 });
+
+// token required
+app.post('/getItems', midWare.validToken, routes.getItems);
