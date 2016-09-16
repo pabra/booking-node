@@ -4,7 +4,7 @@
         "browser": true,
         "commonjs": true,
         # "node": true,
-        # "es6": true,
+        "es6": true,
     },
     "globals": {
         /**
@@ -13,6 +13,10 @@
          */
         "$": false,
         "jQuery": false,
+    },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
     },
     "rules": {
         /**

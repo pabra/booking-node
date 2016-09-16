@@ -1,4 +1,3 @@
-'use strict';
 module.exports = function (el, eventName, handler) {
     if (el.addEventListener) {
         el.addEventListener(eventName, handler);

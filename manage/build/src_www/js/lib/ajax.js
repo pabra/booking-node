@@ -1,4 +1,3 @@
-'use strict';
 // module.exports = function (method, ressource, txData, callback) {
 //     var noop = require('./noop'),
 //         xhr = new XMLHttpRequest();

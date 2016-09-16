@@ -1,9 +1,6 @@
-'use strict';
-
-var domReady = require('./lib/domReady'),
-    on = require('./lib/eventOn'),
-    // ajax = require('./lib/ajax'),
-    xhr = require('xhr');
+import on from './lib/eventOn';
+import domReady from './lib/domReady';
+import xhr from 'xhr';
 
 domReady(function () {
     var win = window,
@@ -56,7 +53,7 @@ domReady(function () {
                     msgEl.textContent = 'login failed';
                 }
             });
-            return false;
+            return undefined;
         });
         win.console.log('show login form');
     } else {

@@ -1,20 +1,16 @@
-'use strict';
-
-var xhr = require('xhr'),
-    ko = require('knockout'),
-    win = window;
+import xhr from 'xhr';
+import ko from 'knockout';
 
 ko.components.register('manage-items', {
     template: require('html!./template.html'),
     viewModel: function (params) {
-        var self = this,
-            groupItems;
+        const win = window;
 
         if (!params.tokenObservable) throw new Error('missing "tokenObservable" in params');
 
-        self.items = ko.observableArray();
+        this.items = ko.observableArray();
 
-        self.getItems = function () {
+        this.getItems = () => {
             xhr({
                 method: 'post',
                 url: 'http://localhost:3000/getItems',
@@ -24,21 +20,21 @@ ko.components.register('manage-items', {
                     // Firefox won't send cross domain data as type json
                     'Content-Type': 'text/plain',
                 },
-            }, function (err, res, body) {
+            }, (err, res, body) => {
                 if (err) {
                     win.console.log('err', err);
                     return;
                 }
                 win.console.log('body', body);
-                self.items(groupItems(body));
+                this.items(groupItems(body));
             });
         };
 
-        groupItems = function (items) {
-            var grouped = {},
-                asArray = [];
+        let groupItems = (items) => {
+            let grouped = {};
+            let asArray = [];
 
-            ko.utils.arrayForEach(items, function (row) {
+            ko.utils.arrayForEach(items, (row) => {
                 if (!grouped.hasOwnProperty(row.group_uid)) {
                     grouped[row.group_uid] = {
                         items: [],
@@ -48,7 +44,7 @@ ko.components.register('manage-items', {
                 grouped[row.group_uid].items.push(row);
             });
 
-            ko.utils.objectForEach(grouped, function (k, v) {
+            ko.utils.objectForEach(grouped, (k, v) => {
                 asArray.push(v);
             });
 

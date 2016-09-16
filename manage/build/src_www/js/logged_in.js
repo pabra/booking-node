@@ -1,11 +1,9 @@
-'use strict';
+import ko from 'knockout';
 
 module.exports = function (containerElement, headerElement) {
-    var win = window,
-        ko = require('knockout'),
-        mainHtml = require('html!../templates/logged_in.html'),
-        headHtml = require('html!../templates/header.html'),
-        MainModel, mainModel;
+    const win = window;
+    const mainHtml = require('html!../templates/logged_in.html');
+    const headHtml = require('html!../templates/header.html');
 
     require('../css/logged_in.css');
     require('./components/manage_items');
@@ -13,21 +11,20 @@ module.exports = function (containerElement, headerElement) {
     headerElement.innerHTML = headHtml;
     containerElement.innerHTML = mainHtml;
 
-    MainModel = function () {
-        var self = this,
-            pages = [
-                {name: 'items', id: 1},
-                {name: 'member area 2', id: 2},
-                {name: 'logout', id: 0},
-            ];
+    const MainModel = function () {
+        const pages = [
+            {name: 'items', id: 1},
+            {name: 'member area 2', id: 2},
+            {name: 'logout', id: 0},
+        ];
 
-        self.pages = ko.observableArray(pages);
-        self.page = ko.observable(pages[0]);
-        self.token = ko.observable(sessionStorage.getItem('token'));
-        self.uid = sessionStorage.getItem('uid');
+        this.pages = ko.observableArray(pages);
+        this.page = ko.observable(pages[0]);
+        this.token = ko.observable(sessionStorage.getItem('token'));
+        this.uid = sessionStorage.getItem('uid');
 
-        self.token.subscribe(function (newVal) {
-            var current = sessionStorage.getItem('token');
+        this.token.subscribe((newVal) => {
+            const current = sessionStorage.getItem('token');
 
             if (newVal === undefined) {
                 sessionStorage.removeItem('token');
@@ -41,17 +38,12 @@ module.exports = function (containerElement, headerElement) {
             }
         });
 
-        self.select_page = function (page) {
-            self.page(page);
-        };
-
-        self.logout = function () {
-            self.token(undefined);
-        };
+        this.select_page = page => this.page(page);
+        this.logout = () => this.token(undefined);
     };
 
     ko.options.deferUpdates = true;
-    mainModel = new MainModel();
+    const mainModel = new MainModel();
     ko.applyBindings(mainModel);
     win.debug_model = mainModel;
     win.ko = ko;

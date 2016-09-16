@@ -1,8 +1,6 @@
-
-'use strict';
 module.exports = function (fn) {
-    var doc = document,
-        documentReadyState = doc.readyState;
+    const doc = document;
+    const documentReadyState = doc.readyState;
 
     if (documentReadyState !== 'loading') {
         fn();
