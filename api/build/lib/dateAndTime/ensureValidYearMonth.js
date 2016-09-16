@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const   errors = require('../errors'),
-        ValueError = errors.ValueError,
-        helpers = require('./internal/helpers.js');
+const errors = require('../errors');
+const ValueError = errors.ValueError;
+const helpers = require('./internal/helpers.js');
 
 
 /**
@@ -12,7 +12,10 @@ const   errors = require('../errors'),
  * @return {object} Object - object of `year` and `month` as integers (month can be null)
  */
 module.exports = function ensureValidYearMonthFn (testYearMonth) {
-    let year, month, matchYearMonth, matchYear;
+    let year;
+    let month;
+    let matchYearMonth;
+    let matchYear;
 
     if ('string' !== typeof testYearMonth) {
         throw new ValueError(`'${testYearMonth}' is not a string`);

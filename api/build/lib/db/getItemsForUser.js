@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const queryPromise = require('./internal/queryPromise');
 

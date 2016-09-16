@@ -1,10 +1,12 @@
-"use strict";
+'use strict';
 
-const   errors = require('../../errors'),
-        ValueError = errors.ValueError,
-        utils = require('../../utils');
+const errors = require('../../errors');
+const ValueError = errors.ValueError;
+const utils = require('../../utils');
 
-let mkDate, setFirstDayOfMonth, setLastDayOfMonth;
+let mkDate;
+let setFirstDayOfMonth;
+let setLastDayOfMonth;
 
 
 /**

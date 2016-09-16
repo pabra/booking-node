@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const   errors = require('./errors'),
-        ValueError = errors.ValueError;
+const errors = require('./errors');
+const ValueError = errors.ValueError;
 
 
 exports.ensureInt = function (testInt) {

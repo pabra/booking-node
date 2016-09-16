@@ -1,33 +1,33 @@
-"use strict";
+'use strict';
 
-const   db = require('../../db'),
-        pool = db.pool,
-        co = require('co'),
-        logger = require('../../logger'),
-        transErrFn = function (conn, err, reject) {
-            conn.rollback(function() {
-                logger.debug('rolled back transaction');
-                conn.destroy();
-                reject({errno: err.errno,
-                        code: err.code,
-                        message: err.message,
-                        name: err.name});
-            });
-        };
+const db = require('../../db');
+const pool = db.pool;
+const co = require('co');
+const logger = require('../../logger');
+const transErrFn = function (conn, err, reject) {
+    conn.rollback(function () {
+        logger.debug('rolled back transaction');
+        conn.destroy();
+        reject({errno: err.errno,
+                code: err.code,
+                message: err.message,
+                name: err.name});
+    });
+};
 
 module.exports = function (txFn) {
-    return new Promise(function(resolve, reject) {
-        pool.getConnection(function(err, conn) {
+    return new Promise(function (resolve, reject) {
+        pool.getConnection(function (connectionError, conn) {
             let res;
 
-            if (err) {
-                reject(err);
+            if (connectionError) {
+                reject(connectionError);
                 return;
             }
 
-            conn.beginTransaction(co(function * (err) {
-                if (err) {
-                    reject(err);
+            conn.beginTransaction(co(function * (beginError) {
+                if (beginError) {
+                    reject(beginError);
                     return;
                 }
 
@@ -38,8 +38,8 @@ module.exports = function (txFn) {
                     return;
                 }
 
-                conn.commit(function(err) {
-                    if (err) transErrFn(conn, err, reject);
+                conn.commit(function (commitError) {
+                    if (commitError) transErrFn(conn, commitError, reject);
                     else {
                         conn.release();
                         resolve(res);

@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 var domReady = require('./lib/domReady'),
     on = require('./lib/eventOn'),
     // ajax = require('./lib/ajax'),
     xhr = require('xhr');
 
-domReady(function() {
+domReady(function () {
     var win = window,
         doc = win.document,
-        token  = sessionStorage.getItem('token'),
+        token = sessionStorage.getItem('token'),
         loginForm = doc.querySelector('form[name=login]'),
         msgEl = loginForm.querySelector('span.msg'),
         mainEl = doc.querySelector('main'),
@@ -17,7 +17,7 @@ domReady(function() {
     require('../css/main.css');
 
     if (!token) {
-        on(loginForm, 'submit', function(ev) {
+        on(loginForm, 'submit', function (ev) {
             ev.preventDefault();
             var emailEl = loginForm.elements.username,
                 passEl = loginForm.elements.password;
@@ -36,8 +36,8 @@ domReady(function() {
                 responseType: 'json',
                 headers: {
                     // Firefox won't send cross domain data as type json
-                    "Content-Type": "text/plain"
-                }
+                    'Content-Type': 'text/plain',
+                },
             }, function (err, res, body) {
                 if (err) {
                     win.console.log('err', err);
@@ -56,11 +56,12 @@ domReady(function() {
                     msgEl.textContent = 'login failed';
                 }
             });
+            return false;
         });
         win.console.log('show login form');
     } else {
         loginForm.parentNode.removeChild(loginForm);
-        require(['./logged_in'], function(fn) {
+        require(['./logged_in'], function (fn) {
             fn(mainEl, headerEl);
         });
     }

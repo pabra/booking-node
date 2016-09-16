@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 module.exports = function (containerElement, headerElement) {
     var win = window,
@@ -18,7 +18,7 @@ module.exports = function (containerElement, headerElement) {
             pages = [
                 {name: 'items', id: 1},
                 {name: 'member area 2', id: 2},
-                {name: 'logout', id: 0}
+                {name: 'logout', id: 0},
             ];
 
         self.pages = ko.observableArray(pages);
@@ -41,7 +41,7 @@ module.exports = function (containerElement, headerElement) {
             }
         });
 
-        self.select_page = function(page) {
+        self.select_page = function (page) {
             self.page(page);
         };
 
@@ -53,5 +53,6 @@ module.exports = function (containerElement, headerElement) {
     ko.options.deferUpdates = true;
     mainModel = new MainModel();
     ko.applyBindings(mainModel);
-    win['debug_model'] = mainModel;
+    win.debug_model = mainModel;
+    win.ko = ko;
 };

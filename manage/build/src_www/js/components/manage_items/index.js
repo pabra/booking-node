@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var xhr = require('xhr'),
     ko = require('knockout'),
@@ -22,8 +22,8 @@ ko.components.register('manage-items', {
                 responseType: 'json',
                 headers: {
                     // Firefox won't send cross domain data as type json
-                    "Content-Type": "text/plain"
-                }
+                    'Content-Type': 'text/plain',
+                },
             }, function (err, res, body) {
                 if (err) {
                     win.console.log('err', err);
@@ -42,7 +42,7 @@ ko.components.register('manage-items', {
                 if (!grouped.hasOwnProperty(row.group_uid)) {
                     grouped[row.group_uid] = {
                         items: [],
-                        data: row
+                        data: row,
                     };
                 }
                 grouped[row.group_uid].items.push(row);
@@ -54,5 +54,5 @@ ko.components.register('manage-items', {
 
             return asArray;
         };
-    }
+    },
 });

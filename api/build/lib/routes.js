@@ -1,24 +1,24 @@
-"use strict";
+'use strict';
 
-const   db = require('./db'),
-        pool = db.pool,
-        co = require('co'),
-        logger = require('./logger'),
-        errors = require('./errors'),
-        ValueError = errors.ValueError,
-        dateAndTime = require('./dateAndTime'),
-        uidLib = require('./uid'),
-        httpErrorHandler = function (err, res) {
-            if (err instanceof ValueError) {
-                res.status(400).send(err);
-            } else {
-                res.status(400).send({errno: err.errno,
-                                      code: err.code,
-                                      message: err.message,
-                                      name: err.name});
-                logger.error(err);
-            }
-        };
+const db = require('./db');
+const pool = db.pool;
+const co = require('co');
+const logger = require('./logger');
+const errors = require('./errors');
+const ValueError = errors.ValueError;
+const dateAndTime = require('./dateAndTime');
+const uidLib = require('./uid');
+const httpErrorHandler = function (err, res) {
+    if (err instanceof ValueError) {
+        res.status(400).send(err);
+    } else {
+        res.status(400).send({errno: err.errno,
+                              code: err.code,
+                              message: err.message,
+                              name: err.name});
+        logger.error(err);
+    }
+};
 
 
 exports.getIndex = function (req, res) {
@@ -29,7 +29,10 @@ exports.getIndex = function (req, res) {
 };
 
 exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
-    let uid, yearMonth, data, debug;
+    let uid;
+    let yearMonth;
+    let data;
+    let debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
@@ -44,7 +47,10 @@ exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
 });
 
 exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
-    let uid, yearMonth, data, debug;
+    let uid;
+    let yearMonth;
+    let data;
+    let debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
@@ -59,7 +65,13 @@ exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
 });
 
 exports.postItemBooking = co.wrap(function * (req, res) {
-    let uid, fromDate, toDate, customerName, passObject, data, debug;
+    let uid;
+    let fromDate;
+    let toDate;
+    let customerName;
+    let passObject;
+    let data;
+    let debug;
 
     try {
         uid = uidLib.ensureValidUid(req.params.uid);
@@ -72,19 +84,24 @@ exports.postItemBooking = co.wrap(function * (req, res) {
             throw new ValueError(`${toDate} < ${fromDate}`);
         }
         if (!customerName) {
-            throw new ValueError(`missing name`);
+            throw new ValueError('missing name');
         }
         debug = {uid, fromDate, toDate, customerName};
         data = yield db.putItemBooking(passObject);
 
         res.send({data, debug});
-    } catch(e) {
+    } catch (e) {
         httpErrorHandler(e, res);
     }
 });
 
 exports.newAccount = co.wrap(function * (req, res) {
-    let companyName, userName, userEmail, userPass, passObject, data;
+    let companyName;
+    let userName;
+    let userEmail;
+    let userPass;
+    let passObject;
+    let data;
 
     try {
         companyName = req.body.company_name;
@@ -92,22 +109,22 @@ exports.newAccount = co.wrap(function * (req, res) {
         userEmail = req.body.user_email;
         userPass = req.body.user_pass;
         passObject = {companyName, userName, userEmail, userPass};
-        if (!companyName) throw new ValueError(`missing company name`);
-        if (!userName) throw new ValueError(`missing user name`);
-        if (!userEmail) throw new ValueError(`missing user email`);
-        if (!userPass) throw new ValueError(`missing user password`);
+        if (!companyName) throw new ValueError('missing company name');
+        if (!userName) throw new ValueError('missing user name');
+        if (!userEmail) throw new ValueError('missing user email');
+        if (!userPass) throw new ValueError('missing user password');
         data = yield db.newAccount(passObject);
 
         res.send({data, debug: passObject});
-    } catch(e) {
+    } catch (e) {
         httpErrorHandler(e, res);
     }
 });
 
 exports.auth = co.wrap(function * (req, res) {
-    const   email = req.body.email,
-            pass = req.body.pass,
-            data = {};
+    const email = req.body.email;
+    const pass = req.body.pass;
+    const data = {};
 
     try {
         if (!email) throw new ValueError('missing email');
@@ -120,7 +137,7 @@ exports.auth = co.wrap(function * (req, res) {
         }
 
         res.send(data);
-    } catch (e){
+    } catch (e) {
         httpErrorHandler(e, res);
     }
 });

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const internUtils = require('./internal/utils');
 

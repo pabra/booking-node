@@ -1,16 +1,18 @@
-"use strict";
+'use strict';
 
-const   co = require('co'),
-        transactionPromise = require('./internal/transactionPromise'),
-        transactionQueryPromise = require('./internal/transactionQueryPromise'),
-        uidInsertHelper = require('./internal/uidInsertHelper'),
-        errors = require('../errors');
+const co = require('co');
+const transactionPromise = require('./internal/transactionPromise');
+const transactionQueryPromise = require('./internal/transactionQueryPromise');
+const uidInsertHelper = require('./internal/uidInsertHelper');
+const errors = require('../errors');
 
 
 module.exports = function putItemBookingFn (obj) {
     return transactionPromise(
         co.wrap(function * (conn) {
-            let q, args, result;
+            let q;
+            let args;
+            let result;
 
             q = `
                 SELECT  id

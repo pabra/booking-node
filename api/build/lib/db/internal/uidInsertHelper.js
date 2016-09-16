@@ -1,16 +1,17 @@
-"use strict";
+'use strict';
 
-const   co = require('co'),
-        uid = require('../../uid'),
-        queryPromise = require('./queryPromise'),
-        transactionQueryPromise = require('./transactionQueryPromise'),
-        dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/,
-        maxTries = 25;
+const co = require('co');
+const uid = require('../../uid');
+const queryPromise = require('./queryPromise');
+const transactionQueryPromise = require('./transactionQueryPromise');
+const dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/;
+const maxTries = 25;
 
 
 module.exports = co.wrap(function * (query, args, connection) {
-    let i = 0,
-        result, insErr;
+    let i = 0;
+    let result;
+    let insErr;
 
     while (i++ === 0 || (insErr && 'ER_DUP_ENTRY' === insErr.code)) {
         if (i >= maxTries) throw new Error(`too many retries (${i}) for inserting uid`);

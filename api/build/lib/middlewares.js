@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const   jwt = require('jwt-simple'),
-        logger = require('./logger');
+const jwt = require('jwt-simple');
+const logger = require('./logger');
 
 exports.token = function (req, res, next) {
     const secret = 'MySuperSecretSuperLongSuperString';
@@ -9,11 +9,11 @@ exports.token = function (req, res, next) {
     logger.debug('req.body.token', req.body.token);
     req.token = {
         payload: {
-            _: new Date().getTime()
+            _: new Date().getTime(),
         },
         encode: function () {
             return jwt.encode(req.token.payload, secret);
-        }
+        },
     };
     if (req.body.token) {
         try {

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const   uidLib = require('./'),
-        errors = require('../errors'),
-        ValueError = errors.ValueError;
+const uidLib = require('./');
+const errors = require('../errors');
+const ValueError = errors.ValueError;
 
 module.exports = function validUidFn (testUid) {
     const expression = uidLib.expression;

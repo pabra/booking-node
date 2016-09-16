@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // module.exports = function (method, ressource, txData, callback) {
 //     var noop = require('./noop'),
 //         xhr = new XMLHttpRequest();
@@ -35,28 +35,28 @@
 /**
  *
  */
-module.exports = function(options) {
+module.exports = function (options) {
     var xhr = new XMLHttpRequest(),
         method = (options.method || '').toLowerCase(),
         url = options.url,
         data = 'object' === typeof options.data ? JSON.stringify(options.data) : undefined,
-        err;
+        error;
 
-    if ("withCredentials" in xhr) {
+    if ('withCredentials' in xhr) {
         // XHR for Chrome/Firefox/Opera/Safari.
         xhr.open(method, url, true);
-    } else if (typeof XDomainRequest != "undefined") {
+    } else if (typeof XDomainRequest !== 'undefined') {
         // XDomainRequest for IE.
         xhr = new XDomainRequest();
         xhr.open(method, url);
     } else {
         // CORS not supported.
         xhr = null;
-        err = new Error('CORS not supported.');
+        error = new Error('CORS not supported.');
         if ('function' === typeof options.error) {
-            options.error(err);
+            options.error(error);
         } else {
-            throw err;
+            throw error;
         }
     }
 
@@ -69,11 +69,11 @@ module.exports = function(options) {
                 options.success(JSON.parse(this.responseText));
             }
         } else {
-            err = new Error(this);
+            error = new Error(this);
             if ('function' === typeof options.error) {
-                options.error(err);
+                options.error(error);
             } else {
-                throw err;
+                throw error;
             }
         }
     };

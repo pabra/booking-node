@@ -1,17 +1,17 @@
-"use strict";
+'use strict';
 
-const   express = require('express'),
-        app = express(),
-        bodyParser = require('body-parser'),
-        midWare = require('./lib/middlewares'),
-        cors = require('cors'),
-        logger = require('./lib/logger'),
-        routes = require('./lib/routes'),
-        corsOptions = {
-            // origin: true,
-            methods: ['POST'],
-            allowedHeaders: ['Content-Type', 'X-Requested-With', 'application/json', 'text/plain']
-        };
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const midWare = require('./lib/middlewares');
+const cors = require('cors');
+const logger = require('./lib/logger');
+const routes = require('./lib/routes');
+const corsOptions = {
+    // origin: true,
+    methods: ['POST'],
+    allowedHeaders: ['Content-Type', 'X-Requested-With', 'application/json', 'text/plain'],
+};
 
 app.use(bodyParser.json({type: ['json', 'text']}));
 app.use(midWare.token);

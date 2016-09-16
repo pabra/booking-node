@@ -1,15 +1,19 @@
-"use strict";
+'use strict';
 
-const   fs = require('fs'),
-        logger = require('../logger'),
-        connect = require('./connect'),
-        database = connect.database;
+const fs = require('fs');
+const logger = require('../logger');
+const connect = require('./connect');
+const database = connect.database;
 
 
 exports.loadSchema = function () {
-    let conn = connect.getMultiConn(),
-        schemaStr, responseHandler, getSchema,
-        emptyDb, applySchema, close;
+    let conn = connect.getMultiConn();
+    let schemaStr;
+    let responseHandler;
+    let getSchema;
+    let emptyDb;
+    let applySchema;
+    let close;
 
     responseHandler = function (err, next) {
         if (err) throw err;
@@ -36,12 +40,16 @@ exports.loadSchema = function () {
                    USE ${database}`;
 
         logger.info('multiquery:', q);
-        conn.query(q, function(err) { responseHandler(err, applySchema); });
+        conn.query(q, function (err) {
+            responseHandler(err, applySchema);
+        });
     };
 
     applySchema = function () {
         logger.info('apply Schema ', conn.threadId);
-        conn.query(schemaStr, function (err) { responseHandler(err, close); });
+        conn.query(schemaStr, function (err) {
+            responseHandler(err, close);
+        });
     };
 
     close = function () {

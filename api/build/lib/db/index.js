@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const   connect = require('./connect'),
-        loadSchema = require('./loadSchema');
+const connect = require('./connect');
+const loadSchema = require('./loadSchema');
 
 exports.pool = connect.pool;
 exports.getUnavailItemPeriod = require('./getUnavailItemPeriod');

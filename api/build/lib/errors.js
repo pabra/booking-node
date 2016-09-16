@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Creating custom Error classes in Node.js
@@ -8,10 +8,10 @@
 const util = require('util');
 
 function ValueError (message, extra) {
-  Error.captureStackTrace(this, this.constructor);
-  this.name = this.constructor.name;
-  this.message = message || '';
-  this.extra = extra;
+    Error.captureStackTrace(this, this.constructor);
+    this.name = this.constructor.name;
+    this.message = message || '';
+    this.extra = extra;
 }
 util.inherits(ValueError, Error);
 
