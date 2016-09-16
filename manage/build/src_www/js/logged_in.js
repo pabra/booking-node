@@ -3,12 +3,12 @@
 module.exports = function (containerElement, headerElement) {
     var win = window,
         ko = require('knockout'),
-        ItemsModel = require('../modules/manage_items'),
         mainHtml = require('html!../templates/logged_in.html'),
         headHtml = require('html!../templates/header.html'),
         MainModel, mainModel;
 
     require('../css/logged_in.css');
+    require('./components/manage_items');
 
     headerElement.innerHTML = headHtml;
     containerElement.innerHTML = mainHtml;
@@ -48,13 +48,6 @@ module.exports = function (containerElement, headerElement) {
         self.logout = function () {
             self.token(undefined);
         };
-
-        self.itemsModel = new ItemsModel({
-            tokenObservable: self.token,
-            containerElement: containerElement.querySelector('section[data-name=items]'),
-            modelName: 'itemsModel'
-        });
-
     };
 
     ko.options.deferUpdates = true;
