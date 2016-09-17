@@ -1,7 +1,7 @@
 import on from './lib/eventOn';
 import off from './lib/eventOff';
 import domReady from './lib/domReady';
-import comm from './lib/communicator';
+import comm from './lib/communicator/light';
 import errors from './lib/errors';
 
 const ValueError = errors.ValueError;

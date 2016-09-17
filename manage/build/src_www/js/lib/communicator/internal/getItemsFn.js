@@ -10,7 +10,7 @@ export default function (callback) {
         const groupedData = {};
         const nestedArrays = [];
 
-        for (const row of data) {
+        for (let row of data) {
             if (!(row.group_id in groupedData)) {
                 groupedData[row.group_id] = {
                     data: row,
