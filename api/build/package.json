@@ -13,6 +13,7 @@
   },
   "author": "pabra",
   "dependencies": {
+    "basic-auth": "^1.0.4",
     "body-parser": "^1.15.2",
     "co": "^4.6.0",
     "cors": "^2.8.1",

@@ -5,25 +5,26 @@ const logger = require('./logger');
 
 exports.token = function (req, res, next) {
     const secret = 'MySuperSecretSuperLongSuperString';
+    const authorization = req.get('Authorization');
+    const authMatch = authorization ? authorization.match(/^Bearer ([^ ]+)$/) : null;
+    const authToken = authMatch ? authMatch[1] : null;
 
-    logger.debug('req.body.token', req.body.token);
     req.token = {
+        encode: () => jwt.encode(req.token.payload, secret),
         payload: {
             _: new Date().getTime(),
         },
-        encode: function () {
-            return jwt.encode(req.token.payload, secret);
-        },
     };
-    if (req.body.token) {
+
+    if (authToken) {
         try {
-            req.token.payload = jwt.decode(req.body.token, secret);
+            const payload = jwt.decode(authToken, secret);
+            req.token.payload = payload;
         } catch (err) {
             // noop
             (function () {})();
         }
     }
-    logger.debug('req.token', req.token);
 
     next();
 };
@@ -34,20 +35,8 @@ exports.validToken = function (req, res, next) {
         next();
     } else {
         logger.debug('need valid token');
-        res.status(403).send({errno: 403,
-                              code: 403,
-                              message: 'valid token required',
-                              name: 'Forbidden'});
+        res.header('WWW-Authenticate', 'Bearer realm="booking-node"');
+        res.status(401);
+        res.send();
     }
-};
-
-exports.crossDomain = function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    // res.header('Access-Control-Allow-Origin', req.headers['origin']);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, application/json, text/plain');
-    // res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Max-Age', 24 * 60 * 60);
-
-    next();
 };

@@ -2,10 +2,10 @@ import ko from 'knockout';
 
 module.exports = function (containerElement, headerElement) {
     const win = window;
-    const mainHtml = require('html!../templates/logged_in.html');
-    const headHtml = require('html!../templates/header.html');
+    const mainHtml = require('html!../templates/authenticated_body.html');
+    const headHtml = require('html!../templates/authenticated_header.html');
 
-    require('../css/logged_in.css');
+    require('../css/authenticated.css');
     require('./components/manage_items');
 
     headerElement.innerHTML = headHtml;
@@ -20,21 +20,21 @@ module.exports = function (containerElement, headerElement) {
 
         this.pages = ko.observableArray(pages);
         this.page = ko.observable(pages[0]);
-        this.token = ko.observable(sessionStorage.getItem('token'));
+        this.token = ko.observable(sessionStorage.getItem('access_token'));
         this.uid = sessionStorage.getItem('uid');
 
         this.token.subscribe((newVal) => {
-            const current = sessionStorage.getItem('token');
+            const current = sessionStorage.getItem('access_token');
 
             if (newVal === undefined) {
-                sessionStorage.removeItem('token');
+                sessionStorage.removeItem('access_token');
                 sessionStorage.removeItem('uid');
                 location.href += '';
                 return;
             }
 
             if (newVal !== current) {
-                sessionStorage.setItem('token', newVal);
+                sessionStorage.setItem('access_token', newVal);
             }
         });
 

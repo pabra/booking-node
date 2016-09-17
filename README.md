@@ -62,7 +62,7 @@ http -v POST localhost:3000/item/item01/2016-06-01..2016-06-30 name='customer na
 http -v POST localhost:3000/new_account company_name='my new company' user_name='the new user' user_email=user@example.com user_pass=secret
 
 # authenticate to get a session token
-http -v POST localhost:3000/auth email=user@localhost pass=pass
+http -v --auth user@localhost:pass localhost:3000/auth
 
 # invalid requests
 http localhost:3000/abc/def

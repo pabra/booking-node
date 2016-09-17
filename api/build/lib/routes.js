@@ -3,6 +3,7 @@
 const db = require('./db');
 const pool = db.pool;
 const co = require('co');
+const auth = require('basic-auth');
 const logger = require('./logger');
 const errors = require('./errors');
 const ValueError = errors.ValueError;
@@ -122,21 +123,26 @@ exports.newAccount = co.wrap(function * (req, res) {
 });
 
 exports.auth = co.wrap(function * (req, res) {
-    const email = req.body.email;
-    const pass = req.body.pass;
+    const credentials = auth(req) || {};
+    const email = credentials.name;
+    const pass = credentials.pass;
     const data = {};
 
     try {
         if (!email) throw new ValueError('missing email');
         if (!pass) throw new ValueError('missing pass');
-        data.uid = yield db.userAuth(email, pass);
+        const result = yield db.userAuth(email, pass);
 
-        if (data.uid) {
-            req.token.payload.uid = data.uid;
-            data.token = req.token.encode();
+        if (result.uid) {
+            req.token.payload.uid = result.uid;
+            data.access_token = req.token.encode();
+            data.token_type = 'Bearer';
+            res.send(data);
+        } else {
+            res.header('WWW-Authenticate', 'Bearer realm="booking-node"');
+            res.status(401);
+            res.send({});
         }
-
-        res.send(data);
     } catch (e) {
         httpErrorHandler(e, res);
     }

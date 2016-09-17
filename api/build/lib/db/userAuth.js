@@ -5,18 +5,26 @@ const queryPromise = require('./internal/queryPromise');
 
 
 module.exports = co.wrap(function * (email, pass) {
-    let q;
-    let args;
-    let res;
-
-    q = `
-        SELECT  uid
+    const q = `
+        SELECT  uid,
+                name
         FROM    users
         WHERE   email = ?
                 AND pass = ?
     `;
-    args = [email, pass];
+    const args = [email, pass];
 
-    res = yield queryPromise(q, args);
-    return res.length === 1 ? res[0].uid : null;
+    const result = yield queryPromise(q, args);
+
+    const data = {
+        uid: null,
+        name: null,
+    };
+
+    if (result.length) {
+        data.uid = result[0].uid;
+        data.name = result[0].name;
+    }
+
+    return data;
 });
