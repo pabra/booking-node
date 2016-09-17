@@ -1,4 +1,4 @@
-module.exports = function (fn) {
+export default function (fn) {
     const doc = document;
     const documentReadyState = doc.readyState;
 
@@ -13,4 +13,4 @@ module.exports = function (fn) {
             }
         });
     }
-};
+}

@@ -14,7 +14,12 @@ module.exports = {
                 loader: 'babel',
                 query: {
                     presets: ['es2015'],
-                    plugins: ['transform-runtime'],
+                    plugins: [
+                        'transform-runtime',
+                        ['babel-plugin-transform-builtin-extend', {
+                            globals: ['Error'],
+                        }],
+                    ],
                     cacheDirectory: '/tmp',
                 },
             },
