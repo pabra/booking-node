@@ -27,6 +27,7 @@ app.post('/new_account', routes.newAccount);
 
 // token required
 app.get('/getItems', midWare.validToken, routes.getItems);
+app.get('/getProfile', midWare.validToken, routes.getProfile);
 
 
 app.listen(3000, function () {

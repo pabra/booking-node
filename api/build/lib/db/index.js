@@ -10,5 +10,6 @@ exports.putItemBooking = require('./putItemBooking');
 exports.newAccount = require('./newAccount');
 exports.userAuth = require('./userAuth');
 exports.getItemsForUser = require('./getItemsForUser');
+exports.getUserProfile = require('./getUserProfile');
 
 loadSchema.loadSchema();

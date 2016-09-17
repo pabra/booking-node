@@ -1,5 +1,6 @@
 import loginFn from './internal/loginFn';
 import getItemsFn from './internal/getItemsFn';
+import getProfileFn from './internal/getProfileFn';
 
 const instance = (function () {
     // could hold private vars and functions here
@@ -10,6 +11,7 @@ const instance = (function () {
         logout: () => sessionStorage.removeItem('access_token'),
         login: loginFn,
         getItems: getItemsFn,
+        getProfile: getProfileFn,
     };
 })();
 

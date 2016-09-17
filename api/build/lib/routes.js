@@ -160,3 +160,17 @@ exports.getItems = co.wrap(function * (req, res) {
 
     res.send(items);
 });
+
+exports.getProfile = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+    let items;
+
+    try {
+        items = yield db.getUserProfile(token.uid);
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+
+    logger.debug('items:', JSON.stringify(items));
+    res.send(items[0] || {});
+});

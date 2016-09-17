@@ -8,6 +8,7 @@ module.exports = function (containerElement, headerElement) {
 
     require('../css/authenticated.css');
     require('./components/manage_items');
+    require('./components/manage_profile');
 
     headerElement.innerHTML = headHtml;
     containerElement.innerHTML = mainHtml;
@@ -15,13 +16,12 @@ module.exports = function (containerElement, headerElement) {
     const MainModel = function () {
         const pages = [
             {name: 'items', id: 1},
-            {name: 'member area 2', id: 2},
+            {name: 'profile', id: 2},
             {name: 'logout', id: 0},
         ];
 
         this.pages = ko.observableArray(pages);
         this.page = ko.observable(pages[0]);
-        this.uid = sessionStorage.getItem('uid');
 
         this.select_page = (page) => this.page(page);
         this.logout = () => {
