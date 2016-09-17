@@ -7,6 +7,7 @@ const instance = (function () {
     // return public API
     return {
         authenticated: () => !!sessionStorage.getItem('access_token'),
+        logout: () => sessionStorage.removeItem('access_token'),
         login: loginFn,
         getItems: getItemsFn,
     };

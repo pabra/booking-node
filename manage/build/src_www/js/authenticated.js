@@ -1,4 +1,5 @@
 import ko from 'knockout';
+import comm from './lib/communicator';
 
 module.exports = function (containerElement, headerElement) {
     const win = window;
@@ -20,26 +21,13 @@ module.exports = function (containerElement, headerElement) {
 
         this.pages = ko.observableArray(pages);
         this.page = ko.observable(pages[0]);
-        this.token = ko.observable(sessionStorage.getItem('access_token'));
         this.uid = sessionStorage.getItem('uid');
 
-        this.token.subscribe((newVal) => {
-            const current = sessionStorage.getItem('access_token');
-
-            if (newVal === undefined) {
-                sessionStorage.removeItem('access_token');
-                sessionStorage.removeItem('uid');
-                location.href += '';
-                return;
-            }
-
-            if (newVal !== current) {
-                sessionStorage.setItem('access_token', newVal);
-            }
-        });
-
-        this.select_page = page => this.page(page);
-        this.logout = () => this.token(undefined);
+        this.select_page = (page) => this.page(page);
+        this.logout = () => {
+            comm.logout();
+            win.location.href += '';
+        };
     };
 
     ko.options.deferUpdates = true;

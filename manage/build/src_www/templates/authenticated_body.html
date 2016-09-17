@@ -3,7 +3,7 @@
     <a href="#" data-bind="click: logout">logout</a>
 </section>
 <section data-bind="if: page().name == 'items'">
-    <manage-items params="tokenObservable: token"></manage-items>
+    <manage-items></manage-items>
 </section>
 <section data-bind="if: page().id == 2">
     <h1 data-bind="text: page().name"></h1>

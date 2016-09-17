@@ -3,9 +3,7 @@ import comm from '../../lib/communicator';
 
 ko.components.register('manage-items', {
     template: require('html!./template.html'),
-    viewModel: function (params) {
-        if (!params.tokenObservable) throw new Error('missing "tokenObservable" in params');
-
+    viewModel: function () {
         this.items = ko.observableArray();
 
         this.getItems = () => {
