@@ -1,10 +1,10 @@
 <a href="#" data-bind="click: getItems">get items</a>
-<ul data-bind="foreach: { data: items, as: 'group' }">
+<ul data-bind="foreach: { data: groupsAvailable, as: 'group_uid' }">
     <li>
-        group: <span data-bind="text: group.data.group_name"></span>
-        <ul data-bind="foreach: { data: group.items, as: 'item' }">
+        group: <span data-bind="text: $component.groups()[group_uid].group_name"></span>
+        <ul data-bind="foreach: { data: $component.groups()[group_uid].itemsAvailable, as: 'item_uid' }">
             <li>
-                item: <span data-bind="text: item.item_name"></span>
+                item: <span data-bind="text: $component.items()[item_uid].item_name"></span>
             </li>
         </ul>
     </li>
