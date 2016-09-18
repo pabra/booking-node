@@ -29,6 +29,15 @@ exports.getIndex = function (req, res) {
     });
 };
 
+exports.reloadDb = function (req, res) { // TODO: remove
+    try {
+        db.loadSchema(true);
+        res.send({ok: true});
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+};
+
 exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
     let uid;
     let yearMonth;

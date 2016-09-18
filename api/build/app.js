@@ -18,6 +18,7 @@ app.use(midWare.token);
 app.use(cors(corsOptions));
 
 app.get('/', routes.getIndex);
+app.get('/reloadDb', routes.reloadDb); // TODO: remove
 app.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
 app.get('/group/:uid/:yearMonth', routes.getUnavailGroupPeriod);
 app.get('/auth', routes.auth);

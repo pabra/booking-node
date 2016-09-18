@@ -64,6 +64,9 @@ http -v POST localhost:3000/new_account company_name='my new company' user_name=
 # authenticate to get a session token
 http -v --auth user@localhost:pass localhost:3000/auth
 
+# reload DB schema
+http localhost:3000/reloadDb
+
 # invalid requests
 http localhost:3000/abc/def
 http localhost:3000/item/abc_def/2016

@@ -1,15 +1,16 @@
 'use strict';
 
+const co = require('co');
 const fs = require('fs');
 const logger = require('../logger');
 const connect = require('./connect');
 const database = connect.database;
 
-
-exports.loadSchema = function () {
-    let conn = connect.getMultiConn();
+exports.loadSchema = function (force=false) {
+    let conn = connect.getMultiConn(true);
     let schemaStr;
     let responseHandler;
+    let dbExists;
     let getSchema;
     let emptyDb;
     let applySchema;
@@ -21,6 +22,19 @@ exports.loadSchema = function () {
         if (next instanceof Function) {
             next();
         }
+    };
+
+    dbExists = function () {
+        const q = `SELECT  1 AS \`exists\`
+                   FROM    information_schema.schemata
+                   WHERE   schema_name = ?`;
+
+        conn.query(q, [database], function (err, rows) {
+            if (err) throw err;
+
+            const exists = (rows[0] || {}).exists;
+            if (!exists || force) getSchema();
+        });
     };
 
     getSchema = function () {
@@ -57,5 +71,5 @@ exports.loadSchema = function () {
         conn.end();
     };
 
-    getSchema();
+    dbExists();
 };
