@@ -3,9 +3,9 @@
 # cd /data
 
 if [[ $DEVEL ]] && [[ $DEVEL != 0 ]]; then
-    WEBPACK_ARGS=''
+    WEBPACK_ARGS='--progress --optimize-dedupe --optimize-occurrence-order'
 else
-    WEBPACK_ARGS='--optimize-minimize'
+    WEBPACK_ARGS='--progress --optimize-minimize --optimize-dedupe --optimize-occurrence-order'
 fi
 
 [ ! -d ./srv_www ] && mkdir -pv ./srv_www
