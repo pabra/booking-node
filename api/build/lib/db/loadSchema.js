@@ -1,6 +1,5 @@
 'use strict';
 
-const co = require('co');
 const fs = require('fs');
 const logger = require('../logger');
 const connect = require('./connect');
@@ -34,6 +33,7 @@ exports.loadSchema = function (force=false) {
 
             const exists = (rows[0] || {}).exists;
             if (!exists || force) getSchema();
+            else conn.end();
         });
     };
 
