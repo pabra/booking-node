@@ -4,6 +4,8 @@ const co = require('co');
 const transactionPromise = require('./internal/transactionPromise');
 const transactionQueryPromise = require('./internal/transactionQueryPromise');
 const uidInsertHelper = require('./internal/uidInsertHelper');
+const uidInserter = uidInsertHelper.uidInserter;
+const UidClass = uidInsertHelper.UidClass;
 
 
 module.exports = function (obj) {
@@ -19,10 +21,10 @@ module.exports = function (obj) {
                 INSERT INTO companies
                 SET ?
             `;
-            args = {uid: null,
+            args = {uid: new UidClass(),
                     name: obj.companyName};
 
-            result = yield uidInsertHelper(q, args, conn);
+            result = yield uidInserter(q, args, conn);
             companyId = result.insertId;
 
             q = `
@@ -37,14 +39,14 @@ module.exports = function (obj) {
                 INSERT INTO users
                 SET ?
             `;
-            args = {uid: null,
+            args = {uid: new UidClass(),
                     name: obj.userName,
                     email: obj.userEmail,
                     pass: obj.userPass,
                     company: companyId,
                     role: roleId};
 
-            result = yield uidInsertHelper(q, args, conn);
+            result = yield uidInserter(q, args, conn);
 
             return result;
         })

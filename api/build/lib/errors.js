@@ -15,4 +15,13 @@ function ValueError (message, extra) {
 }
 util.inherits(ValueError, Error);
 
+function TypeError (message, extra) {
+    Error.captureStackTrace(this, this.constructor);
+    this.name = this.constructor.name;
+    this.message = message || '';
+    this.extra = extra;
+}
+util.inherits(TypeError, Error);
+
 exports.ValueError = ValueError;
+exports.TypeError = TypeError;

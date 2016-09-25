@@ -5,6 +5,8 @@ const transactionPromise = require('./internal/transactionPromise');
 const transactionQueryPromise = require('./internal/transactionQueryPromise');
 const uidInsertHelper = require('./internal/uidInsertHelper');
 const errors = require('../errors');
+const uidInserter = uidInsertHelper.uidInserter;
+const UidClass = uidInsertHelper.UidClass;
 
 
 module.exports = function putItemBookingFn (obj) {
@@ -30,22 +32,22 @@ module.exports = function putItemBookingFn (obj) {
                 INSERT INTO customers
                 SET ?
             `;
-            args = {uid: null,
+            args = {uid: new UidClass(),
                     name: obj.customerName};
 
-            result = yield uidInsertHelper(q, args, conn);
+            result = yield uidInserter(q, args, conn);
 
             q = `
                 INSERT INTO requests
                 SET request_time = NOW(),
                     ?
             `;
-            args = {uid: null,
+            args = {uid: new UidClass(),
                     customer: result.insertId,
                     date_from: obj.fromDate,
                     date_to: obj.toDate};
 
-            result = yield uidInsertHelper(q, args, conn);
+            result = yield uidInserter(q, args, conn);
 
             q = `
                 INSERT INTO request_items
