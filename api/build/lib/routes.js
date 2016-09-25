@@ -183,3 +183,22 @@ exports.getProfile = co.wrap(function * (req, res) {
     logger.debug('items:', JSON.stringify(items));
     res.send(items[0] || {});
 });
+
+exports.putGroup = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+    const newGroupName = req.params.newGroupName;
+
+    try {
+        if (!newGroupName) throw new ValueError('missing newGroupName');
+        const companyUid = uidLib.ensureValidUid(req.params.companyUid);
+        const userBelongsToCompany = yield db.userBelongsToCompany(token.uid, companyUid);
+        if (!userBelongsToCompany) throw new ValueError('user does not belong to company');
+
+        // res.send({test: userBelongsToCompany});
+        const newGroupResult = yield db.putGroup(companyUid, newGroupName);
+
+        res.send({res:newGroupResult});
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+});

@@ -9,7 +9,7 @@ const logger = require('./lib/logger');
 const routes = require('./lib/routes');
 const corsOptions = {
     // origin: true,
-    methods: ['POST', 'GET'],
+    methods: ['POST', 'GET', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'X-Requested-With', 'Authorization'],
 };
 
@@ -29,6 +29,7 @@ app.post('/new_account', routes.newAccount);
 // token required
 app.get('/getItems', midWare.validToken, routes.getItems);
 app.get('/getProfile', midWare.validToken, routes.getProfile);
+app.put('/group/:companyUid/:newGroupName', midWare.validToken, routes.putGroup);
 
 
 app.listen(3000, function () {

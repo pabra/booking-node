@@ -11,6 +11,9 @@ exports.newAccount = require('./newAccount');
 exports.userAuth = require('./userAuth');
 exports.getItemsForUser = require('./getItemsForUser');
 exports.getUserProfile = require('./getUserProfile');
+exports.putGroup = require('./putGroup');
+
+exports.userBelongsToCompany = require('./user/belongsToCompany');
 
 // reload database on startup
 loadSchema.loadSchema();
