@@ -3,8 +3,10 @@
 # cd /data
 
 if [[ $DEVEL ]] && [[ $DEVEL != 0 ]]; then
-    WEBPACK_ARGS='--progress --optimize-dedupe --optimize-occurrence-order'
+    # DEVELOPMENT
+    WEBPACK_ARGS='--progress --optimize-minimize --optimize-dedupe --optimize-occurrence-order --devtool eval --devtool source-map'
 else
+    # PRODUCTION
     WEBPACK_ARGS='--progress --optimize-minimize --optimize-dedupe --optimize-occurrence-order'
 fi
 
