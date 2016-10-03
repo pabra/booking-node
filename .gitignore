@@ -9,6 +9,7 @@
 vars.local.cfg
 node_modules
 npm-debug.log
+api/build/coverage
 api/build/log/*.log
 
 #except this file

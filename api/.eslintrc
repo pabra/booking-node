@@ -10,8 +10,13 @@
          * true  - variable is allowed to be overwritten
          * false - not allowed to be overwritten
          */
-        "$": false,
-        "jQuery": false,
+        "jasmine": false,
+        "beforeEach": false,
+        "afterEach": false,
+        "describe": false,
+        "it": false,
+        "expect": false,
+        "spyOn": false,
     },
     "rules": {
         /**

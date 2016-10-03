@@ -4,7 +4,8 @@
   "description": "the backend API for the \"booking node\" engine",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/istanbul cover node_modules/.bin/jasmine",
+    "testNoCover": "./node_modules/.bin/jasmine",
     "start": "node app"
   },
   "repository": {
@@ -21,5 +22,10 @@
     "jwt-simple": "^0.5.0",
     "mysql": "^2.11.1",
     "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "jasmine": "^2.5.2",
+    "rewire": "^2.5.2"
   }
 }
