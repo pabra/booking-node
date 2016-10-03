@@ -16,7 +16,7 @@ const parseStrictIntOrThrow = utils.parseStrictIntOrThrow;
  * @return {number} year as Integer if valid
  */
 exports.ensureValidYear = function (testYear) {
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getUTCFullYear();
     const minYear = currentYear - 1;
     const maxYear = currentYear + 2;
     const yearInt = parseStrictIntOrThrow(testYear);

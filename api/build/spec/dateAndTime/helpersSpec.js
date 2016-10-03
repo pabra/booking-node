@@ -3,7 +3,7 @@
 describe('date and time helpers', function () {
     const errors = require('../../lib/errors');
     const ValueError = errors.ValueError;
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getUTCFullYear();
     const dateAndTimeHelpers = require('../../lib/dateAndTime/internal/helpers');
     const ensureValidYear = dateAndTimeHelpers.ensureValidYear;
     const ensureValidMonth = dateAndTimeHelpers.ensureValidMonth;
