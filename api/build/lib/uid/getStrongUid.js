@@ -1,17 +1,23 @@
 'use strict';
 
 const crypto = require('crypto');
+const errors = require('../errors');
+const ValueError = errors.ValueError;
         // removed from alphabet: aeiouAEIOU 01l
 const alphabet = 'bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ23456789';
-const expAlpha = new RegExp('[^' + alphabet + ']', 'g');
 const maxUidLen = 256;
 const maxTries = 25;
+
+// not make it const to overwriteable for tests
+let expAlpha = new RegExp('[^' + alphabet + ']', 'g');
 
 
 module.exports = function (len) {
     return new Promise(function (resolve, reject) {
-        if (len < 2) reject(new Error(`len '${len}' < 2`));
-        if (len > maxUidLen) reject(new Error(`len '${len}' > ${maxUidLen}`));
+        if (undefined === len) len = 6;
+        if (typeof len !== 'number' || parseInt(len) !== len) reject(new TypeError('expected integer not ' + typeof len));
+        if (len < 2) reject(new ValueError(`len '${len}' < 2`));
+        if (len > maxUidLen) reject(new ValueError(`len '${len}' > ${maxUidLen}`));
 
         const expMatch = new RegExp('[^0-9].{' + (len - 1) + '}');
         let i = 0;

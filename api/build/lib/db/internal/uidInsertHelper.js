@@ -2,9 +2,7 @@
 
 const co = require('co');
 const uid = require('../../uid');
-const errors = require('../../errors');
 const queryPromise = require('./queryPromise');
-const TypeError = errors.TypeError;
 const transactionQueryPromise = require('./transactionQueryPromise');
 const dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/;
 const maxTries = 25;
@@ -44,7 +42,7 @@ exports.uidInserter = co.wrap(function * (query, args, connection) {
     while (i++ === 0 || (insErr && 'ER_DUP_ENTRY' === insErr.code)) {
         if (i >= maxTries) throw new Error(`too many retries (${i}) for inserting uid`);
 
-        args[uidField] = yield uid.getStrongUid(6);
+        args[uidField] = yield uid.getStrongUid();
 
         try {
             if (!connection) result = yield queryPromise(query, args);

@@ -9,7 +9,7 @@ module.exports = function validUidFn (testUid) {
 
 
     if ('string' !== typeof testUid) {
-        throw new ValueError(`uid '${testUid}' is not a string`);
+        throw new TypeError(`uid '${testUid}' is not a string`);
     }
 
     if (!testUid.match(expression)) {
