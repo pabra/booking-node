@@ -16,8 +16,9 @@ const connOpt = {
 };
 const pool = mysql.createPool(connOpt);
 const logger = require('../logger');
-const getMultiConn = function (withoutDb=false) {
+const getMultiConn = function (withoutDb) {
     const opts = Object.assign({}, connOpt, {multipleStatements: true});
+    if (withoutDb === undefined) withoutDb = false;
     if (withoutDb) delete(opts.database);
     const conn = mysql.createConnection(opts);
 

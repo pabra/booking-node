@@ -5,7 +5,7 @@ const logger = require('../logger');
 const connect = require('./connect');
 const database = connect.database;
 
-exports.loadSchema = function (force=false) {
+exports.loadSchema = function (force) {
     let conn = connect.getMultiConn(true);
     let schemaStr;
     let responseHandler;
@@ -14,6 +14,8 @@ exports.loadSchema = function (force=false) {
     let emptyDb;
     let applySchema;
     let close;
+
+    if (force === undefined) force = false;
 
     responseHandler = function (err, next) {
         if (err) throw err;
