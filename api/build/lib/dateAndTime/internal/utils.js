@@ -13,10 +13,10 @@ let setLastDayOfMonth;
 /**
  * mkDateFn - get new Date object
  *
- * @param  {number} year    - year as int
- * @param  {number} month   - month as int
- * @param  {number} day     - day as int
- * @return {object}         - new Date() object
+ * @param  {number} year    year as int
+ * @param  {number} month   month as int
+ * @param  {number} day     day as int
+ * @return {object}         new Date() object
  */
 mkDate = function mkDateFn (year, month, day) {
     let newDate;
@@ -26,14 +26,10 @@ mkDate = function mkDateFn (year, month, day) {
         isIntOrThrow(month);
         isIntOrThrow(day);
     } catch (e) {
-        if (e instanceof TypeError) throw new TypeError(`year, month, day must be integer: ${year}, ${month}, ${day}`);
-        else throw e;
+        throw new TypeError(`year, month, day must be integer: ${year}, ${month}, ${day}`);
     }
 
-    newDate = new Date(0);
-    newDate.setUTCFullYear(year);
-    newDate.setUTCMonth(month - 1);
-    newDate.setUTCDate(day);
+    newDate = new Date(Date.UTC(year, month - 1, day));
 
     if (newDate.getUTCFullYear() !== year
             || newDate.getUTCMonth() !== month - 1
@@ -46,8 +42,8 @@ mkDate = function mkDateFn (year, month, day) {
 };
 
 setFirstDayOfMonth = function setFirstDayOfMonthFn (dObj) {
-    if (!dObj instanceof Date) {
-        throw new ValueError(`not an instance of Date: ${dObj}`);
+    if (!(dObj instanceof Date)) {
+        throw new TypeError(`not an instance of Date: ${dObj}`);
     }
 
     dObj.setUTCDate(1);
@@ -62,8 +58,8 @@ setFirstDayOfMonth = function setFirstDayOfMonthFn (dObj) {
 setLastDayOfMonth = function setLastDayOfMonthFn (dObj) {
     const fullDay = 24 * 60 * 60 * 1000;
 
-    if (!dObj instanceof Date) {
-        throw new ValueError(`not an instance of Date: ${dObj}`);
+    if (!(dObj instanceof Date)) {
+        throw new TypeError(`not an instance of Date: ${dObj}`);
     }
 
     dObj = setFirstDayOfMonth(dObj);
