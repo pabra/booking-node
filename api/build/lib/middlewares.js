@@ -1,7 +1,6 @@
 'use strict';
 
 const jwt = require('jwt-simple');
-const logger = require('./logger');
 
 exports.token = function (req, res, next) {
     const secret = 'MySuperSecretSuperLongSuperString';
@@ -31,10 +30,8 @@ exports.token = function (req, res, next) {
 
 exports.validToken = function (req, res, next) {
     if (req.token.payload.uid) {
-        logger.debug('valid uid found', req.token.payload.uid);
         next();
     } else {
-        logger.debug('need valid token');
         res.header('WWW-Authenticate', 'Bearer realm="booking-node"');
         res.status(401);
         res.send();

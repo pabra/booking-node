@@ -1,22 +1,29 @@
 'use strict';
 
-const errors = require('./errors');
-const ValueError = errors.ValueError;
 
-
-exports.ensureInt = function (testInt) {
-    let sureInt;
-
-    if (['string', 'number'].indexOf(typeof testInt) > -1) {
-        // a float is typeof 'number' too, so always parse as int
-        sureInt = parseInt(testInt, 10);
-        if (isNaN(sureInt)) throw new ValueError(`cannot parse '${testInt}' as int`);
-    } else throw new ValueError('unexpected type: ' + (typeof testInt));
-
-    return sureInt;
+/**
+ * isIntOrThrow - Description
+ *
+ * @param {type} testInt Description
+ * @return {type} Description
+ */
+exports.isIntOrThrow = function (testInt) {
+    if (typeof testInt !== 'number' || parseInt(testInt, 10) !== testInt)
+        throw new TypeError(`"${testInt}" is not an Integer.`);
 };
 
-exports.isInt = function isIntFn (testInt) {
-    return isNaN(testInt) ? false :
-           parseInt(testInt, 10) !== testInt ? false : true;
+
+/**
+ * parseStrictIntOrThrow - will onĺy parse Integer looking args (no float looking ones)
+ *
+ * @param {(number|string)} testInt has to look like Int not like Float
+ * @return {number} always an Integer
+ */
+exports.parseStrictIntOrThrow = function (testInt) {
+    const parsed = parseInt(testInt, 10);
+    exports.isIntOrThrow(parsed);
+
+    if (String(parsed) !== String(parseFloat(testInt))) throw new TypeError(`"${testInt}" does not look like Integer.`);
+
+    return parsed;
 };

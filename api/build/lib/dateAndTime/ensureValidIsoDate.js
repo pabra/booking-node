@@ -4,6 +4,7 @@ const errors = require('../errors');
 const ValueError = errors.ValueError;
 const helpers = require('./internal/helpers.js');
 const utils = require('../utils');
+const parseStrictIntOrThrow = utils.parseStrictIntOrThrow;
 
 
 module.exports = function ensureValidIsoDate (testIsoDate) {
@@ -25,7 +26,7 @@ module.exports = function ensureValidIsoDate (testIsoDate) {
 
     year = helpers.ensureValidYear(matchIsoDate[1]);
     month = helpers.ensureValidMonth(matchIsoDate[2]);
-    day = utils.ensureInt(matchIsoDate[3]);
+    day = parseStrictIntOrThrow(matchIsoDate[3]);
 
     newDate = new Date(0);
     newDate.setUTCFullYear(year);

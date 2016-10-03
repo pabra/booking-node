@@ -3,6 +3,7 @@
 const errors = require('../../errors');
 const ValueError = errors.ValueError;
 const utils = require('../../utils');
+const isIntOrThrow = utils.isIntOrThrow;
 
 let mkDate;
 let setFirstDayOfMonth;
@@ -20,8 +21,13 @@ let setLastDayOfMonth;
 mkDate = function mkDateFn (year, month, day) {
     let newDate;
 
-    if (!utils.isInt(year) || !utils.isInt(month) || !utils.isInt(day)) {
-        throw new ValueError(`year, month, day must be integer: ${year}, ${month}, ${day}`);
+    try {
+        isIntOrThrow(year);
+        isIntOrThrow(month);
+        isIntOrThrow(day);
+    } catch (e) {
+        if (e instanceof TypeError) throw new TypeError(`year, month, day must be integer: ${year}, ${month}, ${day}`);
+        else throw e;
     }
 
     newDate = new Date(0);
