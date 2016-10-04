@@ -14,24 +14,22 @@ const helpers = require('./internal/helpers.js');
 module.exports = function ensureValidYearMonthFn (testYearMonth) {
     let year;
     let month;
-    let matchYearMonth;
-    let matchYear;
 
     if ('string' !== typeof testYearMonth) {
-        throw new ValueError(`'${testYearMonth}' is not a string`);
+        throw new TypeError('expected string type');
     }
 
-    matchYearMonth = testYearMonth.match(/^(\d{4})-(\d{2})$/);
-    matchYear = testYearMonth.match(/^\d{4}$/);
+    const matchYearMonth = testYearMonth.match(/^(\d{4})-(\d{2})$/);
+    const matchYear = testYearMonth.match(/^\d{4}$/);
 
     if (!matchYearMonth && !matchYear) {
-        throw new ValueError(`'${testYearMonth}' is unknown format`);
+        throw new ValueError(`unexpected format: "${testYearMonth}"`);
     }
 
     if (matchYearMonth) {
         year = helpers.ensureValidYear(matchYearMonth[1]);
         month = helpers.ensureValidMonth(matchYearMonth[2]);
-    } else if (matchYear) {
+    } else {
         year = helpers.ensureValidYear(matchYear[0]);
         month = null;
     }

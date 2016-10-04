@@ -7,6 +7,7 @@ const midWare = require('./lib/middlewares');
 const cors = require('cors');
 const logger = require('./lib/logger');
 const routes = require('./lib/routes');
+const loadSchema = require('./lib/db').loadSchema;
 const corsOptions = {
     // origin: true,
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
@@ -31,6 +32,7 @@ app.get('/getItems', midWare.validToken, routes.getItems);
 app.get('/getProfile', midWare.validToken, routes.getProfile);
 app.put('/group/:companyUid/:newGroupName', midWare.validToken, routes.putGroup);
 
+loadSchema();
 
 app.listen(3000, function () {
     logger.info('Example app listening on port 3000!');

@@ -1,7 +1,8 @@
 'use strict';
 
 const co = require('co');
-const queryPromise = require('../internal/queryPromise');
+// not use const to be able to mock away for tests
+let queryPromise = require('../internal/queryPromise');
 
 module.exports = co.wrap(function * (userUid, companyUid) {
     const q = `

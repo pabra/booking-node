@@ -16,7 +16,7 @@ exports.putGroup = require('./putGroup');
 exports.userBelongsToCompany = require('./user/belongsToCompany');
 
 // reload database on startup
-loadSchema.loadSchema();
+// loadSchema.loadSchema();
 
 // export endpoint to force reload DB - TODO: remove
 exports.loadSchema = loadSchema.loadSchema;
