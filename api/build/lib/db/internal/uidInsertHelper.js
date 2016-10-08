@@ -2,11 +2,14 @@
 
 const co = require('co');
 const uid = require('../../uid');
-const queryPromise = require('./queryPromise');
-const transactionQueryPromise = require('./transactionQueryPromise');
+const utils = require('../../utils');
+const isObjectOrThrow = utils.isObjectOrThrow;
 const dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/;
 const maxTries = 25;
 const UidClass = function () {};
+// not use const to be able to mock away for tests
+let queryPromise = require('./queryPromise');
+let transactionQueryPromise = require('./transactionQueryPromise');
 
 exports.UidClass = UidClass;
 
@@ -16,7 +19,6 @@ exports.uidInserter = co.wrap(function * (query, args, connection) {
     let insErr;
     let uidField = null;
 
-    if (!args instanceof Object) throw new TypeError('args has to be of Object or Array');
     if (args instanceof Array) {
         let found = false;
         args.forEach((v, k) => {
@@ -27,6 +29,7 @@ exports.uidInserter = co.wrap(function * (query, args, connection) {
             }
         });
     } else {
+        isObjectOrThrow(args);
         let found = false;
         for (let k in args) {
             if (args[k] instanceof UidClass) {

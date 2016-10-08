@@ -56,33 +56,36 @@ describe('parseStrictIntOrThrow', function () {
         let fn;
 
         fn = () => parseStrictIntOrThrow();
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(null);
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(Infinity);
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(NaN);
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(true);
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(false);
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(function () {});
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(new Error('boohoo'));
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, 'not an Integer');
+
+        fn = () => parseStrictIntOrThrow(Symbol('abc'));
+        expect(fn).toThrowError(TypeError, 'not an Integer');
 
         fn = () => parseStrictIntOrThrow(1.1);
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, /^does not look like Integer/);
 
         fn = () => parseStrictIntOrThrow('1.1');
-        expect(fn).toThrowError(TypeError);
+        expect(fn).toThrowError(TypeError, /^does not look like Integer/);
     });
 });
