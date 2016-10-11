@@ -1,4 +1,5 @@
 import loginFn from './internal/loginFn';
+import isAuthenticatedFn from './internal/isAuthenticatedFn';
 
 /**
  * communicator light
@@ -10,7 +11,7 @@ const instance = (function () {
 
     // return public API
     return {
-        authenticated: () => !!sessionStorage.getItem('access_token'),
+        isAuthenticated: isAuthenticatedFn,
         login: loginFn,
     };
 })();

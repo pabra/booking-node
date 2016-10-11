@@ -17,14 +17,14 @@ domReady(function () {
 
     require('../css/main.css');
 
-    if (!comm.authenticated()) {
-        let disableForm = function (disabled = true) {
+    if (!comm.isAuthenticated()) {
+        const disableForm = function (disabled = true) {
             for (let el of loginForm.elements) {
                 el.disabled = !!disabled;
             }
         };
 
-        let submitFn = function (ev) {
+        const submitFn = function (ev) {
             disableForm();
             ev.preventDefault();
             const emailEl = loginForm.elements.username;
