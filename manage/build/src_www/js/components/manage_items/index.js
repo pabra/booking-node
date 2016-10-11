@@ -19,11 +19,13 @@ ko.components.register('manage-items', {
                         };
                         this.groupsAvailable.push(v.group_uid);
                     }
-                    this.groups()[v.group_uid].itemsAvailable.push(v.item_uid);
-                    this.items()[v.item_uid] = {
-                        item_uid: v.item_uid,
-                        item_name: v.item_name,
-                    };
+                    if (!(v.item_uid in this.items())) {
+                        this.items()[v.item_uid] = {
+                            item_uid: v.item_uid,
+                            item_name: v.item_name,
+                        };
+                        this.groups()[v.group_uid].itemsAvailable.push(v.item_uid);
+                    }
                 });
             });
         };
