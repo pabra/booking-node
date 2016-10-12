@@ -16,10 +16,12 @@ function ajax (params = {}) {
         data = undefined;
     }
 
+    const access_token = sessionStorage.getItem('access_token');
+    const access_token_type = sessionStorage.getItem('access_token_type');
     const headers = {
         // Firefox won't send cross domain data as type json
         'Content-Type': 'text/plain',
-        'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+        'Authorization': `${access_token_type} ${access_token}`,
     };
 
     if (params.headers) {

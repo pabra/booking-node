@@ -19,6 +19,9 @@ export default function (email, pass, callback) {
         callback: (data) => {
             if (data && data.access_token) {
                 sessionStorage.setItem('access_token', data.access_token);
+                sessionStorage.setItem('access_token_type', data.access_token_type);
+                sessionStorage.setItem('access_token_uid', data.user_uid);
+                sessionStorage.setItem('access_token_name', data.user_name);
             }
             callback(data);
         },

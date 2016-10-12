@@ -145,7 +145,9 @@ exports.auth = co.wrap(function * (req, res) {
         if (result.uid) {
             req.token.payload.uid = result.uid;
             data.access_token = req.token.encode();
-            data.token_type = 'Bearer';
+            data.access_token_type = 'Bearer';
+            data.user_uid = result.uid;
+            data.user_name = result.name;
             res.send(data);
         } else {
             res.header('WWW-Authenticate', 'Bearer realm="booking-node"');
