@@ -1,3 +1,9 @@
+section.main_navigation {
+    border: 1px solid #333;
+    padding: 20px;
+    margin-right: 20px;
+    float: left;
+}
 nav .active {
     background: #ccc;
 }

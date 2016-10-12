@@ -1,10 +1,17 @@
-<section data-bind="if: page().name == 'logout'">
-    <h1 data-bind="text: page().name"></h1>
+<section class="main_navigation">
+    <main-navigation params="dataStore: $root.dataStore"></main-navigation>
+</section>
+
+<section data-bind="if: dataStore.page().name == 'logout'">
+    <h1 data-bind="text: dataStore.page().name"></h1>
     <a href="#" data-bind="click: logout">logout</a>
 </section>
-<section data-bind="if: page().name == 'items'">
+<section data-bind="if: dataStore.page().name == 'items'">
     <manage-items></manage-items>
 </section>
-<section data-bind="if: page().name == 'profile'">
-    <manage-profile></manage-profile>
+<section data-bind="if: dataStore.page().name == 'user'">
+    <manage-user></manage-user>
+</section>
+<section data-bind="if: dataStore.page().name == 'company'">
+    <manage-company></manage-company>
 </section>
