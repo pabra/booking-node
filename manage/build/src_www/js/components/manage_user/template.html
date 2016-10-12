@@ -1,0 +1,35 @@
+<h2>manage user <span data-bind="text: user().user_name"></span></h2>
+<div data-bind="if: dataStore.usersAvailable().length > 1">
+    <label>change user
+        <select size="1"
+                data-bind="options: dataStore.usersAvailable,
+                           optionsText: selectedUserText,
+                           value: dataStore.userSelected"></select>
+    </label>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>key</th>
+            <th>value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>uid</td>
+            <td><input type="text" disabled="disabled" data-bind="textInput: user().user_uid"></td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td><input type="text" data-bind="textInput: user().user_name"></td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td><input type="text" data-bind="textInput: user().user_email"></td>
+        </tr>
+        <tr>
+            <td>pass</td>
+            <td><input type="text" data-bind="textInput: user().user_password"></td>
+        </tr>
+    </tbody>
+</table>

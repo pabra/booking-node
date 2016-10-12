@@ -29,8 +29,10 @@ app.post('/new_account', routes.newAccount);
 
 // token required
 app.get('/getItems', midWare.validToken, routes.getItems);
-app.get('/getProfile', midWare.validToken, routes.getProfile);
 app.put('/group/:companyUid/:newGroupName', midWare.validToken, routes.putGroup);
+
+app.get('/companies', midWare.validToken, routes.getCompanies);
+app.get('/users', midWare.validToken, routes.getUsers);
 
 loadSchema();
 

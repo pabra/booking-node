@@ -8,7 +8,8 @@ module.exports = function (containerElement, headerElement) {
 
     require('../css/authenticated.css');
     require('./components/manage_items');
-    require('./components/manage_profile');
+    require('./components/manage_user');
+    require('./components/manage_company');
 
     headerElement.innerHTML = headHtml;
     containerElement.innerHTML = mainHtml;
@@ -16,7 +17,8 @@ module.exports = function (containerElement, headerElement) {
     const MainModel = function () {
         const pages = [
             {name: 'items', id: 1},
-            {name: 'profile', id: 2},
+            {name: 'user', id: 2},
+            {name: 'company', id: 3},
             {name: 'logout', id: 0},
         ];
 

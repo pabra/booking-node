@@ -10,10 +10,11 @@ exports.putItemBooking = require('./putItemBooking');
 exports.newAccount = require('./newAccount');
 exports.userAuth = require('./userAuth');
 exports.getItemsForUser = require('./getItemsForUser');
-exports.getUserProfile = require('./getUserProfile');
 exports.putGroup = require('./putGroup');
 
 exports.userBelongsToCompany = require('./user/belongsToCompany');
+exports.getCompanies = require('./user/getCompanies');
+exports.getUsers = require('./user/getUsers');
 
 // reload database on startup
 // loadSchema.loadSchema();
