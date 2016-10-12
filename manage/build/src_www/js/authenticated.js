@@ -29,18 +29,16 @@ module.exports = function (containerElement, headerElement) {
             pages:              ko.observableArray(pages),
             page:               ko.observable(pages[0]),
             usersAvailable:     ko.observableArray(),
-            users:              {},
             userSelected:       ko.observable(),
             companiesAvailable: ko.observableArray(),
-            companies:          {},
             companySelected:    ko.observable(),
         });
 
         this.dataStore = comm.storeGet([
             'page','pages',
             'tokenUserUid',
-            'companies', 'companiesAvailable', 'companySelected',
-            'users', 'usersAvailable', 'userSelected',
+            'companiesAvailable', 'companySelected',
+            'usersAvailable', 'userSelected',
         ]);
         this.select_page = page => comm.pageSet(page.name);
         this.logout = () => {
@@ -51,8 +49,7 @@ module.exports = function (containerElement, headerElement) {
         if (this.dataStore.companiesAvailable.length === 0) {
             comm.getCompanies(data => {
                 for (let company of data) {
-                    this.dataStore.companiesAvailable.push(company.company_uid);
-                    this.dataStore.companies[company.company_uid] = company;
+                    this.dataStore.companiesAvailable.push(company);
                 }
                 if (this.dataStore.companySelected() === undefined && this.dataStore.companiesAvailable.length >= 0) {
                     this.dataStore.companySelected(this.dataStore.companiesAvailable()[0]);
@@ -63,10 +60,9 @@ module.exports = function (containerElement, headerElement) {
         if (this.dataStore.usersAvailable.length === 0) {
             comm.getUsers(data => {
                 for (let user of data) {
-                    this.dataStore.usersAvailable.push(user.user_uid);
-                    this.dataStore.users[user.user_uid] = user;
+                    this.dataStore.usersAvailable.push(user);
                     if (user.user_uid === this.dataStore.tokenUserUid)
-                        this.dataStore.userSelected(user.user_uid);
+                        this.dataStore.userSelected(user);
                 }
             });
         }
