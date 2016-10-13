@@ -20,7 +20,7 @@ source $VARS_FILE
 [ ! "$AUTHOR_NAME" ] && echo "Missing AUTHOR_NAME variable" && exit 1
 [ ! "$IMAGE_NAME" ] && echo "Missing IMAGE_NAME variable" && exit 1
 
-$DOCKER ps --filter "name=${IMAGE_NAME}" --no-trunc --format "{{.ID}}" | xargs --no-run-if-empty $DOCKER rm --force
+$DOCKER ps --filter "name=^/${IMAGE_NAME}$" --no-trunc --format "{{.ID}}" | xargs --no-run-if-empty $DOCKER rm --force
 
 COMMON_ARGS=(
     "-p 80:80"

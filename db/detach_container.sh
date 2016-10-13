@@ -30,7 +30,7 @@ source $VARS_FILE
 [ ! -d "${CONTAINER_DATA}/${IMAGE_NAME}/db" ] && mkdir "${CONTAINER_DATA}/${IMAGE_NAME}/db"
 [ ! -d "${CONTAINER_DATA}/${IMAGE_NAME}/dumps" ] && mkdir "${CONTAINER_DATA}/${IMAGE_NAME}/dumps"
 
-$DOCKER ps --filter "name=${IMAGE_NAME}" --no-trunc --format "{{.ID}}" | xargs --no-run-if-empty $DOCKER rm --force
+$DOCKER ps --filter "name=^/${IMAGE_NAME}$" --no-trunc --format "{{.ID}}" | xargs --no-run-if-empty $DOCKER rm --force
 
 COMMON_ARGS=(
     "--env MYSQL_ALLOW_EMPTY_PASSWORD=yes"
