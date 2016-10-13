@@ -24,11 +24,6 @@ source $VARS_FILE
 [ ! "$MYSQL_DATABASE" ] && echo "Missing MYSQL_DATABASE variable" && exit 1
 [ ! "$MYSQL_TEST_DATABASE" ] && echo "Missing MYSQL_TEST_DATABASE variable" && exit 1
 [ ! "$CONTAINER_DATA" ] && echo "Missing CONTAINER_DATA variable" && exit 1
-[ ! -d "$CONTAINER_DATA" ] && echo "Missing directory $CONTAINER_DATA" && exit 1
-[ ! -w "$CONTAINER_DATA" ] && echo "Cannot write to directory $CONTAINER_DATA" && exit 1
-[ ! -d "${CONTAINER_DATA}/${IMAGE_NAME}" ] && mkdir "${CONTAINER_DATA}/${IMAGE_NAME}"
-[ ! -d "${CONTAINER_DATA}/${IMAGE_NAME}/db" ] && mkdir "${CONTAINER_DATA}/${IMAGE_NAME}/db"
-[ ! -d "${CONTAINER_DATA}/${IMAGE_NAME}/dumps" ] && mkdir "${CONTAINER_DATA}/${IMAGE_NAME}/dumps"
 
 $DOCKER ps --filter "name=^/${IMAGE_NAME}$" --no-trunc --format "{{.ID}}" | xargs --no-run-if-empty $DOCKER rm --force
 
