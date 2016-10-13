@@ -17,4 +17,9 @@ source $VARS_FILE
 [ ! "$AUTHOR_NAME" ] && echo "Missing AUTHOR_NAME variable" && exit 1
 [ ! "$IMAGE_NAME" ] && echo "Missing IMAGE_NAME variable" && exit 1
 
-$DOCKER build -t "${AUTHOR_NAME}/${IMAGE_NAME}" $BUILD_DIR
+if [ "$1" = '--for-tests' ]; then
+    $DOCKER build -t "generic/booking-node-api-from" $BUILD_DIR
+    $DOCKER build -t "generic/booking-node-api-tests" -f ${BUILD_DIR}/Dockerfile_for_tests $BUILD_DIR
+else
+    $DOCKER build -t "${AUTHOR_NAME}/${IMAGE_NAME}" $BUILD_DIR
+fi

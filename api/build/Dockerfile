@@ -17,7 +17,7 @@ WORKDIR /usr/src/app
 
 ADD package.json .
 
-RUN npm install
+RUN npm install --production
 
 EXPOSE 3000
 

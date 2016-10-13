@@ -1,0 +1,9 @@
+FROM generic/booking-node-api-from
+
+USER root
+
+RUN npm install
+
+USER app
+
+CMD ["npm", "test"]
