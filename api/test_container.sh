@@ -24,10 +24,18 @@ CONTAINER_NAME="${IMAGE_NAME}_test"
 
 $DOCKER ps --filter "name=${CONTAINER_NAME}" --no-trunc --format "{{.ID}}" | xargs --no-run-if-empty $DOCKER rm --force
 
+COMMON_ARGS=(
+    "--rm"
+    "--name ${CONTAINER_NAME}"
+    "${AUTHOR_NAME}/${IMAGE_NAME}"
+    "npm run-script testNoCover"
+)
 
-$DOCKER run \
-    -t \
-    --rm \
-    --name ${CONTAINER_NAME} \
-    ${AUTHOR_NAME}/${IMAGE_NAME} \
-    npm run-script testNoCover
+if [ -t 1 ]; then
+    $DOCKER run \
+        -t \
+        ${COMMON_ARGS[*]}
+else
+    $DOCKER run \
+        ${COMMON_ARGS[*]}
+fi
