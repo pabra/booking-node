@@ -46,7 +46,7 @@ COMMON_ARGS=(
 
 if [ "$LOCAL_PORT" ] && [ "$LOCAL_PORT" -gt 0 ]; then
     COMMON_ARGS=(
-        "-p ${LOCAL_PORT}:3306"
+        "-p 127.0.0.1:${LOCAL_PORT}:3306"
         "${COMMON_ARGS[@]}"
     )
 fi

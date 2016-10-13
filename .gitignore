@@ -12,5 +12,7 @@ npm-debug.log
 api/build/coverage
 api/build/log/*.log
 
+manage/build/src_www/js/config_.js
+
 #except this file
 !.gitignore

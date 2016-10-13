@@ -1,9 +1,10 @@
 import xhr from 'xhr';
 import errors from '../../errors';
+import config from '../../../config_.js';
 
 const ValueError = errors.ValueError;
 const AjaxError = errors.AjaxError;
-const host = 'http://localhost:3000';
+const host = `${config.apiHostProto}://${config.apiHostName}:${config.apiHostPort}`;
 const win = window;
 
 function ajax (params = {}) {
