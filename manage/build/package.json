@@ -4,7 +4,7 @@
   "description": "Web based mamangement interface to API",
   "main": "index.js",
   "scripts": {
-    "start": "webpack ./src_www/js/index.js",
+    "start": "echo \"Error: no start specified\" && exit 1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "pabra",

@@ -17,7 +17,7 @@ echo 'copy *.html files'
 cp ./src_www/*.html ./srv_www/
 
 echo "running webpack $WEBPACK_ARGS"
-./node_modules/.bin/webpack $WEBPACK_ARGS ./src_www/js/index.js
+./node_modules/.bin/webpack $WEBPACK_ARGS
 
 
 echo 'compressing files'
