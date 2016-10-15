@@ -1,5 +1,6 @@
 import ko from 'knockout';
 import comm from '../../lib/communicator';
+import valuesHandler from './../helpers/valuesHandler';
 
 ko.components.register('manage-company', {
     template: require('html!./template.html'),
@@ -9,32 +10,25 @@ ko.components.register('manage-company', {
         this.company = ko.pureComputed(() => {
             return this.companySelected() || {};
         });
-        this.newName = ko.observable();
+
         this.loading = ko.observable(false);
-        this.hasChanged = ko.pureComputed(() => {
-            const selected = this.companySelected();
-            return selected ?
-                   selected.company_name() !== this.newName() :
-                   false;
+        this.valuesHandler = valuesHandler({
+            source: this.companySelected,
+            keys: ['company_name'],
         });
-
-        this.companySelected.subscribe(newCompany => {
-            this.newName(newCompany.company_name());
-        });
-
-        this.reset = () => {
-            this.newName(this.company().company_name());
-        };
 
         this.save = () => {
             const selected = this.companySelected();
             if (!selected) return;
             this.loading(true);
+            // send changed data this.valuesHandler.getChanged() by ajax
             setTimeout(() => {
-                selected.company_name(this.newName());
+                // if the API accept our update, update our model
+                this.valuesHandler.save();
                 this.loading(false);
             }, 1000);
         };
-        this.companySelected.valueHasMutated();
+        // this.companySelected.valueHasMutated();
+        window.debug_manage_company = this;
     },
 });

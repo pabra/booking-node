@@ -21,21 +21,22 @@
         </tr>
         <tr>
             <td>name</td>
-            <td><input type="text" data-bind="disable: loading, textInput: newName"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: valuesHandler.values.user_name"></td>
         </tr>
         <tr>
             <td>email</td>
-            <td><input type="text" data-bind="disable: loading, textInput: newEmail"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: valuesHandler.values.user_email"></td>
         </tr>
         <tr>
             <td>pass</td>
-            <td><input type="text" data-bind="disable: loading, textInput: newPass"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: valuesHandler.values.user_password"></td>
         </tr>
         <tr>
-            <td></td>
+            <td><span data-bind="visible: valuesHandler.changed">*</span></td>
             <td>
-                <button data-bind="enable: hasChanged() && !loading(), click: reset">reset</button>
-                <button data-bind="enable: hasChanged() && !loading(), click: save">save</button>
+                <button data-bind="enable: valuesHandler.changed() && !loading(), click: save">save</button>
+                or
+                <a href="#" data-bind="attr: {disabled: !valuesHandler.changed() || loading()}, click: valuesHandler.reset">reset</a>
             </td>
         </tr>
     </tbody>

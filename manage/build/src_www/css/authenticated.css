@@ -7,3 +7,7 @@ section.main_navigation {
 nav .active {
     background: #ccc;
 }
+a[disabled] {
+    pointer-events: none;
+    color: gray;
+}

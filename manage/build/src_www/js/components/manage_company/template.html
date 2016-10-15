@@ -21,13 +21,14 @@
         </tr>
         <tr>
             <td>name</td>
-            <td><input type="text" data-bind="disable: loading, textInput: newName"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: valuesHandler.values.company_name"></td>
         </tr>
         <tr>
-            <td>has changed</td>
+            <td><span data-bind="visible: valuesHandler.changed">*</span></td>
             <td>
-                <button data-bind="enable: hasChanged() && !loading(), click: reset">reset</button>
-                <button data-bind="enable: hasChanged() && !loading(), click: save">save</button>
+                <button data-bind="enable: valuesHandler.changed() && !loading(), click: valuesHandler.reset">reset</button>
+                or
+                <a href="#" data-bind="attr: {disabled: !valuesHandler.changed() || loading()}, click: valuesHandler.reset">reset</a>
             </td>
         </tr>
     </tbody>
