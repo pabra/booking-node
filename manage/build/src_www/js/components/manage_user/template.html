@@ -32,7 +32,7 @@
             <td><input type="text" data-bind="disable: loading, textInput: valuesHandler.values.user_password"></td>
         </tr>
         <tr>
-            <td><span data-bind="visible: valuesHandler.changed">*</span></td>
+            <td><span data-bind="visible: valuesHandler.changed" title="values changed">*</span></td>
             <td>
                 <button data-bind="enable: valuesHandler.changed() && !loading(), click: save">save</button>
                 or
