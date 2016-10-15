@@ -1,6 +1,7 @@
 import xhr from 'xhr';
 import errors from '../../errors';
 import config from '../../../config_.js';
+import noop from '../../noop';
 
 const ValueError = errors.ValueError;
 const AjaxError = errors.AjaxError;
@@ -39,6 +40,18 @@ function ajax (params = {}) {
         if (err) {
             win.console.log('err', err);
             throw new AjaxError(err.message);
+        }
+
+        // IE11 not honoring responseType: 'json'
+        // https://github.com/naugtur/xhr/issues/123
+        if ((((res || {}).headers || {})['content-type'] || '').toLowerCase().substr(0,16) === 'application/json'
+                && body && typeof body !== 'object') {
+            try {
+                let parsedBody = JSON.parse(body);
+                body = parsedBody;
+            } catch (e) {
+                noop();
+            }
         }
         win.console.log('res', res);
         win.console.log('body', body);
