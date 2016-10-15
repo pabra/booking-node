@@ -1,13 +1,13 @@
 import on from './lib/eventOn';
 import off from './lib/eventOff';
-import domReady from './lib/domReady';
+import domready from 'domready';
 import comm from './lib/communicator/light';
 import errors from './lib/errors';
 
 const ValueError = errors.ValueError;
 const AjaxError = errors.AjaxError;
 
-domReady(function () {
+domready(function () {
     var win = window,
         doc = win.document,
         loginForm = doc.querySelector('form[name=login]'),
