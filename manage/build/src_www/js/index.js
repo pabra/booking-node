@@ -18,8 +18,10 @@ domReady(function () {
     require('../css/main.css');
 
     if (!comm.isAuthenticated()) {
-        const disableForm = function (disabled = true) {
-            for (let el of loginForm.elements) {
+        const disableForm = function (disabled) {
+            if (disabled === undefined) disabled = true;
+            for (let i = 0; i < loginForm.elements.length; i++) {
+                let el = loginForm.elements[i];
                 el.disabled = !!disabled;
             }
         };
