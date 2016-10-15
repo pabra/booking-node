@@ -1,10 +1,10 @@
 <h2>manage user <span data-bind="text: user().user_name"></span></h2>
-<div data-bind="if: dataStore.usersAvailable().length > 1">
+<div data-bind="if: usersAvailable().length > 1">
     <label>change user
         <select size="1"
-                data-bind="options: dataStore.usersAvailable,
+                data-bind="options: usersAvailable,
                            optionsText: 'user_name',
-                           value: dataStore.userSelected"></select>
+                           value: userSelected"></select>
     </label>
 </div>
 <table>
@@ -21,15 +21,22 @@
         </tr>
         <tr>
             <td>name</td>
-            <td><input type="text" data-bind="textInput: user().user_name"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: newName"></td>
         </tr>
         <tr>
             <td>email</td>
-            <td><input type="text" data-bind="textInput: user().user_email"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: newEmail"></td>
         </tr>
         <tr>
             <td>pass</td>
-            <td><input type="text" data-bind="textInput: user().user_password"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: newPass"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button data-bind="enable: hasChanged() && !loading(), click: reset">reset</button>
+                <button data-bind="enable: hasChanged() && !loading(), click: save">save</button>
+            </td>
         </tr>
     </tbody>
 </table>

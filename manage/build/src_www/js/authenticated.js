@@ -1,5 +1,6 @@
 import ko from 'knockout';
 import comm from './lib/communicator';
+import observableObject from './lib/observableObject';
 
 module.exports = function (containerElement, headerElement) {
     const win = window;
@@ -30,6 +31,7 @@ module.exports = function (containerElement, headerElement) {
             page:               ko.observable(pages[0]),
             usersAvailable:     ko.observableArray(),
             userSelected:       ko.observable(),
+            userAuthenticated:  ko.observable(),
             companiesAvailable: ko.observableArray(),
             companySelected:    ko.observable(),
         });
@@ -38,7 +40,7 @@ module.exports = function (containerElement, headerElement) {
             'page','pages',
             'tokenUserUid',
             'companiesAvailable', 'companySelected',
-            'usersAvailable', 'userSelected',
+            'usersAvailable', 'userSelected', 'userAuthenticated',
         ]);
         this.select_page = page => comm.pageSet(page.name);
         this.logout = () => {
@@ -49,7 +51,7 @@ module.exports = function (containerElement, headerElement) {
         if (this.dataStore.companiesAvailable.length === 0) {
             comm.getCompanies(data => {
                 for (let company of data) {
-                    this.dataStore.companiesAvailable.push(company);
+                    this.dataStore.companiesAvailable.push(observableObject(company));
                 }
                 if (this.dataStore.companySelected() === undefined && this.dataStore.companiesAvailable.length >= 0) {
                     this.dataStore.companySelected(this.dataStore.companiesAvailable()[0]);
@@ -60,9 +62,12 @@ module.exports = function (containerElement, headerElement) {
         if (this.dataStore.usersAvailable.length === 0) {
             comm.getUsers(data => {
                 for (let user of data) {
-                    this.dataStore.usersAvailable.push(user);
-                    if (user.user_uid === this.dataStore.tokenUserUid)
-                        this.dataStore.userSelected(user);
+                    let observableUser = observableObject(user);
+                    this.dataStore.usersAvailable.push(observableUser);
+                    if (user.user_uid === this.dataStore.tokenUserUid) {
+                        this.dataStore.userSelected(observableUser);
+                        this.dataStore.userAuthenticated(observableUser);
+                    }
                 }
             });
         }

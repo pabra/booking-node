@@ -1,10 +1,10 @@
 <h2>manage company <span data-bind="text: company().company_name"></span></h2>
-<div data-bind="if: dataStore.companiesAvailable().length > 1">
+<div data-bind="if: companiesAvailable().length > 1">
     <label>change company
         <select size="1"
-                data-bind="options: dataStore.companiesAvailable,
+                data-bind="options: companiesAvailable,
                            optionsText: 'company_name',
-                           value: dataStore.companySelected"></select>
+                           value: companySelected"></select>
     </label>
 </div>
 <table>
@@ -21,7 +21,14 @@
         </tr>
         <tr>
             <td>name</td>
-            <td><input type="text" data-bind="textInput: company().company_name"></td>
+            <td><input type="text" data-bind="disable: loading, textInput: newName"></td>
+        </tr>
+        <tr>
+            <td>has changed</td>
+            <td>
+                <button data-bind="enable: hasChanged() && !loading(), click: reset">reset</button>
+                <button data-bind="enable: hasChanged() && !loading(), click: save">save</button>
+            </td>
         </tr>
     </tbody>
 </table>
