@@ -11,16 +11,19 @@ module.exports = function (containerElement, headerElement) {
     require('./components/manage_items');
     require('./components/manage_user');
     require('./components/manage_company');
+    require('./components/manage_group');
     require('./components/main_navigation');
 
     headerElement.innerHTML = headHtml;
     containerElement.innerHTML = mainHtml;
 
     const MainModel = function () {
+        const fn = {};
         const pages = [
             {name: 'items', id: 1},
             {name: 'user', id: 2},
             {name: 'company', id: 3},
+            {name: 'group', id: 4},
             {name: 'logout', id: 0},
         ];
 
@@ -34,13 +37,16 @@ module.exports = function (containerElement, headerElement) {
             userAuthenticated:  ko.observable(),
             companiesAvailable: ko.observableArray(),
             companySelected:    ko.observable(),
+            groupsAvailable:    ko.observableArray(),
+            groupSelected:      ko.observable(),
         });
 
         this.dataStore = comm.storeGet([
             'page','pages',
             'tokenUserUid',
-            'companiesAvailable', 'companySelected',
             'usersAvailable', 'userSelected', 'userAuthenticated',
+            'companiesAvailable', 'companySelected',
+            'groupsAvailable', 'groupSelected',
         ]);
         this.select_page = page => comm.pageSet(page.name);
         this.logout = () => {
@@ -48,18 +54,19 @@ module.exports = function (containerElement, headerElement) {
             win.location.href += '';
         };
 
-        if (this.dataStore.companiesAvailable.length === 0) {
+        fn.loadCompanies = () => {
             comm.getCompanies(data => {
                 for (let company of data) {
                     this.dataStore.companiesAvailable.push(observableObject(company));
                 }
-                if (this.dataStore.companySelected() === undefined && this.dataStore.companiesAvailable.length >= 0) {
+                if (this.dataStore.companySelected() === undefined && this.dataStore.companiesAvailable().length > 0) {
                     this.dataStore.companySelected(this.dataStore.companiesAvailable()[0]);
+                    fn.loadGroups();
                 }
             });
-        }
+        };
 
-        if (this.dataStore.usersAvailable.length === 0) {
+        fn.loadUsers = () => {
             comm.getUsers(data => {
                 for (let user of data) {
                     let observableUser = observableObject(user);
@@ -70,8 +77,21 @@ module.exports = function (containerElement, headerElement) {
                     }
                 }
             });
-        }
+        };
 
+        fn.loadGroups = () => {
+            comm.getGroups(this.dataStore.companySelected().company_uid(), data => {
+                for (let group of data) {
+                    this.dataStore.groupsAvailable.push(observableObject(group));
+                }
+                if (this.dataStore.groupSelected() === undefined && this.dataStore.groupsAvailable().length > 0) {
+                    this.dataStore.groupSelected(this.dataStore.groupsAvailable()[0]);
+                }
+            });
+        };
+
+        fn.loadCompanies();
+        fn.loadUsers();
     };
 
     ko.options.deferUpdates = true;

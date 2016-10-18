@@ -6,6 +6,7 @@ if [[ $DEVEL ]] && [[ $DEVEL != 0 ]]; then
     # DEVELOPMENT
     # WEBPACK_ARGS='--progress --optimize-minimize --optimize-dedupe --optimize-occurrence-order --devtool eval --devtool source-map'
     WEBPACK_ARGS='--progress --devtool eval --devtool source-map'
+    WEBPACK_ARGS='--progress'
 else
     # PRODUCTION
     WEBPACK_ARGS='--progress --optimize-minimize --optimize-dedupe --optimize-occurrence-order'

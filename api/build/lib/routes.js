@@ -212,3 +212,16 @@ exports.getUsers = co.wrap(function * (req, res) {
         httpErrorHandler(e, res);
     }
 });
+
+exports.getGroups = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+
+    try {
+        const companyUid = uidLib.ensureValidUid(req.params.companyUid);
+        const groups = yield db.getGroups(token.uid, companyUid);
+        res.send(groups);
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+
+});

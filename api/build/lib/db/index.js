@@ -15,6 +15,7 @@ exports.putGroup = require('./putGroup');
 exports.userBelongsToCompany = require('./user/belongsToCompany');
 exports.getCompanies = require('./user/getCompanies');
 exports.getUsers = require('./user/getUsers');
+exports.getGroups = require('./user/getGroups');
 
 // reload database on startup
 // loadSchema.loadSchema();

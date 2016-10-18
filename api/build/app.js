@@ -33,6 +33,7 @@ app.put('/group/:companyUid/:newGroupName', midWare.validToken, routes.putGroup)
 
 app.get('/companies', midWare.validToken, routes.getCompanies);
 app.get('/users', midWare.validToken, routes.getUsers);
+app.get('/groups/:companyUid', midWare.validToken, routes.getGroups);
 
 loadSchema();
 

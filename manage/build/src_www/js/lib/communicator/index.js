@@ -7,6 +7,7 @@ import getItemsFn from './internal/getItemsFn';
 
 import getCompaniesFn from './internal/getCompaniesFn';
 import getUsersFn from './internal/getUsersFn';
+import getGroupsFn from './internal/getGroupsFn';
 
 const instance = (function () {
     // could hold private vars and functions here
@@ -73,6 +74,7 @@ const instance = (function () {
         getItems:           getItemsFn,
         getCompanies:       getCompaniesFn,
         getUsers:           getUsersFn,
+        getGroups:          getGroupsFn,
     };
 })();
 
