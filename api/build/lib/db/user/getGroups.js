@@ -14,8 +14,6 @@ module.exports = co.wrap(function * (userUid, companyUid) {
         WHERE       c.uid = ?
                     AND u.uid = ?
     `;
-    console.log(q);
-    console.log([companyUid, userUid]);
 
     return yield queryPromise(q, [companyUid, userUid]);
 });
