@@ -1,0 +1,35 @@
+<h2>manage item <span data-bind="text: item().item_name"></span></h2>
+<div data-bind="if: itemsAvailable().length > 1">
+    <label>change item
+        <select size="1"
+                data-bind="options: itemsAvailable,
+                           optionsText: 'item_name',
+                           value: itemSelected"></select>
+    </label>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>key</th>
+            <th>value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>uid</td>
+            <td><input type="text" disabled="disabled" data-bind="textInput: item().item_uid"></td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td><input type="text" data-bind="disable: loading, textInput: valuesHandler.values.item_name"></td>
+        </tr>
+        <tr>
+            <td><span data-bind="visible: valuesHandler.changed" title="values changed">*</span></td>
+            <td>
+                <button data-bind="enable: valuesHandler.changed() && !loading(), click: save">save</button>
+                or
+                <a href="#" data-bind="attr: {disabled: !valuesHandler.changed() || loading()}, click: valuesHandler.reset">reset</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

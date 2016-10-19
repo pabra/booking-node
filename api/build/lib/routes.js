@@ -159,19 +159,6 @@ exports.auth = co.wrap(function * (req, res) {
     }
 });
 
-exports.getItems = co.wrap(function * (req, res) {
-    const token = req.token.payload;
-    let items;
-
-    try {
-        items = yield db.getItemsForUser(token.uid);
-    } catch (e) {
-        httpErrorHandler(e, res);
-    }
-
-    res.send(items);
-});
-
 exports.putGroup = co.wrap(function * (req, res) {
     const token = req.token.payload;
     const newGroupName = req.params.newGroupName;
@@ -223,5 +210,16 @@ exports.getGroups = co.wrap(function * (req, res) {
     } catch (e) {
         httpErrorHandler(e, res);
     }
+});
 
+exports.getItems = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+
+    try {
+        const groupUid = uidLib.ensureValidUid(req.params.groupUid);
+        const items = yield db.getItems(token.uid, groupUid);
+        res.send(items);
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
 });

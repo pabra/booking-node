@@ -7,9 +7,11 @@ ko.components.register('main-navigation', {
         this.companySelected = comm.storeGet('companySelected');
         this.userAuthenticated = comm.storeGet('userAuthenticated');
         this.groupSelected = comm.storeGet('groupSelected');
+        this.itemSelected = comm.storeGet('itemSelected');
         this.goCompany = () => comm.pageSet('company');
         this.goUser = () => comm.pageSet('user');
         this.goGroup = () => comm.pageSet('group');
+        this.goItem = () => comm.pageSet('item');
         this.authenticatedUserName = ko.pureComputed(() => {
             const selected = this.userAuthenticated();
             return selected ?
@@ -26,6 +28,12 @@ ko.components.register('main-navigation', {
             const selected = this.groupSelected();
             return selected ?
                    selected.group_name() :
+                   '';
+        });
+        this.selectedItemText = ko.pureComputed(() => {
+            const selected = this.itemSelected();
+            return selected ?
+                   selected.item_name() :
                    '';
         });
     },

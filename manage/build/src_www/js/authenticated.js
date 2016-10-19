@@ -8,10 +8,10 @@ module.exports = function (containerElement, headerElement) {
     const headHtml = require('html!../templates/authenticated_header.html');
 
     require('../css/authenticated.css');
-    require('./components/manage_items');
     require('./components/manage_user');
     require('./components/manage_company');
     require('./components/manage_group');
+    require('./components/manage_item');
     require('./components/main_navigation');
 
     headerElement.innerHTML = headHtml;
@@ -20,7 +20,7 @@ module.exports = function (containerElement, headerElement) {
     const MainModel = function () {
         const fn = {};
         const pages = [
-            {name: 'items', id: 1},
+            {name: 'item', id: 1},
             {name: 'user', id: 2},
             {name: 'company', id: 3},
             {name: 'group', id: 4},
@@ -39,6 +39,8 @@ module.exports = function (containerElement, headerElement) {
             companySelected:    ko.observable(),
             groupsAvailable:    ko.observableArray(),
             groupSelected:      ko.observable(),
+            itemsAvailable:    ko.observableArray(),
+            itemSelected:      ko.observable(),
         });
 
         this.dataStore = comm.storeGet([
@@ -47,6 +49,7 @@ module.exports = function (containerElement, headerElement) {
             'usersAvailable', 'userSelected', 'userAuthenticated',
             'companiesAvailable', 'companySelected',
             'groupsAvailable', 'groupSelected',
+            'itemsAvailable', 'itemSelected',
         ]);
         this.select_page = page => comm.pageSet(page.name);
         this.logout = () => {
@@ -86,6 +89,18 @@ module.exports = function (containerElement, headerElement) {
                 }
                 if (this.dataStore.groupSelected() === undefined && this.dataStore.groupsAvailable().length > 0) {
                     this.dataStore.groupSelected(this.dataStore.groupsAvailable()[0]);
+                    fn.loadItems();
+                }
+            });
+        };
+
+        fn.loadItems = () => {
+            comm.getItems(this.dataStore.groupSelected().group_uid(), data => {
+                for (let item of data) {
+                    this.dataStore.itemsAvailable.push(observableObject(item));
+                }
+                if (this.dataStore.itemSelected() === undefined && this.dataStore.itemsAvailable().length > 0) {
+                    this.dataStore.itemSelected(this.dataStore.itemsAvailable()[0]);
                 }
             });
         };

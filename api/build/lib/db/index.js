@@ -9,13 +9,13 @@ exports.getUnavailGroupPeriod = require('./getUnavailGroupPeriod');
 exports.putItemBooking = require('./putItemBooking');
 exports.newAccount = require('./newAccount');
 exports.userAuth = require('./userAuth');
-exports.getItemsForUser = require('./getItemsForUser');
 exports.putGroup = require('./putGroup');
 
 exports.userBelongsToCompany = require('./user/belongsToCompany');
 exports.getCompanies = require('./user/getCompanies');
 exports.getUsers = require('./user/getUsers');
 exports.getGroups = require('./user/getGroups');
+exports.getItems = require('./user/getItems');
 
 // reload database on startup
 // loadSchema.loadSchema();

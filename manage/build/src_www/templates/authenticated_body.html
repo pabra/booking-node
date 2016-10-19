@@ -6,9 +6,6 @@
     <h1 data-bind="text: dataStore.page().name"></h1>
     <a href="#" data-bind="click: logout">logout</a>
 </section>
-<section data-bind="if: dataStore.page().name == 'items'">
-    <manage-items></manage-items>
-</section>
 <section data-bind="if: dataStore.page().name == 'user'">
     <manage-user></manage-user>
 </section>
@@ -17,4 +14,7 @@
 </section>
 <section data-bind="if: dataStore.page().name == 'group'">
     <manage-group></manage-group>
+</section>
+<section data-bind="if: dataStore.page().name == 'item'">
+    <manage-item></manage-item>
 </section>
