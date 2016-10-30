@@ -18,7 +18,10 @@ exports.loadSchema = function (force) {
     if (force === undefined) force = false;
 
     responseHandler = function (err, next) {
-        if (err) throw err;
+        if (err) {
+            close();
+            throw err;
+        }
 
         if (next instanceof Function) {
             next();
@@ -31,7 +34,10 @@ exports.loadSchema = function (force) {
                    WHERE   schema_name = ?`;
 
         conn.query(q, [database], function (err, rows) {
-            if (err) throw err;
+            if (err) {
+                close();
+                throw err;
+            }
 
             const exists = (rows[0] || {}).exists;
             if (!exists || force) getSchema();
@@ -41,7 +47,10 @@ exports.loadSchema = function (force) {
 
     getSchema = function () {
         fs.readFile('./db_schema.sql', 'utf-8', function (err, data) {
-            if (err) throw err;
+            if (err) {
+                close();
+                throw err;
+            }
 
             // info('schema data\n', data);
             schemaStr = data;
