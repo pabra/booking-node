@@ -39,8 +39,8 @@ module.exports = function (containerElement, headerElement) {
             companySelected:    ko.observable(),
             groupsAvailable:    ko.observableArray(),
             groupSelected:      ko.observable(),
-            itemsAvailable:    ko.observableArray(),
-            itemSelected:      ko.observable(),
+            itemsAvailable:     ko.observableArray(),
+            itemSelected:       ko.observable(),
         });
 
         this.dataStore = comm.storeGet([
