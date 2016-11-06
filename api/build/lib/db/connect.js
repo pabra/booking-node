@@ -1,14 +1,14 @@
 'use strict';
 
 const mysql = require('mysql');
-const database = process.env.MYSQL_ENV_MYSQL_DATABASE || 'root';
-const test_database = process.env.MYSQL_ENV_MYSQL_TEST_DATABASE || 'test';
+const database = process.env.MYSQL_ENV_MYSQL_DATABASE || 'booking_node';
+const test_database = process.env.MYSQL_ENV_MYSQL_TEST_DATABASE || 'booking_node_test';
 const connOpt = {
     connectionLimit : 10,
     queueLimit      : 50,
     host            : process.env.MYSQL_PORT_3306_TCP_ADDR || 'localhost',
     port            : process.env.MYSQL_PORT_3306_TCP_PORT || 3306,
-    user            : process.env.MYSQL_ENV_MYSQL_USER || 'booking_node',
+    user            : process.env.MYSQL_ENV_MYSQL_USER || 'root',
     password        : process.env.MYSQL_ENV_MYSQL_PASSWORD || 'root',
     database        : database,
     // debug           : ['ComQueryPacket', 'RowDataPacket'],

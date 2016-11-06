@@ -57,6 +57,14 @@ module.exports = function (containerElement, headerElement) {
             win.location.href += '';
         };
 
+        this.dataStore.companySelected.subscribe(newComp => {
+            fn.loadGroups();
+        });
+
+        this.dataStore.groupSelected.subscribe(newGroup => {
+            fn.loadItems();
+        });
+
         fn.loadCompanies = () => {
             comm.getCompanies(data => {
                 for (let company of data) {
@@ -64,7 +72,6 @@ module.exports = function (containerElement, headerElement) {
                 }
                 if (this.dataStore.companySelected() === undefined && this.dataStore.companiesAvailable().length > 0) {
                     this.dataStore.companySelected(this.dataStore.companiesAvailable()[0]);
-                    fn.loadGroups();
                 }
             });
         };
@@ -83,23 +90,36 @@ module.exports = function (containerElement, headerElement) {
         };
 
         fn.loadGroups = () => {
-            comm.getGroups(this.dataStore.companySelected().company_uid(), data => {
+            this.dataStore.groupSelected(undefined);
+            const company = this.dataStore.companySelected();
+            if (!company || !ko.isObservable(company.company_uid) || !company.company_uid()) {
+                return;
+            }
+
+            comm.getGroups(company.company_uid(), data => {
+                this.dataStore.groupsAvailable([]);
                 for (let group of data) {
                     this.dataStore.groupsAvailable.push(observableObject(group));
                 }
-                if (this.dataStore.groupSelected() === undefined && this.dataStore.groupsAvailable().length > 0) {
+                if (this.dataStore.groupsAvailable().length > 0) {
                     this.dataStore.groupSelected(this.dataStore.groupsAvailable()[0]);
-                    fn.loadItems();
                 }
             });
         };
 
         fn.loadItems = () => {
-            comm.getItems(this.dataStore.groupSelected().group_uid(), data => {
+            this.dataStore.itemSelected(undefined);
+            const group = this.dataStore.groupSelected();
+            if (!group || !ko.isObservable(group.group_uid) || !group.group_uid()) {
+                return;
+            }
+
+            comm.getItems(group.group_uid(), data => {
+                this.dataStore.itemsAvailable([]);
                 for (let item of data) {
                     this.dataStore.itemsAvailable.push(observableObject(item));
                 }
-                if (this.dataStore.itemSelected() === undefined && this.dataStore.itemsAvailable().length > 0) {
+                if (this.dataStore.itemsAvailable().length > 0) {
                     this.dataStore.itemSelected(this.dataStore.itemsAvailable()[0]);
                 }
             });

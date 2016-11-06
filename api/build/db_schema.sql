@@ -14,23 +14,6 @@ INSERT INTO companies
     VALUES
     ('XR00TX', 'root company');
 
-/* user_roles set the right of `users`
- */
-CREATE TABLE user_roles (
-    id int(1) unsigned NOT NULL AUTO_INCREMENT,
-    name varchar(16) NOT NULL,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-INSERT INTO user_roles
-    (name)
-    VALUES
-    ('root'),       -- all rights to everything
-    ('owner'),      -- all rights for an company (right to rename and remove company)
-    ('deputy'),     -- all rights for an company (except rename and remove company)
-    ('manager'),    -- rights for specific items or groups (allowed to add and remove items in groups)
-    ('booker');     -- can only handle requests for specific items or groups
-
 /* users can login to the admin page and manage `items`, `requests`, etc.
  * depending on their `user_roles`. They belong to a company.
  */
@@ -41,20 +24,39 @@ CREATE TABLE users (
     email varchar(32) NOT NULL,
     pass varchar(32) NOT NULL,
     company int(4) unsigned NOT NULL,
-    role int(1) unsigned NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY (uid),
     UNIQUE KEY (email),
     KEY (company),
-    KEY (role),
-    FOREIGN KEY (company) REFERENCES companies (id),
-    FOREIGN KEY (role) REFERENCES user_roles (id)
+    FOREIGN KEY (company) REFERENCES companies (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO users
-    (uid, name, email, pass, company, role)
+    (uid, name, email, pass, company)
     VALUES
-    ('xr00tx', 'root user', 'root@localhost', 'admin', (SELECT id FROM companies WHERE uid = 'XR00TX'), (SELECT id FROM user_roles WHERE name = 'root'));
+    ('xr00tx', 'root user', 'root@localhost', 'admin', (SELECT id FROM companies WHERE uid = 'XR00TX'));
+
+CREATE TABLE perm_global (
+    user int(4) unsigned NOT NULL,
+    permission int(1) unsigned NOT NULL,
+    UNIQUE KEY (user),
+    FOREIGN KEY (user) REFERENCES users (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO perm_global
+    (user, permission)
+    VALUES
+    ((SELECT id FROM users WHERE uid = 'xr00tx'), CONV('1111', 2, 10));
+
+CREATE TABLE perm_company (
+    user int(4) unsigned NOT NULL,
+    company int(4) unsigned NOT NULL,
+    permission int(1) unsigned NOT NULL,
+    KEY (company),
+    UNIQUE KEY (user, company),
+    FOREIGN KEY (user) REFERENCES users (id),
+    FOREIGN KEY (company) REFERENCES companies (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /* item_groups grouping multiple `items` of the same type. If someone offers seats
  * for a seminar, each seat would be an individual item but you won't offer each
@@ -75,6 +77,16 @@ CREATE TABLE item_groups (
     FOREIGN KEY (company) REFERENCES companies (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+CREATE TABLE perm_item_group (
+    user int(4) unsigned NOT NULL,
+    item_group int(4) unsigned NOT NULL,
+    permission int(1) unsigned NOT NULL,
+    KEY (item_group),
+    UNIQUE KEY (user, item_group),
+    FOREIGN KEY (user) REFERENCES users (id),
+    FOREIGN KEY (item_group) REFERENCES item_groups (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 /* the individual items that are available. `items` always belong to `item_groups`
  * if you don't use `item_groups`, there has to be a transparent dummy groups. So
  * that there are fewer exceptions to look fo in the code and queries.
@@ -90,30 +102,12 @@ CREATE TABLE items (
     FOREIGN KEY (item_group) REFERENCES item_groups (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-/* Which `users` of role 'booker' (in `user_roles`) have the right to manage
- * requests/bookings for which `item_groups`.
- */
-CREATE TABLE user_item_group (
-    id int(4) unsigned NOT NULL AUTO_INCREMENT,
-    user int(4) unsigned NOT NULL,
-    item_group int(4) unsigned NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY (user,item_group),
-    KEY (item_group),
-    FOREIGN KEY (user) REFERENCES users (id),
-    FOREIGN KEY (item_group) REFERENCES item_groups (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-/* Which `users` of role 'booker' (in `user_roles`) have the right to manage
- * requests/bookings for which `items`.
- */
-CREATE TABLE user_item (
-    id int(4) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE perm_item (
     user int(4) unsigned NOT NULL,
     item int(4) unsigned NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY (user,item),
+    permission int(1) unsigned NOT NULL,
     KEY (item),
+    UNIQUE KEY (user, item),
     FOREIGN KEY (user) REFERENCES users (id),
     FOREIGN KEY (item) REFERENCES items (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -162,12 +156,14 @@ CREATE TABLE request_items (
 INSERT INTO companies
     (uid, name)
     VALUES
-    ('comp01', 'some company');
+    ('comp01', 'some company'),
+    ('comp02', 'another company');
 
 INSERT INTO item_groups
     (uid, name, company)
     VALUES
-    ('grou01', 'transparant', (SELECT id FROM companies WHERE uid = 'comp01'));
+    ('grou01', 'transparant', (SELECT id FROM companies WHERE uid = 'comp01')),
+    ('grou02', 'transparant', (SELECT id FROM companies WHERE uid = 'comp02'));
 
 INSERT INTO items
     (uid, name, item_group)
@@ -176,9 +172,25 @@ INSERT INTO items
     ('item02', 'another thing', (SELECT id FROM item_groups WHERE uid = 'grou01'));
 
 INSERT INTO users
-    (uid, name, email, pass, company, role)
+    (uid, name, email, pass, company)
     VALUES
-    ('user01', 'ein user', 'user@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'comp01'), (SELECT id FROM user_roles WHERE name = 'owner'));
+    ('user01', 'ein user', 'user@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'comp01')),
+    ('user02', 'view company user', 'user2@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'comp01')),
+    ('user03', 'company2 owner', 'user3@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'comp02')),
+    ('user04', 'company2 user', 'user4@localhost', 'pass', (SELECT id FROM companies WHERE uid = 'comp02'));
+
+INSERT INTO perm_company
+    (user, company, permission)
+    VALUES
+    ((SELECT id FROM users WHERE uid = 'user01'),
+     (SELECT id FROM companies WHERE uid = 'comp01'),
+     CONV('1111', 2, 10)),
+    ((SELECT id FROM users WHERE uid = 'user02'),
+     (SELECT id FROM companies WHERE uid = 'comp01'),
+     CONV('0001', 2, 10)),
+    ((SELECT id FROM users WHERE uid = 'user03'),
+     (SELECT id FROM companies WHERE uid = 'comp02'),
+     CONV('1111', 2, 10));
 
 INSERT INTO customers
     (uid, name)

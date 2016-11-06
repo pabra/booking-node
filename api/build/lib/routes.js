@@ -9,6 +9,7 @@ const errors = require('./errors');
 const ValueError = errors.ValueError;
 const dateAndTime = require('./dateAndTime');
 const uidLib = require('./uid');
+const permissions = require('./permissions');
 const httpErrorHandler = function (err, res) {
     if (err instanceof ValueError) {
         res.status(400).send(err);
@@ -183,6 +184,9 @@ exports.getCompanies = co.wrap(function * (req, res) {
 
     try {
         const companies = yield db.getCompanies(token.uid);
+        for (let x of companies) {
+            x.permissions = permissions.permissionToObject(x.permission);
+        }
         res.send(companies);
     } catch (e) {
         httpErrorHandler(e, res);
@@ -206,6 +210,9 @@ exports.getGroups = co.wrap(function * (req, res) {
     try {
         const companyUid = uidLib.ensureValidUid(req.params.companyUid);
         const groups = yield db.getGroups(token.uid, companyUid);
+        for (let x of groups) {
+            x.permissions = permissions.permissionToObject(x.permission);
+        }
         res.send(groups);
     } catch (e) {
         httpErrorHandler(e, res);
