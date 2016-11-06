@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:boron
 
 # set correct timezone
 RUN echo 'Europe/Berlin' > /etc/timezone \
