@@ -6,6 +6,8 @@ const errors = require('../errors');
 const ValueError = errors.ValueError;
 const db = require('../db');
 const getCompanies = db.getCompanies;
+const getGroups = db.getGroups;
+const getItems = db.getItems;
 
 const permissions = {
     denied: parseInt('0000', 2),    // 0
@@ -15,15 +17,72 @@ const permissions = {
     delete: parseInt('1000', 2),    // 8
 };
 
+const thingTypes = [
+    'company',
+    'itemGroup',
+    'item',
+];
+
 const knownPermission = function (permission) {
     if (!permissions.hasOwnProperty(permission)) throw new ValueError(`unknown permission: "${permission}"`);
     return true;
 };
 
+const knownThingType = function (thingType) {
+    if (thingTypes.indexOf(thingType) === -1) throw new ValueError(`unknown thing type: "${thingType}"`);
+    return true;
+};
+
 const getPermission = function (user, item, thingType) {
+    knownThingType(thingType);
     // TODO: get from DB
     return permissions.denied;
 };
+
+const getThingsWithPermission = co.wrap(function * (thingType, params = {}, reqPerms = ['view']) {
+    let requiredPermission = permissions.denied;
+    if (!(reqPerms instanceof Array)) throw new TypeError('expected Array for reqPerms');
+    knownThingType(thingType);
+    for (let x of reqPerms) {
+        knownPermission(x);
+        requiredPermission = addPermissionAction(requiredPermission, x);
+    }
+
+    if (thingType === 'company') {
+        let companies = [];
+        for (let x of yield getCompanies(params.user)) {
+            if (hasPermissionCheck(x.permission, requiredPermission)) {
+                companies.push(x);
+            }
+        }
+
+        return companies;
+    }
+
+    if (thingType === 'itemGroup') {
+        let itemGroups = [];
+        for (let x of yield getGroups(params.user, params.company)) {
+            if (hasPermissionCheck(x.permission, requiredPermission)) {
+                itemGroups.push(x);
+            }
+        }
+
+        return itemGroups;
+    }
+
+    if (thingType === 'item') {
+        let items = [];
+        for (let x of yield getItems(params.user, params.itemGroup)) {
+            if (hasPermissionCheck(x.permission, requiredPermission)) {
+                items.push(x);
+            }
+        }
+
+        return items;
+    }
+
+    return null;
+});
 
 const permissionToObject = function (permission) {
     const hasPermissions = {};
@@ -81,3 +140,4 @@ exports.hasPermission = hasPermission;
 exports.addPermission = addPermission;
 exports.removePermission = removePermission;
 exports.permissionToObject = permissionToObject;
+exports.getThingsWithPermission = getThingsWithPermission;

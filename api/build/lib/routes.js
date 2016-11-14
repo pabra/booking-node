@@ -183,10 +183,7 @@ exports.getCompanies = co.wrap(function * (req, res) {
     const token = req.token.payload;
 
     try {
-        const companies = yield db.getCompanies(token.uid);
-        for (let x of companies) {
-            x.permissions = permissions.permissionToObject(x.permission);
-        }
+        const companies = yield permissions.getThingsWithPermission('company', {user: token.uid});
         res.send(companies);
     } catch (e) {
         httpErrorHandler(e, res);
@@ -209,10 +206,8 @@ exports.getGroups = co.wrap(function * (req, res) {
 
     try {
         const companyUid = uidLib.ensureValidUid(req.params.companyUid);
-        const groups = yield db.getGroups(token.uid, companyUid);
-        for (let x of groups) {
-            x.permissions = permissions.permissionToObject(x.permission);
-        }
+        const params = {user: token.uid, company: companyUid};
+        const groups = yield permissions.getThingsWithPermission('itemGroup', params);
         res.send(groups);
     } catch (e) {
         httpErrorHandler(e, res);
@@ -224,7 +219,8 @@ exports.getItems = co.wrap(function * (req, res) {
 
     try {
         const groupUid = uidLib.ensureValidUid(req.params.groupUid);
-        const items = yield db.getItems(token.uid, groupUid);
+        const params = {user: token.uid, itemGroup: groupUid};
+        const items = yield permissions.getThingsWithPermission('item', params);
         res.send(items);
     } catch (e) {
         httpErrorHandler(e, res);
