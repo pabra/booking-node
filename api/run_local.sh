@@ -48,7 +48,8 @@ export MYSQL_ENV_MYSQL_TEST_DATABASE
 cd ${DIR}/build || exit 1
 echo "DEBUGGER: '${DEBUGGER}'"
 if [ "$DEBUGGER" ] && [ ! "$DEBUGGER" -eq 0 ]; then
-    node-debug --cli=true app.js
+    # node-debug --cli=true app.js
+    node --inspect --debug-brk app.js
 else
     npm start
 fi
