@@ -40,8 +40,10 @@ WORKDIR /data/
 
 ADD package.json ./
 
-RUN npm install -g npm \
-    && npm install
+# updating npm currently fails on Ubuntu 14.04 host
+# seems to be related to: https://github.com/npm/npm/issues/9863
+# RUN npm install -g npm
+RUN npm install
 
 ADD . ./
 
