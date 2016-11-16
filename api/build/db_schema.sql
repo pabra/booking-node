@@ -162,8 +162,8 @@ INSERT INTO companies
 INSERT INTO item_groups
     (uid, name, company)
     VALUES
-    ('grou01', 'transparant', (SELECT id FROM companies WHERE uid = 'comp01')),
-    ('grou02', 'transparant', (SELECT id FROM companies WHERE uid = 'comp02'));
+    ('grou01', 'transparent', (SELECT id FROM companies WHERE uid = 'comp01')),
+    ('grou02', 'transparent', (SELECT id FROM companies WHERE uid = 'comp02'));
 
 INSERT INTO items
     (uid, name, item_group)
