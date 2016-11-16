@@ -226,3 +226,63 @@ exports.getItems = co.wrap(function * (req, res) {
         httpErrorHandler(e, res);
     }
 });
+
+exports.updateCompany = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+
+    try {
+        const companyUid = uidLib.ensureValidUid(req.params.uid);
+        const params = {
+            user: token.uid,
+            company: companyUid,
+            throwPermissionErrors: true,
+        };
+        const perms = ['edit'];
+        const companyData = yield permissions.getThingsWithPermission('company', params, perms);
+
+        if (companyData.length === 0) throw new ValueError(`no company with uid ${companyUid}`);
+        res.send(yield db.updateCompany(companyUid, req.body));
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+});
+
+exports.updateItemGroup = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+
+    try {
+        const itemGroupUid = uidLib.ensureValidUid(req.params.uid);
+        const params = {
+            user: token.uid,
+            itemGroup: itemGroupUid,
+            throwPermissionErrors: true,
+        };
+        const perms = ['edit'];
+        const itemGroupData = yield permissions.getThingsWithPermission('itemGroup', params, perms);
+
+        if (itemGroupData.length === 0) throw new ValueError(`no item group with uid ${itemGroupUid}`);
+        res.send(yield db.updateItemGroup(itemGroupUid, req.body));
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+});
+
+exports.updateItem = co.wrap(function * (req, res) {
+    const token = req.token.payload;
+
+    try {
+        const itemUid = uidLib.ensureValidUid(req.params.uid);
+        const params = {
+            user: token.uid,
+            item: itemUid,
+            throwPermissionErrors: true,
+        };
+        const perms = ['edit'];
+        const itemData = yield permissions.getThingsWithPermission('item', params, perms);
+
+        if (itemData.length === 0) throw new ValueError(`no item with uid ${itemUid}`);
+        res.send(yield db.updateItem(itemUid, req.body));
+    } catch (e) {
+        httpErrorHandler(e, res);
+    }
+});

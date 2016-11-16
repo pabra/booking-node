@@ -17,6 +17,10 @@ exports.getUsers = require('./user/getUsers');
 exports.getGroups = require('./user/getGroups');
 exports.getItems = require('./user/getItems');
 
+exports.updateCompany = require('./user/updateCompany');
+exports.updateItemGroup = require('./user/updateItemGroup');
+exports.updateItem = require('./user/updateItem');
+
 // reload database on startup
 // loadSchema.loadSchema();
 

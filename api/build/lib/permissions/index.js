@@ -4,6 +4,7 @@
 const co = require('co');
 const errors = require('../errors');
 const ValueError = errors.ValueError;
+const PermissionError = errors.PermissionError;
 const db = require('../db');
 const getCompanies = db.getCompanies;
 const getGroups = db.getGroups;
@@ -45,14 +46,16 @@ const getThingsWithPermission = co.wrap(function * (thingType, params = {}, reqP
     knownThingType(thingType);
     for (let x of reqPerms) {
         knownPermission(x);
-        requiredPermission = addPermissionAction(requiredPermission, x);
+        requiredPermission = addPermissionAction(requiredPermission, permissions[x]);
     }
 
     if (thingType === 'company') {
         let companies = [];
-        for (let x of yield getCompanies(params.user)) {
+        for (let x of yield getCompanies(params)) {
             if (hasPermissionCheck(x.permission, requiredPermission)) {
                 companies.push(x);
+            } else if (params.throwPermissionErrors) {
+                throw new PermissionError('missing required permission for company', x);
             }
         }
 
@@ -61,9 +64,11 @@ const getThingsWithPermission = co.wrap(function * (thingType, params = {}, reqP
 
     if (thingType === 'itemGroup') {
         let itemGroups = [];
-        for (let x of yield getGroups(params.user, params.company)) {
+        for (let x of yield getGroups(params)) {
             if (hasPermissionCheck(x.permission, requiredPermission)) {
                 itemGroups.push(x);
+            } else if (params.throwPermissionErrors) {
+                throw new PermissionError('missing required permission for itemGroup', x);
             }
         }
 
@@ -72,9 +77,11 @@ const getThingsWithPermission = co.wrap(function * (thingType, params = {}, reqP
 
     if (thingType === 'item') {
         let items = [];
-        for (let x of yield getItems(params.user, params.itemGroup)) {
+        for (let x of yield getItems(params)) {
             if (hasPermissionCheck(x.permission, requiredPermission)) {
                 items.push(x);
+            } else if (params.throwPermissionErrors) {
+                throw new PermissionError('missing required permission for item', x);
             }
         }
 

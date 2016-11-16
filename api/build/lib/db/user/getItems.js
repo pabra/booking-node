@@ -1,10 +1,27 @@
 'use strict';
 
-const co = require('co');
 // not use const to be able to mock away for tests
 let queryPromise = require('../internal/queryPromise');
+const errors = require('../../errors');
+const ValueError = errors.ValueError;
 
-module.exports = co.wrap(function * (userUid, groupUid) {
+module.exports = function (params) {
+    if (!params.user) throw new ValueError('user required');
+
+    const qArgs = [params.user];
+    let qItemGroupFilter = '';
+    let qItemFilter = '';
+
+    if (params.itemGroup) {
+        qArgs.push(params.itemGroup);
+        qItemGroupFilter = 'AND g.uid = ?';
+    }
+
+    if (params.item) {
+        qArgs.push(params.item);
+        qItemFilter = 'AND i.uid = ?';
+    }
+
     const q = `
         SELECT      i.uid               AS item_uid,
                     i.name              AS item_name,
@@ -21,10 +38,11 @@ module.exports = co.wrap(function * (userUid, groupUid) {
         LEFT JOIN   companies c         ON c.id = u.company OR pg.user
         LEFT JOIN   item_groups g       ON g.company = c.id
         LEFT JOIN   items i             ON i.item_group = g.id
-        WHERE       g.uid = ?
-                    AND u.uid = ?
+        WHERE       u.uid = ?
+                    ${qItemGroupFilter}
+                    ${qItemFilter}
                     AND i.uid IS NOT NULL
     `;
 
-    return yield queryPromise(q, [groupUid, userUid]);
-});
+    return queryPromise(q, qArgs);
+};

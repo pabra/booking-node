@@ -41,3 +41,18 @@ exports.isObjectOrThrow = function (testObj) {
     if (Object.prototype.toString.call(testObj) !== '[object Object]')
         throw new TypeError('not an Object');
 };
+
+/**
+ * promiseReturner - returns a Promise that can succeed or fail and pass value
+ *
+ * @param {any} value Value to pass to resolve or reject function
+ * @param {string} [action=resolve] should the Promise succeed ('resolve') or fail ('reject')
+ *
+ * @return {Promise}
+ */
+exports.promiseReturner = function (value, action='resolve') {
+    return new Promise(function (resolve, reject) {
+        if (action === 'resolve') resolve(value);
+        else reject(value);
+    });
+};

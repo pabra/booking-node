@@ -3,11 +3,15 @@ import ko from 'knockout';
 import loginFn from './internal/loginFn';
 import logoutFn from './internal/logoutFn';
 import isAuthenticatedFn from './internal/isAuthenticatedFn';
-import getItemsFn from './internal/getItemsFn';
 
 import getCompaniesFn from './internal/getCompaniesFn';
 import getUsersFn from './internal/getUsersFn';
 import getGroupsFn from './internal/getGroupsFn';
+import getItemsFn from './internal/getItemsFn';
+
+import updateCompanyFn from './internal/updateCompany';
+import updateItemGroupFn from './internal/updateItemGroup';
+import updateItemFn from './internal/updateItem';
 
 const instance = (function () {
     // could hold private vars and functions here
@@ -75,6 +79,9 @@ const instance = (function () {
         getCompanies:       getCompaniesFn,
         getUsers:           getUsersFn,
         getGroups:          getGroupsFn,
+        updateCompany:      updateCompanyFn,
+        updateItemGroup:    updateItemGroupFn,
+        updateItem:         updateItemFn,
     };
 })();
 

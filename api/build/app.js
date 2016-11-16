@@ -28,6 +28,10 @@ app.post('/item/:uid/:from..:to', routes.postItemBooking);
 app.post('/new_account', routes.newAccount);
 
 // token required
+app.post('/company/:uid', midWare.validToken, routes.updateCompany);
+app.post('/itemGroup/:uid', midWare.validToken, routes.updateItemGroup);
+app.post('/item/:uid', midWare.validToken, routes.updateItem);
+
 app.put('/group/:companyUid/:newGroupName', midWare.validToken, routes.putGroup);
 
 app.get('/companies', midWare.validToken, routes.getCompanies);

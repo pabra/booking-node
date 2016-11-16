@@ -21,12 +21,20 @@ ko.components.register('manage-item', {
             const selected = this.itemSelected();
             if (!selected) return;
             this.loading(true);
-            // send changed data this.valuesHandler.getChanged() by ajax
-            setTimeout(() => {
-                // if the API accept our update, update our model
+            // TODO: check permissions in selected.permissions
+            const changedValues = this.valuesHandler.getChanged();
+            window.console.log('changedValues', changedValues);
+            comm.updateItem(selected.item_uid(), changedValues, data => {
+                window.console.log('data', data);
                 this.valuesHandler.save();
                 this.loading(false);
-            }, 1000);
+            });
+            // send changed data this.valuesHandler.getChanged() by ajax
+            // setTimeout(() => {
+            //     // if the API accept our update, update our model
+            //     this.valuesHandler.save();
+            //     this.loading(false);
+            // }, 1000);
         };
         // this.itemSelected.valueHasMutated();
         window.debug_manage_item = this;
