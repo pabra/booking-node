@@ -1,8 +1,6 @@
 'use strict';
 
 const db = require('./db');
-const pool = db.pool;
-const co = require('co');
 const auth = require('basic-auth');
 const logger = require('./logger');
 const errors = require('./errors');
@@ -10,72 +8,74 @@ const ValueError = errors.ValueError;
 const dateAndTime = require('./dateAndTime');
 const uidLib = require('./uid');
 const permissions = require('./permissions');
-const httpErrorHandler = function (err, res) {
+const httpErrorHandler = function (ctx, err) {
+    ctx.status = 400;
     if (err instanceof ValueError) {
-        res.status(400).send(err);
+        ctx.body = err;
     } else {
-        res.status(400).send({errno: err.errno,
-                              code: err.code,
-                              message: err.message,
-                              name: err.name});
+        ctx.body = {
+            errno: err.errno,
+            code: err.code,
+            message: err.message,
+            name: err.name,
+        };
         logger.error(err);
     }
 };
 
 
-exports.getIndex = function (req, res) {
-    pool.query('SELECT NOW() AS now', function (err, rows, fields) {
-        if (err) throw err;
-        res.send('mysql says now is: ' + rows[0].now);
-    });
+exports.getIndex = function *() {
+    const queryPromise = require('./db/internal/queryPromise');
+    const dbDate = yield queryPromise('SELECT NOW() AS now');
+    this.body = `mysql says now is: ${dbDate[0].now}`;
 };
 
-exports.reloadDb = function (req, res) { // TODO: remove
+exports.reloadDb = function *(req, res) { // TODO: remove
     try {
         db.loadSchema(true);
-        res.send({ok: true});
+        this.body = {ok: true};
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
 };
 
-exports.getUnavailItemPeriod = co.wrap(function * (req, res) {
+exports.getUnavailItemPeriod = function *() {
     let uid;
     let yearMonth;
     let data;
     let debug;
 
     try {
-        uid = uidLib.ensureValidUid(req.params.uid);
-        yearMonth = dateAndTime.ensureValidYearMonth(req.params.yearMonth);
+        uid = uidLib.ensureValidUid(this.params.uid);
+        yearMonth = dateAndTime.ensureValidYearMonth(this.params.yearMonth);
         debug = {item_uid: uid, year: yearMonth.year, month: yearMonth.month};
         data = yield db.getUnavailItemPeriod(uid, yearMonth.year, yearMonth.month);
 
-        res.send({data, debug});
+        this.body = {data, debug};
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.getUnavailGroupPeriod = co.wrap(function * (req, res) {
+exports.getUnavailGroupPeriod = function *() {
     let uid;
     let yearMonth;
     let data;
     let debug;
 
     try {
-        uid = uidLib.ensureValidUid(req.params.uid);
-        yearMonth = dateAndTime.ensureValidYearMonth(req.params.yearMonth);
+        uid = uidLib.ensureValidUid(this.params.uid);
+        yearMonth = dateAndTime.ensureValidYearMonth(this.params.yearMonth);
         debug = {group_uid: uid, year: yearMonth.year, month: yearMonth.month};
         data = yield db.getUnavailGroupPeriod(uid, yearMonth.year, yearMonth.month);
 
-        res.send({data, debug});
+        this.body = {data, debug};
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.postItemBooking = co.wrap(function * (req, res) {
+exports.postItemBooking = function *() {
     let uid;
     let fromDate;
     let toDate;
@@ -85,10 +85,10 @@ exports.postItemBooking = co.wrap(function * (req, res) {
     let debug;
 
     try {
-        uid = uidLib.ensureValidUid(req.params.uid);
-        fromDate = dateAndTime.ensureValidIsoDate(req.params.from);
-        toDate = dateAndTime.ensureValidIsoDate(req.params.to);
-        customerName = req.body.name;
+        uid = uidLib.ensureValidUid(this.params.uid);
+        fromDate = dateAndTime.ensureValidIsoDate(this.params.from);
+        toDate = dateAndTime.ensureValidIsoDate(this.params.to);
+        customerName = this.request.body.name;
         passObject = {item: uid, fromDate, toDate, customerName};
 
         if (toDate < fromDate) {
@@ -100,13 +100,13 @@ exports.postItemBooking = co.wrap(function * (req, res) {
         debug = {uid, fromDate, toDate, customerName};
         data = yield db.putItemBooking(passObject);
 
-        res.send({data, debug});
+        this.body = {data, debug};
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.newAccount = co.wrap(function * (req, res) {
+exports.newAccount = function *() {
     let companyName;
     let userName;
     let userEmail;
@@ -115,10 +115,10 @@ exports.newAccount = co.wrap(function * (req, res) {
     let data;
 
     try {
-        companyName = req.body.company_name;
-        userName = req.body.user_name;
-        userEmail = req.body.user_email;
-        userPass = req.body.user_pass;
+        companyName = this.request.body.company_name;
+        userName = this.request.body.user_name;
+        userEmail = this.request.body.user_email;
+        userPass = this.request.body.user_pass;
         passObject = {companyName, userName, userEmail, userPass};
         if (!companyName) throw new ValueError('missing company name');
         if (!userName) throw new ValueError('missing user name');
@@ -126,14 +126,14 @@ exports.newAccount = co.wrap(function * (req, res) {
         if (!userPass) throw new ValueError('missing user password');
         data = yield db.newAccount(passObject);
 
-        res.send({data, debug: passObject});
+        this.body = {data, debug: passObject};
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.auth = co.wrap(function * (req, res) {
-    const credentials = auth(req) || {};
+exports.auth = function *() {
+    const credentials = auth(this) || {};
     const email = credentials.name;
     const pass = credentials.pass;
     const data = {};
@@ -144,94 +144,93 @@ exports.auth = co.wrap(function * (req, res) {
         const result = yield db.userAuth(email, pass);
 
         if (result.uid) {
-            req.token.payload.uid = result.uid;
-            data.access_token = req.token.encode();
+            this.token.payload.uid = result.uid;
+            data.access_token = this.token.encode();
             data.access_token_type = 'Bearer';
             data.user_uid = result.uid;
             data.user_name = result.name;
-            res.send(data);
+            this.body = data;
         } else {
-            res.header('WWW-Authenticate', 'Bearer realm="booking-node"');
-            res.status(401);
-            res.send({});
+            this.response.set('WWW-Authenticate', 'Bearer realm="booking-node"');
+            this.status = 401;
         }
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.putGroup = co.wrap(function * (req, res) {
-    const token = req.token.payload;
-    const newGroupName = req.params.newGroupName;
+exports.putGroup = function *() {
+    const token = this.token.payload;
+    const newGroupName = this.params.newGroupName;
 
     try {
         if (!newGroupName) throw new ValueError('missing newGroupName');
-        const companyUid = uidLib.ensureValidUid(req.params.companyUid);
+        const companyUid = uidLib.ensureValidUid(this.params.companyUid);
         const userBelongsToCompany = yield db.userBelongsToCompany(token.uid, companyUid);
         if (!userBelongsToCompany) throw new ValueError('user does not belong to company');
 
-        // res.send({test: userBelongsToCompany});
+        // this.body = {test: userBelongsToCompany};
         const newGroupResult = yield db.putGroup(companyUid, newGroupName);
 
-        res.send({res:newGroupResult});
+        this.body = {res:newGroupResult};
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.getCompanies = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.getCompanies = function *() {
+    const token = this.token.payload;
 
     try {
         const companies = yield permissions.getThingsWithPermission('company', {user: token.uid});
-        res.send(companies);
+        this.body = companies;
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.getUsers = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.getUsers = function *() {
+    const token = this.token.payload;
 
     try {
         const users = yield db.getUsers(token.uid);
-        res.send(users);
+        this.body = users;
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.getGroups = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.getGroups = function *() {
+    const token = this.token.payload;
 
     try {
-        const companyUid = uidLib.ensureValidUid(req.params.companyUid);
+        const companyUid = uidLib.ensureValidUid(this.params.companyUid);
         const params = {user: token.uid, company: companyUid};
         const groups = yield permissions.getThingsWithPermission('itemGroup', params);
-        res.send(groups);
+        this.body = groups;
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.getItems = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.getItems = function *() {
+    const token = this.token.payload;
 
     try {
-        const groupUid = uidLib.ensureValidUid(req.params.groupUid);
+        const groupUid = uidLib.ensureValidUid(this.params.groupUid);
         const params = {user: token.uid, itemGroup: groupUid};
         const items = yield permissions.getThingsWithPermission('item', params);
-        res.send(items);
+        this.body = items;
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.updateCompany = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.updateCompany = function *() {
+    const token = this.token.payload;
 
     try {
-        const companyUid = uidLib.ensureValidUid(req.params.uid);
+        const companyUid = uidLib.ensureValidUid(this.params.uid);
         const params = {
             user: token.uid,
             company: companyUid,
@@ -241,17 +240,17 @@ exports.updateCompany = co.wrap(function * (req, res) {
         const companyData = yield permissions.getThingsWithPermission('company', params, perms);
 
         if (companyData.length === 0) throw new ValueError(`no company with uid ${companyUid}`);
-        res.send(yield db.updateCompany(companyUid, req.body));
+        this.body = yield db.updateCompany(companyUid, this.request.body);
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.updateItemGroup = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.updateItemGroup = function *() {
+    const token = this.token.payload;
 
     try {
-        const itemGroupUid = uidLib.ensureValidUid(req.params.uid);
+        const itemGroupUid = uidLib.ensureValidUid(this.params.uid);
         const params = {
             user: token.uid,
             itemGroup: itemGroupUid,
@@ -261,17 +260,17 @@ exports.updateItemGroup = co.wrap(function * (req, res) {
         const itemGroupData = yield permissions.getThingsWithPermission('itemGroup', params, perms);
 
         if (itemGroupData.length === 0) throw new ValueError(`no item group with uid ${itemGroupUid}`);
-        res.send(yield db.updateItemGroup(itemGroupUid, req.body));
+        this.body = yield db.updateItemGroup(itemGroupUid, this.request.body);
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};
 
-exports.updateItem = co.wrap(function * (req, res) {
-    const token = req.token.payload;
+exports.updateItem = function *() {
+    const token = this.token.payload;
 
     try {
-        const itemUid = uidLib.ensureValidUid(req.params.uid);
+        const itemUid = uidLib.ensureValidUid(this.params.uid);
         const params = {
             user: token.uid,
             item: itemUid,
@@ -281,8 +280,8 @@ exports.updateItem = co.wrap(function * (req, res) {
         const itemData = yield permissions.getThingsWithPermission('item', params, perms);
 
         if (itemData.length === 0) throw new ValueError(`no item with uid ${itemUid}`);
-        res.send(yield db.updateItem(itemUid, req.body));
+        this.body = yield db.updateItem(itemUid, this.request.body);
     } catch (e) {
-        httpErrorHandler(e, res);
+        httpErrorHandler(this, e);
     }
-});
+};

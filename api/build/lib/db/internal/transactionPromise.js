@@ -2,7 +2,6 @@
 
 const db = require('../../db');
 const pool = db.pool;
-const co = require('co');
 const logger = require('../../logger');
 const transErrFn = function (conn, err, reject) {
     conn.rollback(function () {
@@ -25,7 +24,7 @@ module.exports = function (txFn) {
                 return;
             }
 
-            conn.beginTransaction(co(function * (beginError) {
+            conn.beginTransaction(function *(beginError) {
                 if (beginError) {
                     reject(beginError);
                     return;
@@ -45,7 +44,7 @@ module.exports = function (txFn) {
                         resolve(res);
                     }
                 });
-            }));
+            });
         });
     });
 };

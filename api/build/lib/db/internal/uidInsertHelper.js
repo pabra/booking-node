@@ -1,6 +1,5 @@
 'use strict';
 
-const co = require('co');
 const uid = require('../../uid');
 const utils = require('../../utils');
 const isObjectOrThrow = utils.isObjectOrThrow;
@@ -13,7 +12,7 @@ let transactionQueryPromise = require('./transactionQueryPromise');
 
 exports.UidClass = UidClass;
 
-exports.uidInserter = co.wrap(function * (query, args, connection) {
+exports.uidInserter = function *(query, args, connection) {
     let i = 0;
     let result;
     let insErr;
@@ -57,4 +56,17 @@ exports.uidInserter = co.wrap(function * (query, args, connection) {
     }
 
     return result;
-});
+};
+
+gen = function *() {
+    let long = () => new Promise((resolve) => {
+        setTimeout(() => resolve('woohoo'), 5000);
+    });
+    console.log('huhu');
+    const x = long();
+    yield x + ' yea';
+    console.log('haha');
+    // throw new Error('hähä');
+    yield 42;
+    console.log('hoho');
+};

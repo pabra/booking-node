@@ -1,10 +1,9 @@
 'use strict';
 
-const co = require('co');
 const queryPromise = require('./internal/queryPromise');
 
 
-module.exports = co.wrap(function * (email, pass) {
+module.exports = function *(email, pass) {
     const q = `
         SELECT  uid,
                 name
@@ -27,4 +26,4 @@ module.exports = co.wrap(function * (email, pass) {
     }
 
     return data;
-});
+};

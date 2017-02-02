@@ -1,6 +1,5 @@
 'use strict';
 
-const co = require('co');
 // not use const to be able to mock away for tests
 let queryPromise = require('../internal/queryPromise');
 

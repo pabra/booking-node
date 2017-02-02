@@ -1,43 +1,56 @@
 'use strict';
 
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
+const bodyParserOptions = {
+    extendTypes: {
+        json: ['text/plain'],
+    },
+};
+const koa = require('koa');
+const app = koa();
+const router = require('koa-router')();
+const body = require('koa-bodyparser')(bodyParserOptions);
 const midWare = require('./lib/middlewares');
-const cors = require('cors');
+const tok = midWare.validToken;
+const cors = require('koa-cors');
 const logger = require('./lib/logger');
 const routes = require('./lib/routes');
 const loadSchema = require('./lib/db').loadSchema;
 const corsOptions = {
     // origin: true,
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'X-Requested-With', 'Authorization'],
+    headers: ['Content-Type', 'X-Requested-With', 'Authorization'],
 };
 
-app.use(bodyParser.json({type: ['json', 'text']}));
-app.use(midWare.token);
-app.use(cors(corsOptions));
+// app.use(bodyParser.json({type: ['json', 'text']}));
+// app.use(midWare.token);
+// app.use(cors(corsOptions));
 
-app.get('/', routes.getIndex);
-app.get('/reloadDb', routes.reloadDb); // TODO: remove
-app.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
-app.get('/group/:uid/:yearMonth', routes.getUnavailGroupPeriod);
-app.get('/auth', routes.auth);
+router.get('/', routes.getIndex);
+router.get('/reloadDb', routes.reloadDb); // TODO: remove
+router.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
+router.get('/group/:uid/:yearMonth', routes.getUnavailGroupPeriod);
+router.get('/auth', routes.auth);
 
-app.post('/item/:uid/:from..:to', routes.postItemBooking);
-app.post('/new_account', routes.newAccount);
+router.post('/item/:uid/:from..:to', routes.postItemBooking);
+router.post('/new_account', routes.newAccount);
 
 // token required
-app.post('/company/:uid', midWare.validToken, routes.updateCompany);
-app.post('/itemGroup/:uid', midWare.validToken, routes.updateItemGroup);
-app.post('/item/:uid', midWare.validToken, routes.updateItem);
+router.post('/company/:uid', tok, body, routes.updateCompany);
+router.post('/itemGroup/:uid', tok, routes.updateItemGroup);
+router.post('/item/:uid', tok, body, routes.updateItem);
 
-app.put('/group/:companyUid/:newGroupName', midWare.validToken, routes.putGroup);
+router.put('/group/:companyUid/:newGroupName', tok, routes.putGroup);
 
-app.get('/companies', midWare.validToken, routes.getCompanies);
-app.get('/users', midWare.validToken, routes.getUsers);
-app.get('/groups/:companyUid', midWare.validToken, routes.getGroups);
-app.get('/items/:groupUid', midWare.validToken, routes.getItems);
+router.get('/companies', tok, routes.getCompanies);
+router.get('/users', tok, routes.getUsers);
+router.get('/groups/:companyUid', tok, routes.getGroups);
+router.get('/items/:groupUid', tok, routes.getItems);
+
+app
+    .use(cors(corsOptions))
+    .use(midWare.token)
+    .use(router.routes())
+    .use(router.allowedMethods());
 
 loadSchema();
 

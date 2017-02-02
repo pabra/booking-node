@@ -1,7 +1,6 @@
 'use strict';
 
 
-const co = require('co');
 const errors = require('../errors');
 const ValueError = errors.ValueError;
 const PermissionError = errors.PermissionError;
@@ -40,7 +39,7 @@ const getPermission = function (user, item, thingType) {
     return permissions.denied;
 };
 
-const getThingsWithPermission = co.wrap(function * (thingType, params = {}, reqPerms = ['view']) {
+const getThingsWithPermission = function *(thingType, params = {}, reqPerms = ['view']) {
     let requiredPermission = permissions.denied;
     if (!(reqPerms instanceof Array)) throw new TypeError('expected Array for reqPerms');
     knownThingType(thingType);
@@ -89,7 +88,7 @@ const getThingsWithPermission = co.wrap(function * (thingType, params = {}, reqP
     }
 
     return null;
-});
+};
 
 const permissionToObject = function (permission) {
     const hasPermissions = {};

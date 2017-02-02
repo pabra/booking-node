@@ -18,11 +18,11 @@ describe('uidInsertHelper', function () {
 
     // good
     it('should succeed', function (done) {
-        const p = uidInsertHelper('query', [new UidClass()]);
-        p.then(function (result) {
-            expect(result).toBe('success!');
-            done();
-        });
+        const g = uidInsertHelper('query', [new UidClass()]);
+        // p.then(function (result) {
+        expect([...g][0]).toBe('success!');
+        done();
+        // });
     });
 
     it('should succeed', function (done) {

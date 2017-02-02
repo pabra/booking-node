@@ -1,10 +1,9 @@
 'use strict';
 
-const co = require('co');
 // not use const to be able to mock away for tests
 let queryPromise = require('../internal/queryPromise');
 
-module.exports = co.wrap(function * (userUid, companyUid) {
+module.exports = function *(userUid, companyUid) {
     const q = `
         SELECT      1 AS isTrue
         FROM        companies c
@@ -16,4 +15,4 @@ module.exports = co.wrap(function * (userUid, companyUid) {
     let ret = yield queryPromise(q, [userUid, companyUid]);
 
     return !!(ret[0] || {}).isTrue;
-});
+};
