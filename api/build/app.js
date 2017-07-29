@@ -11,14 +11,15 @@ const router = require('koa-router')();
 const body = require('koa-bodyparser')(bodyParserOptions);
 const midWare = require('./lib/middlewares');
 const tok = midWare.validToken;
-const cors = require('koa-cors');
+const cors = require('kcors');
 const logger = require('./lib/logger');
 const routes = require('./lib/routes');
 const loadSchema = require('./lib/db').loadSchema;
 const corsOptions = {
     // origin: true,
-    methods: ['POST', 'GET', 'PUT', 'DELETE'],
-    headers: ['Content-Type', 'X-Requested-With', 'Authorization'],
+    origin: '*',
+    allowMethods: ['POST', 'GET', 'PUT', 'DELETE'],
+    allowHeaders: ['Content-Type', 'X-Requested-With', 'Authorization'],
 };
 
 // app.use(bodyParser.json({type: ['json', 'text']}));
