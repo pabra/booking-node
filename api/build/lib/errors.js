@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Creating custom Error classes in Node.js
  * https://gist.github.com/justmoon/15511f92e5216fa2624b

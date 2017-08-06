@@ -6,6 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover node_modules/.bin/jasmine",
     "testNoCover": "./node_modules/.bin/jasmine",
+    "start-dev": "./node_modules/nodemon/bin/nodemon.js app.js",
     "start": "node app"
   },
   "repository": {
@@ -26,6 +27,7 @@
   "devDependencies": {
     "istanbul": "^0.4.5",
     "jasmine": "^2.5.2",
+    "nodemon": "^1.11.0",
     "rewire": "^2.5.2"
   }
 }

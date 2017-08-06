@@ -1,11 +1,11 @@
-'use strict';
-
 const utils = require('../../utils');
 const promiseReturner = utils.promiseReturner;
 // not use const to be able to mock away for tests
 let queryPromise = require('../internal/queryPromise');
 
-module.exports = function (itemUid, data) {
+module.exports = updateItem;
+
+function updateItem (itemUid, data) {
     const allowedFields = ['name'];
     const qArgs = [];
     const updates = [];
@@ -31,4 +31,4 @@ module.exports = function (itemUid, data) {
     qArgs.push(itemUid);
 
     return queryPromise(q, qArgs);
-};
+}

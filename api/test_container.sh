@@ -1,7 +1,6 @@
 #!/bin/bash
 
-BIN_READLINK=$( test -f /usr/local/bin/greadlink && echo "greadlink" || echo "readlink" )
-DIR="$( dirname "$( $BIN_READLINK -f "$0" )" )"
+DIR="$(cd "$(dirname "$0")" && pwd -P)"
 VARS_FILE=${DIR}/vars.cfg
 LOCAL_VARS_FILE=${DIR}/vars.local.cfg
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const crypto = require('crypto');
 const errors = require('../errors');
 const ValueError = errors.ValueError;
@@ -11,10 +9,10 @@ const maxTries = 25;
 // not make it const to overwriteable for tests
 let expAlpha = new RegExp('[^' + alphabet + ']', 'g');
 
+module.exports = getStrongUid;
 
-module.exports = function (len) {
-    return new Promise(function (resolve, reject) {
-        if (undefined === len) len = 6;
+function getStrongUid (len=6) {
+    return new Promise((resolve, reject) => {
         if (typeof len !== 'number' || parseInt(len) !== len) reject(new TypeError('expected integer not ' + typeof len));
         if (len < 2) reject(new ValueError(`len '${len}' < 2`));
         if (len > maxUidLen) reject(new ValueError(`len '${len}' > ${maxUidLen}`));
@@ -24,10 +22,10 @@ module.exports = function (len) {
         let mkRnd;
         let rnd;
 
-        mkRnd = function () {
+        mkRnd = () => {
             if (++i >= maxTries) reject(new Error(`could not get uid of length ${len} within ${i} tries`));
 
-            crypto.randomBytes(len * 2, function (err, buf) {
+            crypto.randomBytes(len * 2, (err, buf) => {
                 if (err) reject(err);
 
                 rnd = buf.toString('base64')
@@ -41,4 +39,4 @@ module.exports = function (len) {
 
         mkRnd();
     });
-};
+}

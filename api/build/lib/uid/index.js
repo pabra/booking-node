@@ -1,5 +1,3 @@
-'use strict';
-
 const expression = /^[a-zA-Z][a-zA-Z0-9]{5}$/;
 const ensureValidUid = require('./ensureValidUid');
 const getStrongUid = require('./getStrongUid');

@@ -5,6 +5,10 @@
         "node": true,
         "es6": true
     },
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module"
+    },
     "globals": {
         /**
          * true  - variable is allowed to be overwritten
@@ -45,7 +49,7 @@
         // "no-multi-spaces":  0,
         "camelcase":        0,
         "yoda":             0,
-        "require-yield":    0,
+        "require-yield":    1,
 
         "brace-style": [2, "1tbs"],
         "comma-dangle": [2, "always-multiline"],

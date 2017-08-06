@@ -1,9 +1,9 @@
-'use strict';
-
 // not use const to be able to mock away for tests
 let queryPromise = require('../internal/queryPromise');
 
-module.exports = function *(userUid, companyUid) {
+module.exports = belingsToCompany;
+
+async function belingsToCompany (userUid, companyUid) {
     const q = `
         SELECT      1 AS isTrue
         FROM        companies c
@@ -12,7 +12,7 @@ module.exports = function *(userUid, companyUid) {
                     AND c.uid = ?
     `;
 
-    let ret = yield queryPromise(q, [userUid, companyUid]);
+    const ret = await queryPromise(q, [userUid, companyUid]);
 
     return !!(ret[0] || {}).isTrue;
-};
+}

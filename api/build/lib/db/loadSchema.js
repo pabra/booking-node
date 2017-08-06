@@ -1,11 +1,11 @@
-'use strict';
-
 const fs = require('fs');
 const logger = require('../logger');
 const connect = require('./connect');
 const database = connect.database;
 
-exports.loadSchema = function (force) {
+exports.loadSchema = loadSchema;
+
+function loadSchema (force) {
     let conn = connect.getMultiConn(true);
     let schemaStr;
     let responseHandler;
@@ -17,7 +17,7 @@ exports.loadSchema = function (force) {
 
     if (force === undefined) force = false;
 
-    responseHandler = function (err, next) {
+    responseHandler = (err, next) => {
         if (err) {
             close();
             throw err;
@@ -28,12 +28,12 @@ exports.loadSchema = function (force) {
         }
     };
 
-    dbExists = function () {
+    dbExists = () => {
         const q = `SELECT  1 AS \`exists\`
                    FROM    information_schema.schemata
                    WHERE   schema_name = ?`;
 
-        conn.query(q, [database], function (err, rows) {
+        conn.query(q, [database], (err, rows) => {
             if (err) {
                 close();
                 throw err;
@@ -45,8 +45,8 @@ exports.loadSchema = function (force) {
         });
     };
 
-    getSchema = function () {
-        fs.readFile('./db_schema.sql', 'utf-8', function (err, data) {
+    getSchema = () => {
+        fs.readFile('./db_schema.sql', 'utf-8', (err, data) => {
             if (err) {
                 close();
                 throw err;
@@ -59,7 +59,7 @@ exports.loadSchema = function (force) {
         });
     };
 
-    emptyDb = function () {
+    emptyDb = () => {
         const q = `DROP DATABASE IF EXISTS ${database};
                    CREATE DATABASE ${database};
                    USE ${database}`;
@@ -70,17 +70,17 @@ exports.loadSchema = function (force) {
         });
     };
 
-    applySchema = function () {
+    applySchema = () => {
         logger.info('apply Schema ', conn.threadId);
         conn.query(schemaStr, function (err) {
             responseHandler(err, close);
         });
     };
 
-    close = function () {
+    close = () => {
         logger.info('close connection', conn.threadId);
         conn.end();
     };
 
     dbExists();
-};
+}

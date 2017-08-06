@@ -1,9 +1,8 @@
-'use strict';
-
 const queryPromise = require('./internal/queryPromise');
 
+module.exports = userAuth;
 
-module.exports = function *(email, pass) {
+async function userAuth (email, pass) {
     const q = `
         SELECT  uid,
                 name
@@ -13,7 +12,7 @@ module.exports = function *(email, pass) {
     `;
     const args = [email, pass];
 
-    const result = yield queryPromise(q, args);
+    const result = await queryPromise(q, args);
 
     const data = {
         uid: null,
@@ -26,4 +25,4 @@ module.exports = function *(email, pass) {
     }
 
     return data;
-};
+}

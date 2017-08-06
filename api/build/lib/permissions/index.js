@@ -1,6 +1,3 @@
-'use strict';
-
-
 const errors = require('../errors');
 const ValueError = errors.ValueError;
 const PermissionError = errors.PermissionError;
@@ -23,23 +20,29 @@ const thingTypes = [
     'item',
 ];
 
-const knownPermission = function (permission) {
+exports.hasPermission = hasPermission;
+exports.addPermission = addPermission;
+exports.removePermission = removePermission;
+exports.permissionToObject = permissionToObject;
+exports.getThingsWithPermission = getThingsWithPermission;
+
+function knownPermission (permission) {
     if (!permissions.hasOwnProperty(permission)) throw new ValueError(`unknown permission: "${permission}"`);
     return true;
-};
+}
 
-const knownThingType = function (thingType) {
+function knownThingType (thingType) {
     if (thingTypes.indexOf(thingType) === -1) throw new ValueError(`unknown thing type: "${thingType}"`);
     return true;
-};
+}
 
-const getPermission = function (user, item, thingType) {
+function getPermission (user, item, thingType) {
     knownThingType(thingType);
     // TODO: get from DB
     return permissions.denied;
-};
+}
 
-const getThingsWithPermission = function *(thingType, params = {}, reqPerms = ['view']) {
+async function getThingsWithPermission (thingType, params={}, reqPerms=['view']) {
     let requiredPermission = permissions.denied;
     if (!(reqPerms instanceof Array)) throw new TypeError('expected Array for reqPerms');
     knownThingType(thingType);
@@ -50,7 +53,7 @@ const getThingsWithPermission = function *(thingType, params = {}, reqPerms = ['
 
     if (thingType === 'company') {
         let companies = [];
-        for (let x of yield getCompanies(params)) {
+        for (let x of await getCompanies(params)) {
             if (hasPermissionCheck(x.permission, requiredPermission)) {
                 companies.push(x);
             } else if (params.throwPermissionErrors) {
@@ -63,7 +66,7 @@ const getThingsWithPermission = function *(thingType, params = {}, reqPerms = ['
 
     if (thingType === 'itemGroup') {
         let itemGroups = [];
-        for (let x of yield getGroups(params)) {
+        for (let x of await getGroups(params)) {
             if (hasPermissionCheck(x.permission, requiredPermission)) {
                 itemGroups.push(x);
             } else if (params.throwPermissionErrors) {
@@ -76,7 +79,7 @@ const getThingsWithPermission = function *(thingType, params = {}, reqPerms = ['
 
     if (thingType === 'item') {
         let items = [];
-        for (let x of yield getItems(params)) {
+        for (let x of await getItems(params)) {
             if (hasPermissionCheck(x.permission, requiredPermission)) {
                 items.push(x);
             } else if (params.throwPermissionErrors) {
@@ -88,9 +91,9 @@ const getThingsWithPermission = function *(thingType, params = {}, reqPerms = ['
     }
 
     return null;
-};
+}
 
-const permissionToObject = function (permission) {
+function permissionToObject (permission) {
     const hasPermissions = {};
     for (let x in permissions) {
         if (!permissions.hasOwnProperty(x) || x === 'denied') continue;
@@ -98,15 +101,15 @@ const permissionToObject = function (permission) {
     }
 
     return hasPermissions;
-};
+}
 
-const removePermissionAction = function (oldPerm, remPerm) {
+function removePermissionAction (oldPerm, remPerm) {
     const addedPerm = addPermissionAction(oldPerm, remPerm);
 
     return addedPerm ^ remPerm; // bitwise XOR
-};
+}
 
-const removePermission = function (user, item, thingType, permissionName) {
+function removePermission (user, item, thingType, permissionName) {
     knownPermission(permissionName);
     const hasPerm = getPermission(user, item, thingType);
     const definedPerm = permissions[permissionName];
@@ -114,13 +117,13 @@ const removePermission = function (user, item, thingType, permissionName) {
 
     // TODO: write newPerm to DB
     return newPerm === newPerm;
-};
+}
 
-const addPermissionAction = function (oldPerm, addPerm) {
+function addPermissionAction (oldPerm, addPerm) {
     return oldPerm | addPerm; // bitwise OR
-};
+}
 
-const addPermission = function (user, item, thingType, permissionName) {
+function addPermission (user, item, thingType, permissionName) {
     knownPermission(permissionName);
     const hasPerm = getPermission(user, item, thingType);
     const definedPerm = permissions[permissionName];
@@ -128,22 +131,16 @@ const addPermission = function (user, item, thingType, permissionName) {
 
     // TODO: write newPerm to DB
     return newPerm === newPerm;
-};
+}
 
-const hasPermissionCheck = function (hasPerm, checkPerm) {
+function hasPermissionCheck (hasPerm, checkPerm) {
     return (checkPerm & hasPerm) === checkPerm; // bitwise AND
-};
+}
 
-const hasPermission = function (user, item, thingType, permissionName) {
+function hasPermission (user, item, thingType, permissionName) {
     knownPermission(permissionName);
     const hasPerm = getPermission(user, item, thingType);
     const definedPerm = permissions[permissionName];
 
     return hasPermissionCheck(hasPerm, definedPerm);
-};
-
-exports.hasPermission = hasPermission;
-exports.addPermission = addPermission;
-exports.removePermission = removePermission;
-exports.permissionToObject = permissionToObject;
-exports.getThingsWithPermission = getThingsWithPermission;
+}

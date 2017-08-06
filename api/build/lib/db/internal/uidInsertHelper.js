@@ -1,5 +1,3 @@
-'use strict';
-
 const uid = require('../../uid');
 const utils = require('../../utils');
 const isObjectOrThrow = utils.isObjectOrThrow;
@@ -12,7 +10,16 @@ let transactionQueryPromise = require('./transactionQueryPromise');
 
 exports.UidClass = UidClass;
 
-exports.uidInserter = function *(query, args, connection) {
+/**
+ * uidInserter - helper to insert entries containing uid into db
+ *
+ * @param {String} query the query to execute
+ * @param {Object|Arry} args query args
+ * @param {mysql.connection} connection optional connection to use - if passed, it's assumed we are within a transaction
+ *
+ * @return {Object} query result
+ */
+exports.uidInserter = async (query, args, connection) => {
     let i = 0;
     let result;
     let insErr;
@@ -44,11 +51,11 @@ exports.uidInserter = function *(query, args, connection) {
     while (i++ === 0 || (insErr && 'ER_DUP_ENTRY' === insErr.code)) {
         if (i >= maxTries) throw new Error(`too many retries (${i}) for inserting uid`);
 
-        args[uidField] = yield uid.getStrongUid();
+        args[uidField] = await uid.getStrongUid();
 
         try {
-            if (!connection) result = yield queryPromise(query, args);
-            else result = yield transactionQueryPromise(connection, query, args);
+            if (!connection) result = await queryPromise(query, args);
+            else result = await transactionQueryPromise(connection, query, args);
         } catch (err) {
             if ('ER_DUP_ENTRY' === err.code && err.message.match(dupUidRe)) insErr = err;
             else throw err;
@@ -56,17 +63,4 @@ exports.uidInserter = function *(query, args, connection) {
     }
 
     return result;
-};
-
-gen = function *() {
-    let long = () => new Promise((resolve) => {
-        setTimeout(() => resolve('woohoo'), 5000);
-    });
-    console.log('huhu');
-    const x = long();
-    yield x + ' yea';
-    console.log('haha');
-    // throw new Error('hähä');
-    yield 42;
-    console.log('hoho');
 };

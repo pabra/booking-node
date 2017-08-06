@@ -1,12 +1,10 @@
-'use strict';
-
 const bodyParserOptions = {
     extendTypes: {
         json: ['text/plain'],
     },
 };
-const koa = require('koa');
-const app = koa();
+const Koa = require('koa');
+const app = new Koa();
 const router = require('koa-router')();
 const body = require('koa-bodyparser')(bodyParserOptions);
 const midWare = require('./lib/middlewares');
@@ -32,7 +30,7 @@ router.get('/item/:uid/:yearMonth', routes.getUnavailItemPeriod);
 router.get('/group/:uid/:yearMonth', routes.getUnavailGroupPeriod);
 router.get('/auth', routes.auth);
 
-router.post('/item/:uid/:from..:to', routes.postItemBooking);
+router.post('/item/:uid/:from..:to', body, routes.postItemBooking);
 router.post('/new_account', routes.newAccount);
 
 // token required

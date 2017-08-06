@@ -1,5 +1,3 @@
-'use strict';
-
 const connect = require('./connect');
 const loadSchema = require('./loadSchema');
 

@@ -1,62 +1,77 @@
-'use strict';
-
 const transactionPromise = require('./internal/transactionPromise');
 const transactionQueryPromise = require('./internal/transactionQueryPromise');
 const uidInsertHelper = require('./internal/uidInsertHelper');
 const errors = require('../errors');
 const uidInserter = uidInsertHelper.uidInserter;
 const UidClass = uidInsertHelper.UidClass;
+const logger = require('../logger');
 
+module.exports = putItemBooking;
 
-module.exports = function putItemBookingFn (obj) {
-    return transactionPromise(function *(conn) {
+function putItemBooking (obj) {
+    const txFn = async function (conn) {
         let q;
         let args;
         let result;
 
-        q = `
-            SELECT  id
-            FROM    items
-            WHERE   ?
-        `;
-        args = {uid: obj.item};
-        result = yield transactionQueryPromise(conn, q, args);
+        try {
+            logger.debug('running putItemBooking with conn: ', !!conn);
+            if (!conn) throw new TypeError('conn is required');
 
-        if (result.length === 0) throw new errors.ValueError(`unknown item uid '${obj.item}'`);
+            q = `
+                SELECT  id
+                FROM    items
+                WHERE   ?
+            `;
+            args = {uid: obj.item};
+            result = await transactionQueryPromise(conn, q, args);
 
-        obj.itemId = result[0].id;
+            if (result.length === 0) {
+                throw new errors.ValueError(`unknown item uid '${obj.item}'`);
+            }
 
-        q = `
-            INSERT INTO customers
-            SET ?
-        `;
-        args = {uid: new UidClass(),
-                name: obj.customerName};
+            obj.itemId = result[0].id;
 
-        result = yield uidInserter(q, args, conn);
+            q = `
+                INSERT INTO customers
+                SET ?
+            `;
+            args = {
+                uid: new UidClass(),
+                name: obj.customerName,
+            };
 
-        q = `
-            INSERT INTO requests
-            SET request_time = NOW(),
-                ?
-        `;
-        args = {uid: new UidClass(),
+            result = await uidInserter(q, args, conn);
+
+            q = `
+                INSERT INTO requests
+                SET request_time = NOW(),
+                    ?
+            `;
+            args = {
+                uid: new UidClass(),
                 customer: result.insertId,
                 date_from: obj.fromDate,
-                date_to: obj.toDate};
+                date_to: obj.toDate,
+            };
 
-        result = yield uidInserter(q, args, conn);
+            result = await uidInserter(q, args, conn);
 
-        q = `
-            INSERT INTO request_items
-            SET         request = ?,
-                        item = ?
-        `;
-        args = {request: result.insertId,
-                item: obj.itemId};
-        args = [result.insertId, obj.itemId];
-        result = yield transactionQueryPromise(conn, q, args);
+            q = `
+                INSERT INTO request_items
+                SET ?
+            `;
+            args = {
+                request: result.insertId,
+                item: obj.itemId,
+            };
+            result = await transactionQueryPromise(conn, q, args);
+        } catch (e) {
+            logger.error('cought error in putItemBooking', e);
+        }
 
         return result;
-    });
-};
+    };
+
+    return transactionPromise(txFn);
+}

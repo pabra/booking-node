@@ -1,15 +1,16 @@
-'use strict';
-
 const jwt = require('jwt-simple');
 
-exports.token = function *(next) {
+exports.token = token;
+exports.validToken = validToken;
+
+async function token (ctx, next) {
     const secret = 'MySuperSecretSuperLongSuperString';
-    const authorization = this.get('Authorization');
+    const authorization = ctx.get('Authorization');
     const authMatch = authorization ? authorization.match(/^Bearer ([^ ]+)$/) : null;
     const authToken = authMatch ? authMatch[1] : null;
 
-    this.token = {
-        encode: () => jwt.encode(this.token.payload, secret),
+    ctx.token = {
+        encode: () => jwt.encode(ctx.token.payload, secret),
         payload: {
             _: new Date().getTime(),
         },
@@ -18,21 +19,21 @@ exports.token = function *(next) {
     if (authToken) {
         try {
             const payload = jwt.decode(authToken, secret);
-            this.token.payload = payload;
+            ctx.token.payload = payload;
         } catch (err) {
             // noop
             (() => {})();
         }
     }
 
-    yield next;
-};
+    await next();
+}
 
-exports.validToken = function *(next) {
-    if (this.token.payload.uid) {
-        yield next;
+async function validToken (ctx, next) {
+    if (ctx.token.payload.uid) {
+        await next();
     } else {
-        this.set('WWW-Authenticate', 'Bearer realm="booking-node"');
-        this.status = 401;
+        ctx.set('WWW-Authenticate', 'Bearer realm="booking-node"');
+        ctx.status = 401;
     }
-};
+}

@@ -1,5 +1,3 @@
-'use strict';
-
 const mysql = require('mysql');
 const database = process.env.MYSQL_ENV_MYSQL_DATABASE || 'booking_node';
 const test_database = process.env.MYSQL_ENV_MYSQL_TEST_DATABASE || 'booking_node_test';

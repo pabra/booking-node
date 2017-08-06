@@ -1,17 +1,17 @@
-'use strict';
-
 const queryPromise = require('./internal/queryPromise');
 const dat = require('../dateAndTime');
 
+module.exports = getUnavailItemPeriod;
+
 /**
- * getUnavailItemPeriodFn - queries the databse for unavailbility of an item
+ * getUnavailItemPeriod - queries the databse for unavailbility of an item
  *
  * @param  {string} groupUid - description
  * @param  {number} year    - description
  * @param  {number} month   - description
  * @return {type}           - description
  */
-module.exports = function getUnavailItemPeriodFn (groupUid, year, month) {
+function getUnavailItemPeriod (groupUid, year, month) {
     let q;
     let monthStart;
     let monthEnd;
@@ -39,4 +39,4 @@ module.exports = function getUnavailItemPeriodFn (groupUid, year, month) {
     `;
 
     return queryPromise(q, [groupUid, dateStart, dateEnd]);
-};
+}
