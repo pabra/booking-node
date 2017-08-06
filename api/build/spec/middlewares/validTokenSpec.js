@@ -1,36 +1,33 @@
-'use strict';
-
-describe('token validation', function () {
+describe('token validation', () => {
     const middlewares = require('../../lib/middlewares');
     const validToken = middlewares.validToken;
-    const req = {
+    const ctx = {
         token: {
             payload: {},
         },
-    };
-    const res = {
-        header: () => {},
-        status: () => {},
         send: () => {},
+        set: () => {},
     };
     const fnObj = {
         next: () => {},
     };
 
-    beforeEach(function () {
+    beforeEach(() => {
 
         spyOn(fnObj, 'next');
-        spyOn(res, 'send');
+        spyOn(ctx, 'send');
+        spyOn(ctx, 'set');
     });
 
-    it('should detect invalid token', function () {
-        validToken(req, res, fnObj.next);
-        expect(res.send).toHaveBeenCalled();
+    it('should detect invalid token', () => {
+        validToken(ctx, fnObj.next);
+        expect(ctx.set).toHaveBeenCalled();
+        expect(fnObj.next).not.toHaveBeenCalled();
     });
 
-    it('should detect valid token', function () {
-        req.token.payload.uid = 42;
-        validToken(req, res, fnObj.next);
+    it('should detect valid token', () => {
+        ctx.token.payload.uid = 42;
+        validToken(ctx, fnObj.next);
         expect(fnObj.next).toHaveBeenCalled();
     });
 });

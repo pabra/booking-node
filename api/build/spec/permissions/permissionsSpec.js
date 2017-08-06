@@ -1,6 +1,4 @@
 /* eslint no-multi-spaces: 0 */
-'use strict';
-
 describe('permission check', function () {
     const rewire = require('rewire');
     const permissionLib = rewire('../../lib/permissions');

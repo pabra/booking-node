@@ -1,4 +1,3 @@
-'use strict';
 describe('uid parsing', function () {
     const uidLib = require('../../lib/uid');
     const errors = require('../../lib/errors');

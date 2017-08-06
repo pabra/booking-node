@@ -1,5 +1,3 @@
-'use strict';
-
 describe('mkdate', function () {
     const errors = require('../../lib/errors');
     const ValueError = errors.ValueError;
@@ -70,8 +68,6 @@ describe('mkdate', function () {
 });
 
 describe('setFirstDayOfMonth', function () {
-    const errors = require('../../lib/errors');
-    const ValueError = errors.ValueError;
     const dateAndTimeUtils = require('../../lib/dateAndTime/internal/utils');
     const setFirstDayOfMonth = dateAndTimeUtils.setFirstDayOfMonth;
 
@@ -119,8 +115,6 @@ describe('setFirstDayOfMonth', function () {
 });
 
 describe('setLastDayOfMonth', function () {
-    const errors = require('../../lib/errors');
-    const ValueError = errors.ValueError;
     const dateAndTimeUtils = require('../../lib/dateAndTime/internal/utils');
     const setLastDayOfMonth = dateAndTimeUtils.setLastDayOfMonth;
 

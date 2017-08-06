@@ -1,5 +1,3 @@
-'use strict';
-
 describe('generating uid', function () {
     const uidLib = require('../../lib/uid');
     const validUidRe = uidLib.expression;

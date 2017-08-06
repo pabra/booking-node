@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ValueError', function () {
     const errors = require('../../lib/errors');
     const ValueError = errors.ValueError;

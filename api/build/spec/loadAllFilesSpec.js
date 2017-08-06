@@ -1,6 +1,3 @@
-'use strict';
-
-
 const rewire = require('rewire');
 const fs = require('fs');
 const path = require('path');

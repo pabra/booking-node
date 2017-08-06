@@ -1,6 +1,4 @@
-'use strict';
-
-describe('uidInsertHelper', function () {
+describe('uidInsertHelper', () => {
     const rewire = require('rewire');
     const uidInsertHelperLib = rewire('../../../lib/db/internal/uidInsertHelper');
     const uidInsertHelper = uidInsertHelperLib.uidInserter;
@@ -11,18 +9,17 @@ describe('uidInsertHelper', function () {
         });
     };
 
-    beforeEach(function () {
+    beforeEach(() => {
         uidInsertHelperLib.__set__('queryPromise', queryPromiseMock);
         uidInsertHelperLib.__set__('transactionQueryPromise', queryPromiseMock);
     });
 
     // good
-    it('should succeed', function (done) {
-        const g = uidInsertHelper('query', [new UidClass()]);
-        // p.then(function (result) {
-        expect([...g][0]).toBe('success!');
+    it('should succeed', async done => {
+        const data = await uidInsertHelper('query', [new UidClass()]);
+        expect(data).toBe('success!');
+
         done();
-        // });
     });
 
     it('should succeed', function (done) {

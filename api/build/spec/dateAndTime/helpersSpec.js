@@ -1,5 +1,3 @@
-'use strict';
-
 describe('date and time helpers', function () {
     const errors = require('../../lib/errors');
     const ValueError = errors.ValueError;

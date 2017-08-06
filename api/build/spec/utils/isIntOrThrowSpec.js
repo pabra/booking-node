@@ -1,4 +1,3 @@
-'use strict';
 describe('isIntOrThrow', function () {
     const utils = require('../../lib/utils');
     const isIntOrThrow = utils.isIntOrThrow;

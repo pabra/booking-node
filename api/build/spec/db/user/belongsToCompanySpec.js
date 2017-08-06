@@ -1,6 +1,4 @@
-'use strict';
-
-describe('belongsToCompany', function () {
+describe('belongsToCompany', () => {
     const rewire = require('rewire');
     const belongsToCompany = rewire('../../../lib/db/user/belongsToCompany');
     const companyUserRalation = {'comp01': {'user01': {'isTrue': 1}}};

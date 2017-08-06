@@ -1,84 +1,81 @@
-'use strict';
-
-describe('token detection in HTTP request header', function () {
+describe('token detection in HTTP request header', () => {
     const rewire = require('rewire');
     const middlewares = rewire('../../lib/middlewares');
     const jwt = middlewares.__get__('jwt');
     const decodeOrig = jwt.decode;
     const tokenContent = 'testToken';
-    const res = {};
     const fnObj = {
-        next: function () {},
+        next: () => {},
     };
-    let req;
+    let ctx;
 
-    beforeEach(function () {
+    beforeEach(() => {
         jwt.decode = txt => txt;
-        req = {
+        ctx = {
             get: header => `Bearer ${tokenContent}`,
         };
 
         spyOn(fnObj, 'next');
     });
 
-    afterEach(function () {
+    afterEach(() => {
         jwt.decode = decodeOrig;
     });
 
-    it('should call next', function () {
-        middlewares.token(req, res, fnObj.next);
+    it('should call next', () => {
+        middlewares.token(ctx, fnObj.next);
         expect(fnObj.next).toHaveBeenCalled();
     });
 
-    it('should not throw', function () {
-        let fn = () => middlewares.token(req, res, fnObj.next);
+    it('should not throw', () => {
+        let fn = () => middlewares.token(ctx, fnObj.next);
         expect(fn).not.toThrow();
     });
 
-    it('should add token payload to request', function () {
-        middlewares.token(req, res, fnObj.next);
-        expect(req.token.payload).toEqual(tokenContent);
+    it('should add token payload to request', () => {
+        middlewares.token(ctx, fnObj.next);
+        expect(ctx.token.payload).toEqual(tokenContent);
     });
 
-    describe('undecodeable token', function () {
+    describe('undecodeable token', () => {
         const now = new Date();
 
-        beforeEach(function () {
-            jwt.decode = function () {
+        beforeEach(() => {
+            jwt.decode = () => {
                 throw new Error('cannot decode');
             };
         });
 
-        it('thrown Error should be cought', function () {
-            middlewares.token(req, res, fnObj.next);
+        it('thrown Error should be cought', () => {
+            middlewares.token(ctx, fnObj.next);
             expect(fnObj.next).toHaveBeenCalled();
         });
 
-        it('should set initial token payload to request', function () {
+        it('should set initial token payload to request', () => {
             jasmine.clock().mockDate(now);
-            middlewares.token(req, res, fnObj.next);
-            expect(req.token.payload).toEqual({_: now.getTime()});
+            middlewares.token(ctx, fnObj.next);
+            expect(ctx.token.payload).toEqual({_: now.getTime()});
         });
     });
 
-    describe('no token in HTTP request header', function () {
+    describe('no token in HTTP request header', () => {
         const now = new Date();
 
-        beforeEach(function () {
-            req = {
+        beforeEach(() => {
+            ctx = {
                 get: header => undefined,
             };
         });
 
-        it('should not throw', function () {
-            let fn = () => middlewares.token(req, res, fnObj.next);
+        it('should not throw', () => {
+            let fn = () => middlewares.token(ctx, fnObj.next);
             expect(fn).not.toThrow();
         });
 
-        it('should set initial token payload to request', function () {
+        it('should set initial token payload to request', () => {
             jasmine.clock().mockDate(now);
-            middlewares.token(req, res, fnObj.next);
-            expect(req.token.payload).toEqual({_: now.getTime()});
+            middlewares.token(ctx, fnObj.next);
+            expect(ctx.token.payload).toEqual({_: now.getTime()});
         });
     });
 });

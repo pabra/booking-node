@@ -1,5 +1,3 @@
-'use strict';
-
 describe('isObject', function () {
     const utils = require('../../lib/utils');
     const isObjectOrThrow = utils.isObjectOrThrow;

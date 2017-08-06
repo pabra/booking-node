@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ensureValidYearMonth', function () {
     const currentYear = new Date().getUTCFullYear();
     const minYear = currentYear - 1;

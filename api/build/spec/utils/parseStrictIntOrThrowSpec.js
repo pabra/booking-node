@@ -1,5 +1,3 @@
-'use strict';
-
 describe('parseStrictIntOrThrow', function () {
     const utils = require('../../lib/utils');
     const parseStrictIntOrThrow = utils.parseStrictIntOrThrow;
