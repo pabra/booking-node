@@ -35,13 +35,12 @@ echo "root pw: '${ROOT_PW}'"
 echo '--------------------------'
 
 $DOCKER run \
-    -it \
-    --rm \
+    --detach \
+    --restart=always \
     --name "${IMAGE_NAME}_phpmyadmin" \
     --link "${IMAGE_NAME}:db" \
     --env "PMA_USER=root" \
     --env "PMA_PASSWORD=${ROOT_PW}" \
     --env "PMA_ARBITRARY=1" \
     --publish 127.0.0.1:8888:80 \
-    phpmyadmin/phpmyadmin \
-    bash
+    phpmyadmin/phpmyadmin
