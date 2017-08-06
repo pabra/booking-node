@@ -1,24 +1,21 @@
-'use strict';
-
 const errors = require('../../errors');
 const ValueError = errors.ValueError;
 const utils = require('../../utils');
 const isIntOrThrow = utils.isIntOrThrow;
 
-let mkDate;
-let setFirstDayOfMonth;
-let setLastDayOfMonth;
-
+exports.mkDate = mkDate;
+exports.setFirstDayOfMonth = setFirstDayOfMonth;
+exports.setLastDayOfMonth = setLastDayOfMonth;
 
 /**
- * mkDateFn - get new Date object
+ * mkDate - get new Date object
  *
  * @param  {number} year    year as int
  * @param  {number} month   month as int
  * @param  {number} day     day as int
  * @return {object}         new Date() object
  */
-mkDate = function mkDateFn (year, month, day) {
+function mkDate (year, month, day) {
     let newDate;
 
     try {
@@ -39,9 +36,9 @@ mkDate = function mkDateFn (year, month, day) {
     }
 
     return newDate;
-};
+}
 
-setFirstDayOfMonth = function setFirstDayOfMonthFn (dObj) {
+function setFirstDayOfMonth (dObj) {
     if (!(dObj instanceof Date)) {
         throw new TypeError(`not an instance of Date: ${dObj}`);
     }
@@ -53,9 +50,9 @@ setFirstDayOfMonth = function setFirstDayOfMonthFn (dObj) {
     dObj.setUTCMilliseconds(0);
 
     return dObj;
-};
+}
 
-setLastDayOfMonth = function setLastDayOfMonthFn (dObj) {
+function setLastDayOfMonth (dObj) {
     const fullDay = 24 * 60 * 60 * 1000;
 
     if (!(dObj instanceof Date)) {
@@ -69,8 +66,4 @@ setLastDayOfMonth = function setLastDayOfMonthFn (dObj) {
     dObj = new Date(dObj.getTime() - fullDay);
 
     return dObj;
-};
-
-exports.mkDate = mkDate;
-exports.setFirstDayOfMonth = setFirstDayOfMonth;
-exports.setLastDayOfMonth = setLastDayOfMonth;
+}

@@ -1,10 +1,10 @@
-'use strict';
-
 const errors = require('../../errors');
 const ValueError = errors.ValueError;
 const utils = require('../../utils');
 const parseStrictIntOrThrow = utils.parseStrictIntOrThrow;
 
+exports.ensureValidYear = ensureValidYear;
+exports.ensureValidMonth = ensureValidMonth;
 
 /**
  * ensureValidYear - Validate passed year
@@ -15,7 +15,7 @@ const parseStrictIntOrThrow = utils.parseStrictIntOrThrow;
  *
  * @return {number} year as Integer if valid
  */
-exports.ensureValidYear = function (testYear) {
+function ensureValidYear (testYear) {
     const currentYear = new Date().getUTCFullYear();
     const minYear = currentYear - 1;
     const maxYear = currentYear + 2;
@@ -25,7 +25,7 @@ exports.ensureValidYear = function (testYear) {
     if (yearInt > maxYear) throw new ValueError(`year ${yearInt} > ${minYear}`);
 
     return yearInt;
-};
+}
 
 
 /**
@@ -37,7 +37,7 @@ exports.ensureValidYear = function (testYear) {
  *
  * @return {number} month as Integer
  */
-exports.ensureValidMonth = function (testMonth) {
+function ensureValidMonth (testMonth) {
     const minMonth = 1;
     const maxMonth = 12;
     const monthInt = parseStrictIntOrThrow(testMonth);
@@ -46,4 +46,4 @@ exports.ensureValidMonth = function (testMonth) {
     if (monthInt > maxMonth) throw new ValueError(`month ${monthInt} < ${maxMonth}`);
 
     return monthInt;
-};
+}

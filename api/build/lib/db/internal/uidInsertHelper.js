@@ -3,12 +3,16 @@ const utils = require('../../utils');
 const isObjectOrThrow = utils.isObjectOrThrow;
 const dupUidRe = /ER_DUP_ENTRY: Duplicate entry '\w+' for key 'uid'/;
 const maxTries = 25;
-const UidClass = function () {};
 // not use const to be able to mock away for tests
 let queryPromise = require('./queryPromise');
 let transactionQueryPromise = require('./transactionQueryPromise');
 
+class UidClass {
+
+}
+
 exports.UidClass = UidClass;
+exports.uidInserter = uidInserter;
 
 /**
  * uidInserter - helper to insert entries containing uid into db
@@ -19,7 +23,7 @@ exports.UidClass = UidClass;
  *
  * @return {Object} query result
  */
-exports.uidInserter = async (query, args, connection) => {
+async function uidInserter (query, args, connection) {
     let i = 0;
     let result;
     let insErr;
@@ -63,4 +67,4 @@ exports.uidInserter = async (query, args, connection) => {
     }
 
     return result;
-};
+}

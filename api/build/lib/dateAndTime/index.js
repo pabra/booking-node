@@ -1,5 +1,3 @@
-'use strict';
-
 const internUtils = require('./internal/utils');
 
 exports.ensureValidYearMonth = require('./ensureValidYearMonth');

@@ -1,9 +1,8 @@
-'use strict';
-
 const errors = require('../errors');
 const ValueError = errors.ValueError;
 const helpers = require('./internal/helpers.js');
 
+module.exports = ensureValidYearMonth;
 
 /**
  * ensureValidYearMonthFn - Parse and return year and month
@@ -11,7 +10,7 @@ const helpers = require('./internal/helpers.js');
  * @param {string} testYearMonth - 4 digit year (eg '2016') or year-month (eg '2016-06')
  * @return {object} Object - object of `year` and `month` as integers (month can be null)
  */
-module.exports = function ensureValidYearMonthFn (testYearMonth) {
+function ensureValidYearMonth (testYearMonth) {
     let year;
     let month;
 
@@ -35,4 +34,4 @@ module.exports = function ensureValidYearMonthFn (testYearMonth) {
     }
 
     return {year, month};
-};
+}

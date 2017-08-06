@@ -1,5 +1,3 @@
-'use strict';
-
 const errors = require('../errors');
 const ValueError = errors.ValueError;
 const helpers = require('./internal/helpers');
@@ -8,8 +6,9 @@ const mkDate = dateUtils.mkDate;
 const utils = require('../utils');
 const parseStrictIntOrThrow = utils.parseStrictIntOrThrow;
 
+module.exports = ensureValidIsoDate;
 
-module.exports = function ensureValidIsoDate (testIsoDate) {
+function ensureValidIsoDate (testIsoDate) {
     if ('string' !== typeof testIsoDate) {
         throw new TypeError('expected string type');
     }
@@ -26,4 +25,4 @@ module.exports = function ensureValidIsoDate (testIsoDate) {
     const newDate = mkDate(year, month, day);
 
     return newDate;
-};
+}

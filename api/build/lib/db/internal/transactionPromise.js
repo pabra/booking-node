@@ -14,7 +14,9 @@ const transErrFn = (conn, err, reject) => {
     });
 };
 
-module.exports = function (txFn) {
+module.exports = transactionPromise;
+
+function transactionPromise (txFn) {
     logger.debug('txFn', txFn);
     return new Promise(function (resolve, reject) {
         pool.getConnection(function (connectionError, conn) {
@@ -50,4 +52,4 @@ module.exports = function (txFn) {
             });
         });
     });
-};
+}
