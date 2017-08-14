@@ -9,7 +9,7 @@ const logger = require('../logger');
 module.exports = putItemBooking;
 
 function putItemBooking (obj) {
-    const txFn = async function (conn) {
+    return transactionPromise(async conn => {
         let q;
         let args;
         let result;
@@ -71,7 +71,5 @@ function putItemBooking (obj) {
         }
 
         return result;
-    };
-
-    return transactionPromise(txFn);
+    });
 }
